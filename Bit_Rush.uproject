@@ -5,7 +5,7 @@
 	"Description": "",
 	"Modules": [
 		{
-			"Name": "SPM_Shooter",
+			"Name": "Bit_Rush",
 			"Type": "Runtime",
 			"LoadingPhase": "Default"
 		}

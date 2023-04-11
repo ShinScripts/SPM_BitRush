@@ -3,13 +3,13 @@
 using UnrealBuildTool;
 using System.Collections.Generic;
 
-public class SPM_ShooterTarget : TargetRules
+public class Bit_RushTarget : TargetRules
 {
-	public SPM_ShooterTarget( TargetInfo Target) : base(Target)
+	public Bit_RushTarget( TargetInfo Target) : base(Target)
 	{
 		Type = TargetType.Game;
 		DefaultBuildSettings = BuildSettingsVersion.V2;
 		IncludeOrderVersion = EngineIncludeOrderVersion.Unreal5_1;
-		ExtraModuleNames.Add("SPM_Shooter");
+		ExtraModuleNames.Add("Bit_Rush");
 	}
 }

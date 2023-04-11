@@ -4,13 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/GameModeBase.h"
-#include "SPM_ShooterGameModeBase.generated.h"
+#include "Bit_RushGameModeBase.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class SPM_SHOOTER_API ASPM_ShooterGameModeBase : public AGameModeBase
+class BIT_RUSH_API ABit_RushGameModeBase : public AGameModeBase
 {
 	GENERATED_BODY()
 	
