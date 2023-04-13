@@ -23,6 +23,7 @@ APlayerCharacter::APlayerCharacter()
 void APlayerCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+
 	CanMove = true;
 	CharacterMovement->BrakingFrictionFactor = 2;
 	CharacterMovement->GravityScale = 1;
