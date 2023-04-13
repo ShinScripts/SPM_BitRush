@@ -23,7 +23,13 @@ APlayerCharacter::APlayerCharacter()
 void APlayerCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+
 	CanMove = true;
+	CharacterMovement->BrakingFrictionFactor = 2;
+	CharacterMovement->GravityScale = 1;
+	CharacterMovement->FallingLateralFriction = 10;
+	CharacterMovement->GroundFriction = 20;
+	CharacterMovement->BrakingDecelerationWalking = 2048;
 }
 
 // Called every frame

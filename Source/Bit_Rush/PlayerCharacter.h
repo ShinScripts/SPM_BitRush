@@ -8,7 +8,7 @@
 #include "PlayerCharacter.generated.h"
 
 UCLASS()
-class TESTMAP_API APlayerCharacter : public ACharacter
+class BIT_RUSH_API APlayerCharacter : public ACharacter
 {
 	GENERATED_BODY()
 
