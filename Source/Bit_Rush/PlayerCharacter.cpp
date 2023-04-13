@@ -29,6 +29,7 @@ void APlayerCharacter::BeginPlay()
 	CharacterMovement->FallingLateralFriction = 10;
 	CharacterMovement->GroundFriction = 20;
 	CharacterMovement->BrakingDecelerationWalking = 2048;
+	CharacterMovement->AirControl = 20;
 }
 
 // Called every frame
@@ -38,7 +39,7 @@ void APlayerCharacter::Tick(float DeltaTime)
 	FloorHit = CharacterMovement->CurrentFloor.HitResult;
 	SlideSurfNormal = GetSlideSurface(FloorHit.Normal);
 	
-	if(ShouldSlide)
+	if(ShouldSlide && !CharacterMovement->IsFalling())
 	{
 		PhysSlide();
 	}
