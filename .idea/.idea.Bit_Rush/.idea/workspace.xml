@@ -27,11 +27,15 @@
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="Toolset" />
+  </component>
   <component name="ProjectId" id="2OGwCsb6f548MDBmlQwFDWNHNxt" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
+
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "RunOnceActivity.OpenProjectViewOnStart": "true",
@@ -51,7 +55,7 @@
       "C:\\Users\\shin\\AppData\\Local\\Symbols\\src"
     ]
   }
-}]]></component>
+}</component>
   <component name="RunManager" selected="C++ Project.Bit_Rush">
     <configuration name="Bit_Rush" type="CppProject" factoryName="C++ Project">
       <configuration_1>

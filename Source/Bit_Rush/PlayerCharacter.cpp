@@ -37,18 +37,14 @@ void APlayerCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 	FloorHit = CharacterMovement->CurrentFloor.HitResult;
-	if(FloorHit.Component != nullptr)
-	{
-		UE_LOG(LogTemp,Warning,TEXT("%s"),*FloorHit.Component->GetName());
-		SlideSurfNormal = GetSlideSurface(FloorHit.Normal);
+	SlideSurfNormal = GetSlideSurface(FloorHit.Normal);
 	
-		if(ShouldSlide)
-		{
-			PhysSlide();
-		}
+	if(ShouldSlide)
+	{
+		PhysSlide();
 	}
 
-	UE_LOG(LogTemp,Warning,TEXT("VELOCITY: %s"),*CharacterMovement->Velocity.ToString())
+	//UE_LOG(LogTemp,Warning,TEXT("VELOCITY: %s"),*CharacterMovement->Velocity.ToString())
 }
 
 // Called to bind functionality to input
@@ -111,12 +107,8 @@ void APlayerCharacter::StopVelocity()
 
 void APlayerCharacter::EnterSlide()
 {
-
-	if(SlideSurfNormal.Equals(FVector::Zero()))
-		ShouldLaunchSlide = true;
-	Hit = FloorHit;
 	ShouldSlide = true;
-	CharacterMovement->GroundFriction = 0.5;
+	CharacterMovement->GroundFriction = 0;
 	CharacterMovement->BrakingDecelerationWalking = 1000;
 	
 }
@@ -132,41 +124,42 @@ void APlayerCharacter::ExitSlide()
 
 void APlayerCharacter::PhysSlide()
 {
-	CanMove = false;
-	if(!CharacterMovement->IsFalling())
+	if(SlideSurfNormal.Equals(FVector::Zero()))
 	{
-		if(SlideSurfNormal.Equals(FVector::Zero()))
-		{
-			CharacterMovement->AddImpulse(GetActorForwardVector() * SlideVelocity);
-			FTimerHandle TimeHandler;
-			GetWorldTimerManager().SetTimer(TimeHandler,this,&APlayerCharacter::StopSlidingAfterSeconds,0.5f);
-			//TEST
-		}
-		if(!SlideSurfNormal.Equals(FVector::Zero()))
-		{
-			CharacterMovement->AddImpulse(SlideSurfNormal.GetSafeNormal() * -SlideVelocity);
-		}
-			
+		CharacterMovement->AddImpulse(FVector(GetVelocity().X,GetVelocity().Y,0).GetSafeNormal() *  5000);
+		FTimerHandle TimerHandle;
+		GetWorld()->GetTimerManager().SetTimer(TimerHandle,this,&APlayerCharacter::StopSlide,0.5f);
 	}
-
-	UE_LOG(LogTemp,Warning,TEXT("SLIDE"));
+	else
+	{
+		CharacterMovement->AddForce(SlideSurfNormal);
+	}
+	CanMove = false;
 }
 
-void APlayerCharacter::StopSlidingAfterSeconds()
+void APlayerCharacter::StopSlide()
 {
-	UE_LOG(LogTemp,Warning,TEXT("STOPSTOPOST"));
-	ShouldSlide = false;
-	CanMove = true;
+	if(!SlideSurfNormal.Equals(FVector::Zero()))
+	{
+		return;
+	}
+	else
+	{
+		ExitSlide();
+	}
 }
 
 FVector APlayerCharacter::GetSlideSurface(FVector FloorNormal)
 {
-	if(FloorHit.Normal.Equals(GetActorUpVector()))
+	if(FloorNormal.Equals(GetActorUpVector()))
 	{
 		return FVector::Zero();
 	}
 		FVector crossVect = FVector::CrossProduct(FloorNormal,GetActorUpVector());
-		return FVector::CrossProduct(crossVect,FloorNormal).GetSafeNormal();
+	    FVector CrossCrossVect = FVector::CrossProduct(FloorNormal,crossVect.GetSafeNormal());
+		float Direction = 1 - FVector::DotProduct(FloorNormal,GetActorUpVector());
+		FVector FloorInfluence = (FMath::Clamp(Direction,0,1) * SlideVelocity) *  CrossCrossVect.GetSafeNormal();
+		return FloorInfluence;
 }
 
 
