@@ -74,6 +74,8 @@ void APlayerCharacter::MoveRight(float AxisValue)
 
 void APlayerCharacter::Dash()
 {
+	if(!CanDash) return;
+	
 	CanMove = false;
 	CharacterMovement->GravityScale = 0;
 	
@@ -88,8 +90,11 @@ void APlayerCharacter::Dash()
 		LaunchCharacter(GetVelocity().GetSafeNormal() * DashVelocity, false,true);
 	}
 	
+	CanDash = false;
+	
 	FTimerHandle TimeHandler;
 	GetWorldTimerManager().SetTimer(TimeHandler,this,&APlayerCharacter::StopVelocity,DashLength,false);
+	
 }
 
 void APlayerCharacter::StopVelocity()
@@ -99,6 +104,9 @@ void APlayerCharacter::StopVelocity()
 	CharacterMovement->FallingLateralFriction = 10;
 	CharacterMovement->Velocity.Set(0,0,0);
 	CanMove = true;
+
+	FTimerHandle TimeHandler;
+	GetWorldTimerManager().SetTimer(TimeHandler,this, &APlayerCharacter::ResetDash,DashCooldown,false);
 }
 
 void APlayerCharacter::EnterSlide()
@@ -106,7 +114,6 @@ void APlayerCharacter::EnterSlide()
 	ShouldSlide = true;
 	CharacterMovement->GroundFriction = 0;
 	CharacterMovement->BrakingDecelerationWalking = 1000;
-	
 }
 
 void APlayerCharacter::ExitSlide()
@@ -115,7 +122,6 @@ void APlayerCharacter::ExitSlide()
 	CanMove = true;
 	CharacterMovement->GroundFriction = 20;
 	CharacterMovement->BrakingDecelerationWalking = 2048;
-	
 }
 
 void APlayerCharacter::PhysSlide()
@@ -143,6 +149,11 @@ void APlayerCharacter::StopSlide()
 	{
 		ExitSlide();
 	}
+}
+
+void APlayerCharacter::ResetDash()
+{
+	CanDash = true;
 }
 
 FVector APlayerCharacter::GetSlideSurface(FVector FloorNormal)

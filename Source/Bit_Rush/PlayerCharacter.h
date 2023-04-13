@@ -34,15 +34,20 @@ private:
 	UPROPERTY(EditAnywhere)
 	float SlideVelocity = 900000;
 	
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta=(AllowPrivateAccess))
 	bool CanMove;
 
+	// Dash
 	UPROPERTY(EditAnywhere)
 	float DashVelocity = 2000;
 	
-
 	UPROPERTY(EditAnywhere)
 	float DashLength = 0.15;
+
+	bool CanDash = true;
+
+	UPROPERTY(EditAnywhere)
+	float DashCooldown = 1;
 
 	UPROPERTY()
 	class UCameraComponent* CameraComp;
@@ -72,6 +77,8 @@ private:
 	void PhysSlide();
 
 	void StopSlide();
+
+	void ResetDash();
 	//void StopSlidingAfterSeconds();
 	FVector GetSlideSurface(FVector);
 };
