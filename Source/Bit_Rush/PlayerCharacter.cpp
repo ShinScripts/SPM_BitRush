@@ -3,12 +3,7 @@
 
 #include "PlayerCharacter.h"
 
-#include <string>
-
-#include "Evaluation/IMovieSceneEvaluationHook.h"
 #include "GameFramework/CharacterMovementComponent.h"
-#include "Kismet/GameplayStatics.h"
-#include "PhysicalMaterials/PhysicalMaterial.h"
 
 // Sets default values
 APlayerCharacter::APlayerCharacter()
@@ -28,6 +23,7 @@ void APlayerCharacter::BeginPlay()
 	CharacterMovement->BrakingFrictionFactor = 2;
 	CharacterMovement->GravityScale = 1;
 	CharacterMovement->FallingLateralFriction = 10;
+	CharacterMovement->AirControl = 20;
 	CharacterMovement->GroundFriction = 20;
 	CharacterMovement->BrakingDecelerationWalking = 2048;
 }
