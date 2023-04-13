@@ -3,17 +3,19 @@
 #pragma once
 
 #include "CoreMinimal.h"
+
 #include "GameFramework/Character.h"
 #include "PlayerCharacter.generated.h"
 
 UCLASS()
-class BIT_RUSH_API APlayerCharacter : public ACharacter
+class TESTMAP_API APlayerCharacter : public ACharacter
 {
 	GENERATED_BODY()
 
 public:
 	// Sets default values for this character's properties
 	APlayerCharacter();
+
 
 protected:
 	// Called when the game starts or when spawned
@@ -28,13 +30,12 @@ public:
 
 private:
 
-	//Variables
+	//Variable
+	UPROPERTY(EditAnywhere)
+	float SlideVelocity = 3000;
 
 	UPROPERTY(EditAnywhere)
-	UCapsuleComponent* CapsulComp;
-
-	UPROPERTY(EditAnywhere)
-	float SlideVelocity = 1000;
+	float SlideLaunchVelocity = 500000;
 	
 	UPROPERTY(VisibleAnywhere)
 	bool CanMove;
@@ -43,13 +44,30 @@ private:
 	float DashVelocity = 2000;
 
 	UPROPERTY(EditAnywhere)
-	bool HasSlided = false;
-	
+	FHitResult Hit;
+
+	UPROPERTY(EditAnywhere)
+	float DashLength = 0.15;
+
+	UPROPERTY()
+	class UCameraComponent* CameraComp;
+
+	bool ShouldSlide = false;
+	bool ShouldLaunchSlide = false;
+	FVector SlideSurfNormal;
+	class UCharacterMovementComponent* CharacterMovement;
+
+	struct FHitResult FloorHit;
 	//Functions
 	void MoveForward(float AxisValue);
 	void MoveRight(float AxisValue);
-	void Slide();
-	void SetShouldDash();
+
 	void Dash();
-	void ResetSlide();
+	void StopVelocity();
+	
+	void EnterSlide();
+	void ExitSlide();
+	void PhysSlide();
+	void StopSlidingAfterSeconds();
+	FVector GetSlideSurface(FVector);
 };
