@@ -8,7 +8,7 @@
 #include "PlayerCharacter.generated.h"
 
 UCLASS()
-class TESTMAP_API APlayerCharacter : public ACharacter
+class BIT_RUSH_API APlayerCharacter : public ACharacter
 {
 	GENERATED_BODY()
 
@@ -32,19 +32,14 @@ private:
 
 	//Variable
 	UPROPERTY(EditAnywhere)
-	float SlideVelocity = 3000;
-
-	UPROPERTY(EditAnywhere)
-	float SlideLaunchVelocity = 500000;
+	float SlideVelocity = 900000;
 	
 	UPROPERTY(VisibleAnywhere)
 	bool CanMove;
 
 	UPROPERTY(EditAnywhere)
 	float DashVelocity = 2000;
-
-	UPROPERTY(EditAnywhere)
-	FHitResult Hit;
+	
 
 	UPROPERTY(EditAnywhere)
 	float DashLength = 0.15;
@@ -53,10 +48,17 @@ private:
 	class UCameraComponent* CameraComp;
 
 	bool ShouldSlide = false;
+	
 	bool ShouldLaunchSlide = false;
-	FVector SlideSurfNormal;
-	class UCharacterMovementComponent* CharacterMovement;
 
+	UPROPERTY(BlueprintReadWrite,meta=(AllowPrivateAccess))
+	FVector SlideSurfNormal;
+
+	UPROPERTY(BlueprintReadWrite, meta=(AllowPrivateAccess))
+	float CharacterSpeed = 600;
+	
+	class UCharacterMovementComponent* CharacterMovement;
+	
 	struct FHitResult FloorHit;
 	//Functions
 	void MoveForward(float AxisValue);
@@ -68,6 +70,8 @@ private:
 	void EnterSlide();
 	void ExitSlide();
 	void PhysSlide();
-	void StopSlidingAfterSeconds();
+
+	void StopSlide();
+	//void StopSlidingAfterSeconds();
 	FVector GetSlideSurface(FVector);
 };
