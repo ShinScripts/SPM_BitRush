@@ -32,7 +32,7 @@ private:
 
 	//Variable
 	UPROPERTY(EditAnywhere)
-	float SlideVelocity = 900000;
+	float SlideVelocity = 2000;
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta=(AllowPrivateAccess))
 	bool CanMove;

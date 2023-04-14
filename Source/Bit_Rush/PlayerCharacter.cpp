@@ -134,7 +134,7 @@ void APlayerCharacter::PhysSlide()
 	}
 	else
 	{
-		CharacterMovement->AddForce(SlideSurfNormal);
+		CharacterMovement->AddForce(SlideSurfNormal * SlideVelocity);
 	}
 	CanMove = false;
 }
