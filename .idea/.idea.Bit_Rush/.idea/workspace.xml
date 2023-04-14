@@ -9,43 +9,24 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a4dc6a02-eec9-4a77-ade6-4903ba3e158e" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.Bit_Rush/.idea/encodings.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.Bit_Rush/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Bit_Rush/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Bit_Rush.uproject" beforeDir="false" afterPath="$PROJECT_DIR$/Bit_Rush.uproject" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/BP_PlayerCharacter.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/BP_PlayerCharacter.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/BP_BitRushGameMode.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/BP_BitRushGameMode.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/BP_EMPGrenade.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/BP_EnemyLaserTurret.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/BP_EnemyRocketTurret.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/BP_EnemyRocketTurret.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/BP_GrenadeLauncher.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/BP_GrenadeLauncher.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/BP_JumpPad.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/BP_JumpPad.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/BP_PlayerCharacter.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/BP_RocketProjectile.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Crosshair.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Crosshair.uasset" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Content/DiarImport/Maps/FirstPersonMap_2.umap" beforeDir="false" afterPath="$PROJECT_DIR$/Content/DiarImport/Maps/FirstPersonMap_2.umap" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/LevelPrototyping/Materials/MF_ProcGrid.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/LevelPrototyping/Materials/MF_ProcGrid.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/LevelPrototyping/Materials/MI_PrototypeGrid_Gray.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/LevelPrototyping/Materials/MI_PrototypeGrid_Gray.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/LevelPrototyping/Materials/MI_Solid_Blue.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/LevelPrototyping/Materials/MI_Solid_Blue.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/LevelPrototyping/Materials/M_PrototypeGrid.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/LevelPrototyping/Materials/M_PrototypeGrid.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/LevelPrototyping/Materials/M_Solid.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/LevelPrototyping/Materials/M_Solid.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/LevelPrototyping/Meshes/SM_ChamferCube.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/LevelPrototyping/Meshes/SM_ChamferCube.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/LevelPrototyping/Meshes/SM_Cube.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/LevelPrototyping/Meshes/SM_Cube.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/LevelPrototyping/Textures/T_GridChecker_A.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/LevelPrototyping/Textures/T_GridChecker_A.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/DiarImport/Maps/FirstPersonMap_2/1/9A/8FDL2HTONF7RSPV0D8FVIG.uasset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/DiarImport/Maps/FirstPersonMap_2/1/9H/ZY1VL36FVK1IZ139MFVFKW.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/__ExternalActors__/DiarImport/Maps/FirstPersonMap_2/1/9H/ZY1VL36FVK1IZ139MFVFKW.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/DiarImport/Maps/FirstPersonMap_2/2/02/YDWD30HRHT9X31BX38XY9C.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/__ExternalActors__/DiarImport/Maps/FirstPersonMap_2/2/02/YDWD30HRHT9X31BX38XY9C.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/DiarImport/Maps/FirstPersonMap_2/2/16/E2ZW62KXU8QTA46DENNDZL.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/__ExternalActors__/DiarImport/Maps/FirstPersonMap_2/2/16/E2ZW62KXU8QTA46DENNDZL.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/DiarImport/Maps/FirstPersonMap_2/2/2Z/H9351VGEYHY0HUJ2QOR701.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/__ExternalActors__/DiarImport/Maps/FirstPersonMap_2/2/2Z/H9351VGEYHY0HUJ2QOR701.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/DiarImport/Maps/FirstPersonMap_2/2/6J/PHFL7CXFHNG5DARMF5XE61.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/__ExternalActors__/DiarImport/Maps/FirstPersonMap_2/2/6J/PHFL7CXFHNG5DARMF5XE61.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/DiarImport/Maps/FirstPersonMap_2/2/D4/YGWPZCK5RCUGQAUZ9SSMMF.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/__ExternalActors__/DiarImport/Maps/FirstPersonMap_2/2/D4/YGWPZCK5RCUGQAUZ9SSMMF.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/DiarImport/Maps/FirstPersonMap_2/2/LV/JMQBTDH7MOQ7VPQAF21V12.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/__ExternalActors__/DiarImport/Maps/FirstPersonMap_2/2/LV/JMQBTDH7MOQ7VPQAF21V12.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/DiarImport/Maps/FirstPersonMap_2/2/PX/WYECS5N1O660XA1ULAZYCP.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/__ExternalActors__/DiarImport/Maps/FirstPersonMap_2/2/PX/WYECS5N1O660XA1ULAZYCP.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/DiarImport/Maps/FirstPersonMap_2/3/31/Q23C3ULSUY1W1XWQRL60QF.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/__ExternalActors__/DiarImport/Maps/FirstPersonMap_2/3/31/Q23C3ULSUY1W1XWQRL60QF.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/DiarImport/Maps/FirstPersonMap_2/3/AX/31K9TXFDBTN3IFICA1HDGI.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/__ExternalActors__/DiarImport/Maps/FirstPersonMap_2/3/AX/31K9TXFDBTN3IFICA1HDGI.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/DiarImport/Maps/FirstPersonMap_2/3/CQ/Z7A52UZN4KX0U3R1UJ45M8.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/__ExternalActors__/DiarImport/Maps/FirstPersonMap_2/3/CQ/Z7A52UZN4KX0U3R1UJ45M8.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/DiarImport/Maps/FirstPersonMap_2/3/SW/DOV64GSPPMM6X47UWMD0KQ.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/__ExternalActors__/DiarImport/Maps/FirstPersonMap_2/3/SW/DOV64GSPPMM6X47UWMD0KQ.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/DiarImport/Maps/FirstPersonMap_2/5/CB/NM67LMV4OYAP854MNAUXKM.uasset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/DiarImport/Maps/FirstPersonMap_2/6/ZY/RDJ2J6XY5UN31CZEQG85RS.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/__ExternalActors__/DiarImport/Maps/FirstPersonMap_2/6/ZY/RDJ2J6XY5UN31CZEQG85RS.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/DiarImport/Maps/FirstPersonMap_2/7/IN/Y25AC86IUV2MHZG81W6UTD.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/__ExternalActors__/DiarImport/Maps/FirstPersonMap_2/7/IN/Y25AC86IUV2MHZG81W6UTD.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/DiarImport/Maps/FirstPersonMap_2/8/K4/M0KZSH6WW2KFG1M09JI0XF.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/__ExternalActors__/DiarImport/Maps/FirstPersonMap_2/8/K4/M0KZSH6WW2KFG1M09JI0XF.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/DiarImport/Maps/FirstPersonMap_2/A/63/6PIMWSIHFNWZ2SKG4R8T7R.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/__ExternalActors__/DiarImport/Maps/FirstPersonMap_2/A/63/6PIMWSIHFNWZ2SKG4R8T7R.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/DiarImport/Maps/FirstPersonMap_2/A/7L/5DOQUWRY1YDGUQ05GPHSAC.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/__ExternalActors__/DiarImport/Maps/FirstPersonMap_2/A/7L/5DOQUWRY1YDGUQ05GPHSAC.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/DiarImport/Maps/FirstPersonMap_2/B/Q0/PW8DL47XM3NBEZ04FOUCJR.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/__ExternalActors__/DiarImport/Maps/FirstPersonMap_2/B/Q0/PW8DL47XM3NBEZ04FOUCJR.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/DiarImport/Maps/FirstPersonMap_2/B/XY/8L8XKMM9H5OJE3HOIY3QRL.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/__ExternalActors__/DiarImport/Maps/FirstPersonMap_2/B/XY/8L8XKMM9H5OJE3HOIY3QRL.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/DiarImport/Maps/FirstPersonMap_2/D/8U/MKE0LNJR2Y0SCX1N2K1PK2.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/__ExternalActors__/DiarImport/Maps/FirstPersonMap_2/D/8U/MKE0LNJR2Y0SCX1N2K1PK2.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/DiarImport/Maps/FirstPersonMap_2/D/JR/7UZAYNP9GH8IGZC3F1OA54.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/__ExternalActors__/DiarImport/Maps/FirstPersonMap_2/D/JR/7UZAYNP9GH8IGZC3F1OA54.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/DiarImport/Maps/FirstPersonMap_2/E/XL/R8J2ONY5MVM6EJ1A3SDF2V.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/__ExternalActors__/DiarImport/Maps/FirstPersonMap_2/E/XL/R8J2ONY5MVM6EJ1A3SDF2V.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Particles/RocketExlposion.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Particles/RocketExlposion.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/DiarImport/Maps/FirstPersonMap_2/2/PF/2X7SSJTVH11AN6C0LQHKLI.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/__ExternalActors__/DiarImport/Maps/FirstPersonMap_2/2/PF/2X7SSJTVH11AN6C0LQHKLI.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/DiarImport/Maps/FirstPersonMap_2/4/0X/6FT3UT10K6GVP4N19XG6C7.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/DiarImport/Maps/FirstPersonMap_2/4/8Y/LAXP47XBACRN8NVU9NVG93.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/__ExternalActors__/DiarImport/Maps/FirstPersonMap_2/4/8Y/LAXP47XBACRN8NVU9NVG93.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/DiarImport/Maps/FirstPersonMap_2/9/Z4/M0HCDO0SIURSYHZGMEPX2A.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/DiarImport/Maps/FirstPersonMap_2/A/3I/3X8803RLJ8QV0I34YE4AVD.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/__ExternalActors__/DiarImport/Maps/FirstPersonMap_2/A/3I/3X8803RLJ8QV0I34YE4AVD.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/Bit_Rush/EnemyLaserTurret.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Bit_Rush/EnemyLaserTurret.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Source/Bit_Rush/PlayerCharacter.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Bit_Rush/PlayerCharacter.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Source/Bit_Rush/PlayerCharacter.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Bit_Rush/PlayerCharacter.h" afterDir="false" />
     </list>
@@ -94,7 +75,7 @@
       <workItem from="1681419722498" duration="2913000" />
       <workItem from="1681462735530" duration="653000" />
       <workItem from="1681463436340" duration="93000" />
-      <workItem from="1681463586811" duration="3658000" />
+      <workItem from="1681463586811" duration="6253000" />
     </task>
     <servers />
   </component>

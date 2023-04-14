@@ -51,7 +51,7 @@ private:
 
 	UPROPERTY()
 	class UCameraComponent* CameraComp;
-
+	
 	bool ShouldSlide = false;
 	
 	bool ShouldLaunchSlide = false;
@@ -59,7 +59,7 @@ private:
 	UPROPERTY(BlueprintReadWrite,meta=(AllowPrivateAccess))
 	FVector SlideSurfNormal;
 
-	UPROPERTY(BlueprintReadWrite, meta=(AllowPrivateAccess))
+	UPROPERTY(EditAnywhere)
 	float CharacterSpeed = 600;
 	
 	class UCharacterMovementComponent* CharacterMovement;
