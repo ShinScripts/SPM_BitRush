@@ -3,6 +3,7 @@
 
 #include "PlayerCharacter.h"
 
+#include "AITypes.h"
 #include "GameFramework/CharacterMovementComponent.h"
 
 // Sets default values
@@ -35,7 +36,7 @@ void APlayerCharacter::Tick(float DeltaTime)
 	FloorHit = CharacterMovement->CurrentFloor.HitResult;
 	SlideSurfNormal = GetSlideSurface(FloorHit.Normal);
 	
-	if(ShouldSlide)
+	if(ShouldSlide && !CharacterMovement->IsFalling())
 	{
 		PhysSlide();
 	}
@@ -63,13 +64,13 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 void APlayerCharacter::MoveForward(float AxisValue)
 {
 	if(CanMove)
-		AddMovementInput(GetActorForwardVector() * AxisValue);
+		AddMovementInput(GetActorForwardVector() * AxisValue * CharacterSpeed );
 }
 
 void APlayerCharacter::MoveRight(float AxisValue)
 {
 	if(CanMove)
-		AddMovementInput(GetActorRightVector() * AxisValue);
+		AddMovementInput(GetActorRightVector() * AxisValue * CharacterSpeed);
 }
 
 void APlayerCharacter::Dash()
