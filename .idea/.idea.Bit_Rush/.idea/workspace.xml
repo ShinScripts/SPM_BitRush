@@ -7,7 +7,8 @@
   <component name="ChangeListManager">
     <list default="true" id="2a97e929-d2b1-4ad0-bc3e-9f94598a1990" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.Bit_Rush/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Bit_Rush/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.vsconfig" beforeDir="false" afterPath="$PROJECT_DIR$/.vsconfig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/Levels/AlexandersTestLvl/E/TV/SIFQVQ2E1CLHXJII3ZOLRP.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/__ExternalActors__/Levels/AlexandersTestLvl/E/TV/SIFQVQ2E1CLHXJII3ZOLRP.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/Bit_Rush/MovingPlatformActorComponent.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Bit_Rush/MovingPlatformActorComponent.cpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -161,7 +162,7 @@
       <updated>1681200102227</updated>
       <workItem from="1681200103304" duration="3000" />
       <workItem from="1681249565933" duration="443000" />
-      <workItem from="1681596365848" duration="4114000" />
+      <workItem from="1681596365848" duration="10176000" />
     </task>
     <servers />
   </component>

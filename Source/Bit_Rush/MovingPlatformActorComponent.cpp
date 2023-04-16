@@ -3,9 +3,6 @@
 #include "MovingPlatformActorComponent.h"
 #include "Math/UnitConversion.h"
 
-
-
-
 // Sets default values for this component's properties
 UMovingPlatformActorComponent::UMovingPlatformActorComponent()
 {
@@ -14,17 +11,8 @@ UMovingPlatformActorComponent::UMovingPlatformActorComponent()
  PrimaryComponentTick.bCanEverTick = true;
 
 
-
-
  // ...
 }
-
-
-
-
-
-
-
 
 // Called when the game starts
 void UMovingPlatformActorComponent::BeginPlay()
@@ -41,13 +29,6 @@ void UMovingPlatformActorComponent::BeginPlay()
   DefineVelocities();
 }
 
-
-
-
-
-
-
-
 // Called every frame
 void UMovingPlatformActorComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
@@ -61,17 +42,14 @@ void UMovingPlatformActorComponent::TickComponent(float DeltaTime, ELevelTick Ti
 
 
 
-
 FVector UMovingPlatformActorComponent::GetPos() // A more convenient way to get this actors location;
 {
  return GetOwner()->GetActorLocation();
 }
 
-
-
-
 void UMovingPlatformActorComponent::MovePlatform(float DeltaTime) // Moves object (ideally a platform) based on whether MovingXForward, MovingYForward and MovingZForward are true/false respectively.
 {
+  //DefineVelocities();
 	DefineMovingForward();
   FVector CurPos = GetPos();
   
@@ -121,9 +99,9 @@ void UMovingPlatformActorComponent::DefineVelocities() // Calculates velocities 
  float Distance = sqrt((DistanceVector.X*DistanceVector.X) + (DistanceVector.Y*DistanceVector.Y) + (DistanceVector.Z*DistanceVector.Z));
  float ETA = Distance/Speed;
   
- XVelocity = 100*(DistanceVector.X/ETA); // Since UE uses cm as its unit all velocities were * 100 to convert to m/s
- YVelocity = 100*(DistanceVector.Y/ETA);
- ZVelocity = 100*(DistanceVector.Z/ETA);
+ XVelocity = /*100*Speed*(DistanceVector.X/Distance);*/100*(DistanceVector.X/ETA); // Since UE uses cm as its unit all velocities were * 100 to convert to m/s
+ YVelocity = /*100*Speed*(DistanceVector.Y/Distance);*/100*(DistanceVector.Y/ETA);
+ ZVelocity = /*100*Speed*(DistanceVector.Z/Distance);*/100*(DistanceVector.Z/ETA);
 
  if(TargetPosition.X < StartPosition.X) // In case of StartPosition being < TargetPosition, Velocities for all axis are inverted since it would otherwise not work with the MovePlatform() function causing the object to fly of in the opposite directions and not reaching its target destination.
  {
