@@ -58,7 +58,7 @@ void AEnemyLaserTurret::Shoot()
 	Params.AddIgnoredActor(this);
 	// TODO add all enemies? Params.AddIgnoredActor()
 	GetWorld()->SweepSingleByChannel(Hit, LaserStart,LaserEnd, FQuat::Identity, ECC_GameTraceChannel1, FCollisionShape::MakeSphere(12.0f), Params);
-	DrawDebugLine(GetWorld(), LaserStart, Hit.Location,FColor::Red,true, 0, 0 , 10);
+	DrawDebugLine(GetWorld(), LaserStart, Hit.Location,FColor::Red, false, 1.f, 0, 10);
 
 	//	FColor(255,0,0),true , 0, 0, 1); 
 		
