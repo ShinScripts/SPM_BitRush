@@ -10,25 +10,7 @@
   <component name="ChangeListManager">
     <list default="true" id="a4dc6a02-eec9-4a77-ade6-4903ba3e158e" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.Bit_Rush/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Bit_Rush/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/BP_BitRushGameMode.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/BP_BitRushGameMode.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/BP_EMPGrenade.uasset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/BP_EnemyLaserTurret.uasset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/BP_EnemyRocketTurret.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/BP_EnemyRocketTurret.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/BP_GrenadeLauncher.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/BP_GrenadeLauncher.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/BP_JumpPad.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/BP_JumpPad.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/BP_PlayerCharacter.uasset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/BP_RocketProjectile.uasset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Crosshair.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Crosshair.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/DiarImport/Maps/FirstPersonMap_2.umap" beforeDir="false" afterPath="$PROJECT_DIR$/Content/DiarImport/Maps/FirstPersonMap_2.umap" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Particles/RocketExlposion.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Particles/RocketExlposion.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/DiarImport/Maps/FirstPersonMap_2/2/PF/2X7SSJTVH11AN6C0LQHKLI.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/__ExternalActors__/DiarImport/Maps/FirstPersonMap_2/2/PF/2X7SSJTVH11AN6C0LQHKLI.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/DiarImport/Maps/FirstPersonMap_2/4/0X/6FT3UT10K6GVP4N19XG6C7.uasset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/DiarImport/Maps/FirstPersonMap_2/4/8Y/LAXP47XBACRN8NVU9NVG93.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/__ExternalActors__/DiarImport/Maps/FirstPersonMap_2/4/8Y/LAXP47XBACRN8NVU9NVG93.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/DiarImport/Maps/FirstPersonMap_2/9/Z4/M0HCDO0SIURSYHZGMEPX2A.uasset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/DiarImport/Maps/FirstPersonMap_2/A/3I/3X8803RLJ8QV0I34YE4AVD.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/__ExternalActors__/DiarImport/Maps/FirstPersonMap_2/A/3I/3X8803RLJ8QV0I34YE4AVD.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/Bit_Rush/EnemyLaserTurret.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Bit_Rush/EnemyLaserTurret.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/Bit_Rush/PlayerCharacter.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Bit_Rush/PlayerCharacter.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/Bit_Rush/PlayerCharacter.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Bit_Rush/PlayerCharacter.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Blueprints/BP_PlayerCharacter.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Blueprints/BP_PlayerCharacter.uasset" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -58,9 +40,9 @@
   },
   &quot;keyToStringList&quot;: {
     &quot;rider.external.source.directories&quot;: [
-      &quot;C:\\Users\\shmo6177\\AppData\\Roaming\\JetBrains\\Rider2022.3\\resharper-host\\DecompilerCache&quot;,
-      &quot;C:\\Users\\shmo6177\\AppData\\Roaming\\JetBrains\\Rider2022.3\\resharper-host\\SourcesCache&quot;,
-      &quot;C:\\Users\\shmo6177\\AppData\\Local\\Symbols\\src&quot;
+      &quot;C:\\Users\\shin\\AppData\\Roaming\\JetBrains\\Rider2023.1\\resharper-host\\DecompilerCache&quot;,
+      &quot;C:\\Users\\shin\\AppData\\Roaming\\JetBrains\\Rider2023.1\\resharper-host\\SourcesCache&quot;,
+      &quot;C:\\Users\\shin\\AppData\\Local\\Symbols\\src&quot;
     ]
   }
 }</component>
@@ -76,6 +58,9 @@
       <workItem from="1681462735530" duration="653000" />
       <workItem from="1681463436340" duration="93000" />
       <workItem from="1681463586811" duration="6253000" />
+      <workItem from="1681491904765" duration="88000" />
+      <workItem from="1681725192898" duration="846000" />
+      <workItem from="1681731640775" duration="419000" />
     </task>
     <servers />
   </component>
