@@ -7,8 +7,8 @@
   <component name="ChangeListManager">
     <list default="true" id="2a97e929-d2b1-4ad0-bc3e-9f94598a1990" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.Bit_Rush/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Bit_Rush/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Bit_Rush.uproject" beforeDir="false" afterPath="$PROJECT_DIR$/Bit_Rush.uproject" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/Levels/AlexandersTestLvl/E/TV/SIFQVQ2E1CLHXJII3ZOLRP.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/__ExternalActors__/Levels/AlexandersTestLvl/E/TV/SIFQVQ2E1CLHXJII3ZOLRP.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/Bit_Rush/MovingPlatformActorComponent.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Bit_Rush/MovingPlatformActorComponent.cpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -23,21 +23,21 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   },
-  "keyToStringList": {
-    "rider.external.source.directories": [
-      "C:\\Users\\Kosmonavt\\AppData\\Roaming\\JetBrains\\Rider2022.3\\resharper-host\\DecompilerCache",
-      "C:\\Users\\Kosmonavt\\AppData\\Roaming\\JetBrains\\Rider2022.3\\resharper-host\\SourcesCache",
-      "C:\\Users\\Kosmonavt\\AppData\\Local\\Symbols\\src"
+  &quot;keyToStringList&quot;: {
+    &quot;rider.external.source.directories&quot;: [
+      &quot;C:\\Users\\Kosmonavt\\AppData\\Roaming\\JetBrains\\Rider2022.3\\resharper-host\\DecompilerCache&quot;,
+      &quot;C:\\Users\\Kosmonavt\\AppData\\Roaming\\JetBrains\\Rider2022.3\\resharper-host\\SourcesCache&quot;,
+      &quot;C:\\Users\\Kosmonavt\\AppData\\Local\\Symbols\\src&quot;
     ]
   }
-}]]></component>
+}</component>
   <component name="RunManager" selected="C++ Project.Bit_Rush">
     <configuration name="Bit_Rush" type="CppProject" factoryName="C++ Project">
       <configuration_1>
@@ -163,6 +163,7 @@
       <workItem from="1681200103304" duration="3000" />
       <workItem from="1681249565933" duration="443000" />
       <workItem from="1681596365848" duration="10176000" />
+      <workItem from="1681675519662" duration="4716000" />
     </task>
     <servers />
   </component>
