@@ -3,12 +3,9 @@
 
 #include "PlayerCharacter.h"
 
-#include <string>
-
-#include "Evaluation/IMovieSceneEvaluationHook.h"
+#include "AITypes.h"
+#include "Camera/CameraComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
-#include "Kismet/GameplayStatics.h"
-#include "PhysicalMaterials/PhysicalMaterial.h"
 
 // Sets default values
 APlayerCharacter::APlayerCharacter()
@@ -16,6 +13,7 @@ APlayerCharacter::APlayerCharacter()
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 	CharacterMovement = GetCharacterMovement();
+
 }
 
 
@@ -23,13 +21,16 @@ APlayerCharacter::APlayerCharacter()
 void APlayerCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+
 	CanMove = true;
 	CharacterMovement->BrakingFrictionFactor = 2;
 	CharacterMovement->GravityScale = 1;
 	CharacterMovement->FallingLateralFriction = 10;
+	CharacterMovement->AirControl = 20;
 	CharacterMovement->GroundFriction = 20;
 	CharacterMovement->BrakingDecelerationWalking = 2048;
 	CharacterMovement->AirControl = 20;
+	CameraComp = FindComponentByClass<UCameraComponent>();
 }
 
 // Called every frame
@@ -44,7 +45,16 @@ void APlayerCharacter::Tick(float DeltaTime)
 		PhysSlide();
 	}
 
-	//UE_LOG(LogTemp,Warning,TEXT("VELOCITY: %s"),*CharacterMovement->Velocity.ToString())
+	if(bCanGrapple)
+	{
+		CharacterMovement->Velocity = FVector::Zero();
+		CharacterMovement->SetMovementMode(MOVE_Flying);
+		UE_LOG(LogTemp,Warning,TEXT("HIT"));
+		float GrapplingSpeed = GrappleHit.Distance/GrapplingTime;
+		SetActorLocation(FMath::VInterpConstantTo(GetActorLocation(),GrappleHit.ImpactPoint, DeltaTime, GrapplingSpeed));
+		FTimerHandle TimerHandle;
+		GetWorldTimerManager().SetTimer(TimerHandle,this,&APlayerCharacter::StopGrapple,GrapplingTime,false);
+	}
 }
 
 // Called to bind functionality to input
@@ -62,22 +72,26 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 	PlayerInputComponent->BindAction(TEXT("Dash"),EInputEvent::IE_Pressed,this, &APlayerCharacter::Dash);
 	PlayerInputComponent->BindAction(TEXT("Slide"),EInputEvent::IE_Pressed,this, &APlayerCharacter::EnterSlide);
 	PlayerInputComponent->BindAction(TEXT("Slide"),EInputEvent::IE_Released,this,&APlayerCharacter::ExitSlide);
+	PlayerInputComponent->BindAction(TEXT("Grapple"),EInputEvent::IE_Pressed,this,&APlayerCharacter::CanGrapple);
 }
 
 void APlayerCharacter::MoveForward(float AxisValue)
 {
 	if(CanMove)
-		AddMovementInput(GetActorForwardVector() * AxisValue);
+		AddMovementInput(GetActorForwardVector() * AxisValue * CharacterSpeed );
 }
 
 void APlayerCharacter::MoveRight(float AxisValue)
 {
 	if(CanMove)
-		AddMovementInput(GetActorRightVector() * AxisValue);
+		AddMovementInput(GetActorRightVector() * AxisValue * CharacterSpeed);
 }
 
 void APlayerCharacter::Dash()
 {
+	
+	if(!CanDash) return;
+	
 	CanMove = false;
 	CharacterMovement->GravityScale = 0;
 	
@@ -92,17 +106,22 @@ void APlayerCharacter::Dash()
 		LaunchCharacter(GetVelocity().GetSafeNormal() * DashVelocity, false,true);
 	}
 	
+	CanDash = false;
+	
 	FTimerHandle TimeHandler;
-	GetWorldTimerManager().SetTimer(TimeHandler,this,&APlayerCharacter::StopVelocity,DashLength,false);
+	GetWorldTimerManager().SetTimer(TimeHandler,this,&APlayerCharacter::StopDash,DashLength,false);
+	
 }
 
-void APlayerCharacter::StopVelocity()
+void APlayerCharacter::StopDash()
 {
 	CharacterMovement->BrakingFrictionFactor = 2;
 	CharacterMovement->GravityScale = 1;
 	CharacterMovement->FallingLateralFriction = 10;
-	CharacterMovement->Velocity.Set(0,0,0);
 	CanMove = true;
+
+	FTimerHandle TimeHandler;
+	GetWorldTimerManager().SetTimer(TimeHandler,this, &APlayerCharacter::ResetDash,DashCooldown,false);
 }
 
 void APlayerCharacter::EnterSlide()
@@ -110,7 +129,6 @@ void APlayerCharacter::EnterSlide()
 	ShouldSlide = true;
 	CharacterMovement->GroundFriction = 0;
 	CharacterMovement->BrakingDecelerationWalking = 1000;
-	
 }
 
 void APlayerCharacter::ExitSlide()
@@ -119,7 +137,6 @@ void APlayerCharacter::ExitSlide()
 	CanMove = true;
 	CharacterMovement->GroundFriction = 20;
 	CharacterMovement->BrakingDecelerationWalking = 2048;
-	
 }
 
 void APlayerCharacter::PhysSlide()
@@ -132,7 +149,7 @@ void APlayerCharacter::PhysSlide()
 	}
 	else
 	{
-		CharacterMovement->AddForce(SlideSurfNormal);
+		CharacterMovement->AddForce(SlideSurfNormal * SlideVelocity + 2000);
 	}
 	CanMove = false;
 }
@@ -147,6 +164,34 @@ void APlayerCharacter::StopSlide()
 	{
 		ExitSlide();
 	}
+}
+
+void APlayerCharacter::ResetDash()
+{
+	CanDash = true;
+}
+
+void APlayerCharacter::CanGrapple()
+{
+	FVector TraceStart = CameraComp->GetComponentLocation();
+	FVector TraceEnd = TraceStart + CameraComp->GetForwardVector() * GrapplingHookRange;
+	FCollisionQueryParams QueryParams;
+	QueryParams.AddIgnoredActor(this);
+	DrawDebugLine(GetWorld(),TraceStart,TraceEnd,FColor::Red,false,0,0,5);
+	GetWorld()->SweepSingleByChannel(GrappleHit,TraceStart,TraceEnd,FQuat::Identity,ECC_GameTraceChannel1,FCollisionShape::MakeSphere(20),QueryParams);
+	if(GrappleHit.Component != nullptr && GrappleHit.Component->ComponentHasTag("GrapplePoint"))
+		bCanGrapple = true;
+	else
+	{
+		bCanGrapple = false;
+	}
+
+}
+
+void APlayerCharacter::StopGrapple()
+{
+	bCanGrapple = false;
+	CharacterMovement->SetMovementMode(MOVE_Walking);
 }
 
 FVector APlayerCharacter::GetSlideSurface(FVector FloorNormal)
