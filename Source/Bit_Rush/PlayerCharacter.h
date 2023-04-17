@@ -60,25 +60,39 @@ private:
 	FVector SlideSurfNormal;
 
 	UPROPERTY(EditAnywhere)
-	float CharacterSpeed = 600;
+	float CharacterSpeed = 100;
+
+	UPROPERTY(EditAnywhere)
+	float GrapplingHookRange = 1500;
+
+	UPROPERTY(EditAnywhere)
+	float GrapplingTime = 0.5;
+
+	bool bCanGrapple;
 	
 	class UCharacterMovementComponent* CharacterMovement;
 	
 	struct FHitResult FloorHit;
+
+	FHitResult GrappleHit;
 	//Functions
 	void MoveForward(float AxisValue);
 	void MoveRight(float AxisValue);
 
+	//Dash
 	void Dash();
-	void StopVelocity();
-	
+	void StopDash();
+	void ResetDash();
+
+	//Slide
 	void EnterSlide();
 	void ExitSlide();
 	void PhysSlide();
-
 	void StopSlide();
 
-	void ResetDash();
+	//Grapple
+	void CanGrapple();
+	void StopGrapple();
 	//void StopSlidingAfterSeconds();
 	FVector GetSlideSurface(FVector);
 };
