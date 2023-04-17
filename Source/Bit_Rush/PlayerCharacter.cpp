@@ -49,7 +49,9 @@ void APlayerCharacter::Tick(float DeltaTime)
 		CharacterMovement->Velocity = FVector::Zero();
 		CharacterMovement->SetMovementMode(MOVE_Flying);
 		UE_LOG(LogTemp,Warning,TEXT("HIT"));
+
 		float GrapplingTime = GrappleHit.Distance/GrapplingSpeed;
+
 		SetActorLocation(FMath::VInterpConstantTo(GetActorLocation(),GrappleHit.ImpactPoint, DeltaTime, GrapplingSpeed));
 		FTimerHandle TimerHandle;
 		GetWorldTimerManager().SetTimer(TimerHandle,this,&APlayerCharacter::StopGrapple,GrapplingTime,false);
