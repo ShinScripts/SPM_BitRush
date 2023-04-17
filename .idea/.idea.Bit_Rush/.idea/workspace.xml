@@ -8,28 +8,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a4dc6a02-eec9-4a77-ade6-4903ba3e158e" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.Bit_Rush/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Bit_Rush/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/BP_BitRushGameMode.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/BP_BitRushGameMode.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/BP_EMPGrenade.uasset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/BP_EnemyLaserTurret.uasset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/BP_EnemyRocketTurret.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/BP_EnemyRocketTurret.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/BP_GrenadeLauncher.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/BP_GrenadeLauncher.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/BP_JumpPad.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/BP_JumpPad.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/BP_PlayerCharacter.uasset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/BP_RocketProjectile.uasset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Crosshair.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Crosshair.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/DiarImport/Maps/FirstPersonMap_2.umap" beforeDir="false" afterPath="$PROJECT_DIR$/Content/DiarImport/Maps/FirstPersonMap_2.umap" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Particles/RocketExlposion.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Particles/RocketExlposion.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/DiarImport/Maps/FirstPersonMap_2/2/PF/2X7SSJTVH11AN6C0LQHKLI.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/__ExternalActors__/DiarImport/Maps/FirstPersonMap_2/2/PF/2X7SSJTVH11AN6C0LQHKLI.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/DiarImport/Maps/FirstPersonMap_2/4/0X/6FT3UT10K6GVP4N19XG6C7.uasset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/DiarImport/Maps/FirstPersonMap_2/4/8Y/LAXP47XBACRN8NVU9NVG93.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/__ExternalActors__/DiarImport/Maps/FirstPersonMap_2/4/8Y/LAXP47XBACRN8NVU9NVG93.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/DiarImport/Maps/FirstPersonMap_2/9/Z4/M0HCDO0SIURSYHZGMEPX2A.uasset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/DiarImport/Maps/FirstPersonMap_2/A/3I/3X8803RLJ8QV0I34YE4AVD.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/__ExternalActors__/DiarImport/Maps/FirstPersonMap_2/A/3I/3X8803RLJ8QV0I34YE4AVD.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/Bit_Rush/EnemyLaserTurret.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Bit_Rush/EnemyLaserTurret.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/Bit_Rush/PlayerCharacter.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Bit_Rush/PlayerCharacter.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/Bit_Rush/PlayerCharacter.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Bit_Rush/PlayerCharacter.h" afterDir="false" />
-    </list>
+    <list default="true" id="a4dc6a02-eec9-4a77-ade6-4903ba3e158e" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -46,24 +25,24 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;Shahin&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "git-widget-placeholder": "Shahin",
+    "node.js.detected.package.eslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "vue.rearranger.settings.migration": "true"
   },
-  &quot;keyToStringList&quot;: {
-    &quot;rider.external.source.directories&quot;: [
-      &quot;C:\\Users\\shmo6177\\AppData\\Roaming\\JetBrains\\Rider2022.3\\resharper-host\\DecompilerCache&quot;,
-      &quot;C:\\Users\\shmo6177\\AppData\\Roaming\\JetBrains\\Rider2022.3\\resharper-host\\SourcesCache&quot;,
-      &quot;C:\\Users\\shmo6177\\AppData\\Local\\Symbols\\src&quot;
+  "keyToStringList": {
+    "rider.external.source.directories": [
+      "C:\\Users\\shin\\AppData\\Roaming\\JetBrains\\Rider2023.1\\resharper-host\\DecompilerCache",
+      "C:\\Users\\shin\\AppData\\Roaming\\JetBrains\\Rider2023.1\\resharper-host\\SourcesCache",
+      "C:\\Users\\shin\\AppData\\Local\\Symbols\\src"
     ]
   }
-}</component>
+}]]></component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -76,6 +55,7 @@
       <workItem from="1681462735530" duration="653000" />
       <workItem from="1681463436340" duration="93000" />
       <workItem from="1681463586811" duration="6253000" />
+      <workItem from="1681491904765" duration="88000" />
     </task>
     <servers />
   </component>
