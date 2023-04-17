@@ -49,7 +49,7 @@ void APlayerCharacter::Tick(float DeltaTime)
 		CharacterMovement->Velocity = FVector::Zero();
 		CharacterMovement->SetMovementMode(MOVE_Flying);
 		UE_LOG(LogTemp,Warning,TEXT("HIT"));
-		float GrapplingSpeed = GrappleHit.Distance/GrapplingTime;
+		float GrapplingTime = GrappleHit.Distance/GrapplingSpeed;
 		SetActorLocation(FMath::VInterpConstantTo(GetActorLocation(),GrappleHit.ImpactPoint, DeltaTime, GrapplingSpeed));
 		FTimerHandle TimerHandle;
 		GetWorldTimerManager().SetTimer(TimerHandle,this,&APlayerCharacter::StopGrapple,GrapplingTime,false);
@@ -128,6 +128,7 @@ void APlayerCharacter::EnterSlide()
 	ShouldSlide = true;
 	CharacterMovement->GroundFriction = 0;
 	CharacterMovement->BrakingDecelerationWalking = 1000;
+	CharacterMovement->FallingLateralFriction = 0;
 }
 
 void APlayerCharacter::ExitSlide()
@@ -136,20 +137,21 @@ void APlayerCharacter::ExitSlide()
 	CanMove = true;
 	CharacterMovement->GroundFriction = 20;
 	CharacterMovement->BrakingDecelerationWalking = 2048;
+	CharacterMovement->FallingLateralFriction = 10;
 }
 
 void APlayerCharacter::PhysSlide()
 {
-	if(SlideSurfNormal.Equals(FVector::Zero()))
-	{
-		CharacterMovement->AddImpulse(FVector(GetVelocity().X,GetVelocity().Y,0).GetSafeNormal() *  5000);
-		FTimerHandle TimerHandle;
-		GetWorld()->GetTimerManager().SetTimer(TimerHandle,this,&APlayerCharacter::StopSlide,0.5f);
-	}
-	else
-	{
-		CharacterMovement->AddForce(SlideSurfNormal * SlideVelocity + 2000);
-	}
+	//if(SlideSurfNormal.Equals(FVector::Zero()))
+	//{
+		//CharacterMovement->AddImpulse(FVector(GetVelocity().X,GetVelocity().Y,0).GetSafeNormal() *  5000);
+		//FTimerHandle TimerHandle;
+		//GetWorld()->GetTimerManager().SetTimer(TimerHandle,this,&APlayerCharacter::StopSlide,0.5f);
+	//}
+	//else
+	//{
+		CharacterMovement->AddForce(SlideSurfNormal * SlideVelocity + 5000);
+	//}
 	CanMove = false;
 }
 
@@ -195,10 +197,6 @@ void APlayerCharacter::StopGrapple()
 
 FVector APlayerCharacter::GetSlideSurface(FVector FloorNormal)
 {
-	if(FloorNormal.Equals(GetActorUpVector()))
-	{
-		return FVector::Zero();
-	}
 		FVector crossVect = FVector::CrossProduct(FloorNormal,GetActorUpVector());
 	    FVector CrossCrossVect = FVector::CrossProduct(FloorNormal,crossVect.GetSafeNormal());
 		float Direction = 1 - FVector::DotProduct(FloorNormal,GetActorUpVector());
