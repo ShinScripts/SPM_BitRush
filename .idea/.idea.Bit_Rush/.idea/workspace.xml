@@ -7,11 +7,17 @@
   <component name="ChangeListManager">
     <list default="true" id="2a97e929-d2b1-4ad0-bc3e-9f94598a1990" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.Bit_Rush/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Bit_Rush/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.vsconfig" beforeDir="false" afterPath="$PROJECT_DIR$/.vsconfig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Config/DefaultEngine.ini" beforeDir="false" afterPath="$PROJECT_DIR$/Config/DefaultEngine.ini" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$PROJECT_DIR$/Source/Bit_Rush/MPlatformVInterpActorComponent.cpp" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Source/Bit_Rush/MPlatformVInterpActorComponent.h" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
@@ -26,13 +32,14 @@
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "WebServerToolWindowFactoryState": "false",
+    "settings.editor.selected.configurable": "preferences.keymap",
     "vue.rearranger.settings.migration": "true"
   },
   "keyToStringList": {
     "rider.external.source.directories": [
-      "C:\\Users\\lillt\\AppData\\Roaming\\JetBrains\\Rider2022.3\\resharper-host\\DecompilerCache",
-      "C:\\Users\\lillt\\AppData\\Roaming\\JetBrains\\Rider2022.3\\resharper-host\\SourcesCache",
-      "C:\\Users\\lillt\\AppData\\Local\\Symbols\\src"
+      "C:\\Users\\alkr8077\\AppData\\Roaming\\JetBrains\\Rider2022.3\\resharper-host\\DecompilerCache",
+      "C:\\Users\\alkr8077\\AppData\\Roaming\\JetBrains\\Rider2022.3\\resharper-host\\SourcesCache",
+      "C:\\Users\\alkr8077\\AppData\\Local\\Symbols\\src"
     ]
   }
 }]]></component>
@@ -160,6 +167,12 @@
       <updated>1681200102227</updated>
       <workItem from="1681200103304" duration="3000" />
       <workItem from="1681249565933" duration="443000" />
+      <workItem from="1681717574353" duration="740000" />
+      <workItem from="1681719644059" duration="565000" />
+      <workItem from="1681720234486" duration="14000" />
+      <workItem from="1681720278270" duration="5723000" />
+      <workItem from="1681726220317" duration="6336000" />
+      <workItem from="1681732637549" duration="11051000" />
     </task>
     <servers />
   </component>
