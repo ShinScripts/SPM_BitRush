@@ -66,7 +66,7 @@ private:
 	float GrapplingHookRange = 1500;
 
 	UPROPERTY(EditAnywhere)
-	float GrapplingTime = 0.5;
+	float GrapplingSpeed = 3000;
 
 	bool bCanGrapple;
 	
