@@ -10,7 +10,9 @@
   <component name="ChangeListManager">
     <list default="true" id="a4dc6a02-eec9-4a77-ade6-4903ba3e158e" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.Bit_Rush/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Bit_Rush/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Blueprints/BP_JumpPad.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Blueprints/BP_JumpPad.uasset" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Content/Blueprints/BP_PlayerCharacter.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Blueprints/BP_PlayerCharacter.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/Shahin_Sandbox/E/WF/XREERG6K89B8XUI6GZQKGI.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/__ExternalActors__/Shahin_Sandbox/E/WF/XREERG6K89B8XUI6GZQKGI.uasset" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -67,6 +69,9 @@
       <workItem from="1681753030921" duration="584000" />
       <workItem from="1681778697724" duration="705000" />
       <workItem from="1681813411162" duration="2707000" />
+      <workItem from="1681818630337" duration="4000" />
+      <workItem from="1681821421362" duration="596000" />
+      <workItem from="1681840899666" duration="319000" />
     </task>
     <servers />
   </component>
