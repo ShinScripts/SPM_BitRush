@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+
 #include "GameFramework/Character.h"
 #include "PlayerCharacter.generated.h"
 
@@ -14,6 +15,7 @@ class BIT_RUSH_API APlayerCharacter : public ACharacter
 public:
 	// Sets default values for this character's properties
 	APlayerCharacter();
+
 
 protected:
 	// Called when the game starts or when spawned
@@ -28,28 +30,69 @@ public:
 
 private:
 
-	//Variables
-
+	//Variable
 	UPROPERTY(EditAnywhere)
-	UCapsuleComponent* CapsulComp;
-
-	UPROPERTY(EditAnywhere)
-	float SlideVelocity = 1000;
+	float SlideVelocity = 2000;
 	
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta=(AllowPrivateAccess))
 	bool CanMove;
 
+	// Dash
 	UPROPERTY(EditAnywhere)
 	float DashVelocity = 2000;
+	
+	UPROPERTY(EditAnywhere)
+	float DashLength = 0.15;
+
+	bool CanDash = true;
 
 	UPROPERTY(EditAnywhere)
-	bool HasSlided = false;
+	float DashCooldown = 1;
+
+	UPROPERTY()
+	class UCameraComponent* CameraComp;
 	
+	bool ShouldSlide = false;
+	
+	bool ShouldLaunchSlide = false;
+
+	UPROPERTY(BlueprintReadWrite,meta=(AllowPrivateAccess))
+	FVector SlideSurfNormal;
+
+	UPROPERTY(EditAnywhere)
+	float CharacterSpeed = 100;
+
+	UPROPERTY(EditAnywhere)
+	float GrapplingHookRange = 1500;
+
+	UPROPERTY(EditAnywhere)
+	float GrapplingSpeed = 3000;
+
+	bool bCanGrapple;
+	
+	class UCharacterMovementComponent* CharacterMovement;
+	
+	struct FHitResult FloorHit;
+
+	FHitResult GrappleHit;
 	//Functions
 	void MoveForward(float AxisValue);
 	void MoveRight(float AxisValue);
-	void Slide();
-	void SetShouldDash();
+
+	//Dash
 	void Dash();
-	void ResetSlide();
+	void StopDash();
+	void ResetDash();
+
+	//Slide
+	void EnterSlide();
+	void ExitSlide();
+	void PhysSlide();
+	void StopSlide();
+
+	//Grapple
+	void CanGrapple();
+	void StopGrapple();
+	//void StopSlidingAfterSeconds();
+	FVector GetSlideSurface(FVector);
 };
