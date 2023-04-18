@@ -5,11 +5,7 @@
     <projectFile>Intermediate/ProjectFiles/UE5.vcxproj</projectFile>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2a97e929-d2b1-4ad0-bc3e-9f94598a1990" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.Bit_Rush/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Bit_Rush/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/Bit_Rush/MPlatformVInterpActorComponent.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Bit_Rush/MPlatformVInterpActorComponent.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/Bit_Rush/MPlatformVInterpActorComponent.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Bit_Rush/MPlatformVInterpActorComponent.h" afterDir="false" />
-    </list>
+    <list default="true" id="2a97e929-d2b1-4ad0-bc3e-9f94598a1990" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -18,6 +14,7 @@
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
+  <component name="MetaFilesCheckinStateConfiguration" checkMetaFiles="false" />
   <component name="ProjectId" id="2OGwCsb6f548MDBmlQwFDWNHNxt" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
@@ -171,6 +168,7 @@
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
+  <component name="UnityCheckinConfiguration" checkUnsavedScenes="false" />
   <component name="UnityUnitTestConfiguration" currentTestLauncher="NUnit" />
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
