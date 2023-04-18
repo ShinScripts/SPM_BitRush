@@ -1,6 +1,9 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "MPlatformVInterpActorComponent.h"
+
+#include "VectorTypes.h"
+#include "EntitySystem/MovieSceneEntitySystemRunner.h"
 #include "Math/UnitConversion.h"
 
 // Sets default values for this component's properties
@@ -9,10 +12,10 @@ UMPlatformVInterpActorComponent::UMPlatformVInterpActorComponent()
  // Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
  // off to improve performance if you don't need them.
  PrimaryComponentTick.bCanEverTick = true;
-  Parent = GetOwner();
-
-
+  //Parent = GetOwner();
+ 
  // ...
+	
 }
 
 // Called when the game starts
@@ -20,14 +23,13 @@ void UMPlatformVInterpActorComponent::BeginPlay()
 {
  Super::BeginPlay();
 
-
-
-
  // Do this:
-  //MovingForward = true;
-  //DefineMovingForward();
-  //StartPosition = GetOwner()->GetActorLocation();
-  //DefineVelocities();
+	DefStartPos = GetPos();
+	DefTargetPos = TargetActor->GetActorLocation();
+	StartPosition = GetPos();
+	TargetPosition = TargetActor->GetActorLocation();
+
+	HideActor(TargetActor, ActorVisible, ActorPhysicsEnabled);
 }
 
 // Called every frame
@@ -37,7 +39,7 @@ void UMPlatformVInterpActorComponent::TickComponent(float DeltaTime, ELevelTick 
 
 
  // Do this:
-  //DefineMovingForward();
+	//TargetPosition = TargetActor->GetActorLocation();
   MovePlatform(DeltaTime);
 }
 
@@ -50,153 +52,116 @@ FVector UMPlatformVInterpActorComponent::GetPos() // A more convenient way to ge
 
 void UMPlatformVInterpActorComponent::MovePlatform(float DeltaTime) // Moves object (ideally a platform) based on whether MovingXForward, MovingYForward and MovingZForward are true/false respectively.
 {
-  //DefineVelocities();
-	//DefineMovingForward();
-  FVector CurPos = GetPos();
-
   if(!TargetActor)
   {
     return;
   }
-	/*float NewX = 0;
-	float NewY = 0;
-	float NewZ = 0;
-  
-  	if(MovingXForward)
-  	{
-  	   NewX = CurPos.X + XVelocity*DeltaTime;
-  	}
-	else if(!MovingXForward)
+	if(!EaseIn)
 	{
-	  NewX = CurPos.X - XVelocity*DeltaTime;
+		if(ReciprocatingPlatform)
+           {
+         	ConstantReciprocatingMove();
+          }
+        	else
+        	{
+        		StartPosition = DefStartPos;
+        		TargetPosition = DefTargetPos;
+        	}
+	}
+	else
+	{
+		if(ReciprocatingPlatform)
+		{
+			EaseInReciprocatingMove();
+		}
+		else
+		{
+			StartPosition = DefStartPos;
+			TargetPosition = DefTargetPos;
+		}
+	}
+ 
+	GetOwner()->SetActorLocation(GetNewPos(DeltaTime));
+}
+
+FVector UMPlatformVInterpActorComponent::GetNewPos(float DeltaTime)
+{
+	FVector NewPos;
+
+	if(EaseIn)
+	{
+		NewPos = FVector(FMath::VInterpTo(GetPos(), /*TargetActor->GetActorLocation()*/TargetPosition, DeltaTime, Speed)); 
+	}
+	else
+	{
+		NewPos = FVector(FMath::VInterpConstantTo(GetPos(), /*TargetActor->GetActorLocation()*/TargetPosition, DeltaTime, Speed*100)); // multiplied by a factor of 100 because UE uses cm as their main unit apparently so it was done to get speed in m/s.
 	}
 
-	if(MovingYForward)
-  	{
-      NewY = CurPos.Y + YVelocity*DeltaTime;
-  	}
-	else if(!MovingYForward)
+	return NewPos;
+}
+
+void UMPlatformVInterpActorComponent::ConstantReciprocatingMove()
+{
+	/*float MoveDistance = FVector::Dist(StartPosition, TargetPosition);
+	 float DistanceMoved = FVector::Dist(StartPosition, GetPos());*/
+	float DistanceToTarget = FVector::Dist(TargetPosition, GetPos());
+	
+	if(DistanceToTarget <= 0 && TargetPosition != DefStartPos)
 	{
-	  NewY = CurPos.Y - YVelocity*DeltaTime;
+		StartPosition = DefTargetPos;
+		TargetPosition = DefStartPos;
+ 		
+		//Speed = -Speed;
+		//TargetActor->GetOwner()->SetActorLocation(DefStartPos);
+		//StartPosition = DefStartPos;
 	}
-
-	if(MovingZForward)
-  	{
-      NewZ = CurPos.Z + ZVelocity*DeltaTime;
-  	}
-	else if(!MovingZForward)
+	else if(DistanceToTarget <= 0 && TargetPosition != DefTargetPos)
 	{
-	  NewZ = CurPos.Z - ZVelocity*DeltaTime;
-	}*/
+		StartPosition = DefStartPos;
+		TargetPosition = DefTargetPos;
+		//TargetActor->GetOwner()->SetActorLocation(DefTargetPos);
+		//StartPosition = DefTargetPos;
+	}
+}
 
-  FVector NewPos = FVector(/*NewX,NewY,NewZ*/FMath::VInterpTo(CurPos, TargetActor->GetActorLocation(), DeltaTime, Speed));
-  
-	GetOwner()->SetActorLocation(NewPos);
+void UMPlatformVInterpActorComponent::EaseInReciprocatingMove()
+{
+	/*float MoveDistance = FVector::Dist(StartPosition, TargetPosition);
+	 float DistanceMoved = FVector::Dist(StartPosition, GetPos());*/
+	float DistanceToTarget = FVector::Dist(TargetPosition, GetPos());
+	
+	if(DistanceToTarget <= EaseInDistanceMargin && TargetPosition != DefStartPos)
+	{
+		StartPosition = DefTargetPos;
+		TargetPosition = DefStartPos;
+ 		
+		//Speed = -Speed;
+		//TargetActor->GetOwner()->SetActorLocation(DefStartPos);
+		//StartPosition = DefStartPos;
+	}
+	else if(DistanceToTarget <= EaseInDistanceMargin && TargetPosition != DefTargetPos)
+	{
+		StartPosition = DefStartPos;
+		TargetPosition = DefTargetPos;
+		//TargetActor->GetOwner()->SetActorLocation(DefTargetPos);
+		//StartPosition = DefTargetPos;
+	}
+}
+
+void UMPlatformVInterpActorComponent::HideActor(AActor* Actor ,bool Visible, bool PhysicsActive)
+{
+	if(!Actor)
+	{
+		return;
+	}
+	
+	Actor->GetRootComponent()->SetVisibility(Visible);
+	if(!PhysicsActive)
+	{
+		Actor->GetRootComponent()->DestroyPhysicsState();
+	}
+	
 }
 
 
-/*void UMPlatformVInterpActorComponent::DefineVelocities() // Calculates velocities for XYZ (X-/Y-/ZVelocity) axis based on input forward vector speed (Speed), distance and estimated time of arrival (ETA) using basic physics and trigonoemtry formulas.
-{
-  //FVector CurPos = GetPos();
-  
- FVector DistanceVector = TargetPosition-StartPosition;
- float Distance = sqrt((DistanceVector.X*DistanceVector.X) + (DistanceVector.Y*DistanceVector.Y) + (DistanceVector.Z*DistanceVector.Z));
- float ETA = Distance/Speed;
-  
- XVelocity =100*(DistanceVector.X/ETA); // Since UE uses cm as its unit all velocities were * 100 to convert to m/s
- YVelocity =100*(DistanceVector.Y/ETA);
- ZVelocity =100*(DistanceVector.Z/ETA);
 
- if(TargetPosition.X < StartPosition.X) // In case of StartPosition being < TargetPosition, Velocities for all axis are inverted since it would otherwise not work with the MovePlatform() function causing the object to fly of in the opposite directions and not reaching its target destination.
- {
-   XVelocity *= -1;
- }
- if(TargetPosition.Y < StartPosition.Y)
- {
-   YVelocity *= -1;
- }
- if(TargetPosition.Z < StartPosition.Z)
- {
-   ZVelocity *= -1;
- }
-}
-
-void UMPlatformVInterpActorComponent::DefineMovingForward() // Sets bools MovingXForward, MovingYForward, MovingZForward to true/false when reaching TargetPosition/StartPosition for each respective axis when StartPosition.XYZ < TargetPosition.XYZ and inverse in the opposite case to  
-{
-  FVector CurPos = GetPos();
-
-  if(TargetPosition.X > StartPosition.X)
-  {
-    if(CurPos.X >= TargetPosition.X)
-    {
-      MovingXForward = false;
-    }
-    else if(CurPos.X < StartPosition.X)
-    {
-      MovingXForward = true;
-    }
-  }
-  else if(TargetPosition.X < StartPosition.X)
-  {
-
-    if(CurPos.X <= TargetPosition.X)
-    {
-      MovingXForward = true;
-    }
-    else if(CurPos.X > StartPosition.X)
-    {
-      MovingXForward = false;
-    }
-   
-  }
-
-  if(TargetPosition.Y > StartPosition.Y)
-  {
-	  if(CurPos.Y >= TargetPosition.Y)
-    {
-      MovingYForward = false;
-    }
-    else if(CurPos.Y < StartPosition.Y)
-    {
-      MovingYForward = true;
-    }
-  }
-  else if(TargetPosition.Y < StartPosition.Y)
-  {
-	  if(CurPos.Y <= TargetPosition.Y)
-    {
-      MovingYForward = true;
-    }
-      else if(CurPos.Y > StartPosition.Y)
-    {
-      MovingYForward = false;
-    }
-    
-  }
-  if(TargetPosition.Z > StartPosition.Z)
-  {
-
-    if(CurPos.Z >= TargetPosition.Z)
-    {
-      MovingZForward = false;
-    }
-    else if(CurPos.Z < StartPosition.Z)
-    {
-      MovingZForward = true;
-    }
-  }
-  else if(TargetPosition.Z < StartPosition.Z)
-  {
-
-    if(CurPos.Z <= TargetPosition.Z)
-    {
-      MovingZForward = true;
-    }
-    else if(CurPos.Z > StartPosition.Z)
-    {
-      MovingZForward = false;
-    }
-    
-  }
-
-}*/
