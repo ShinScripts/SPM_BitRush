@@ -31,4 +31,10 @@ void UDeflectorActorComponent::TickComponent(float DeltaTime, ELevelTick TickTyp
 
 	// ...
 }
+/*Pseudo code:
+*Check for projectiles in deflection hitbox.
+*Check for tag on overlapping projectiles.
+*Check if source is in view.
+*Destroy or deflect projectiles if all above are true.
+*/
 
