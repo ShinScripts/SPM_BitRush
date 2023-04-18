@@ -16,12 +16,11 @@ public:
 	// Sets default values for this character's properties
 	APlayerCharacter();
 
-
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-public:	
+public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
@@ -29,18 +28,17 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 private:
-
 	//Variable
 	UPROPERTY(EditAnywhere)
 	float SlideVelocity = 2000;
-	
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta=(AllowPrivateAccess))
 	bool CanMove;
 
 	// Dash
 	UPROPERTY(EditAnywhere)
 	float DashVelocity = 2000;
-	
+
 	UPROPERTY(EditAnywhere)
 	float DashLength = 0.15;
 
@@ -51,12 +49,12 @@ private:
 
 	UPROPERTY()
 	class UCameraComponent* CameraComp;
-	
+
 	bool ShouldSlide = false;
-	
+
 	bool ShouldLaunchSlide = false;
 
-	UPROPERTY(BlueprintReadWrite,meta=(AllowPrivateAccess))
+	UPROPERTY(BlueprintReadWrite, meta=(AllowPrivateAccess))
 	FVector SlideSurfNormal;
 
 	UPROPERTY(EditAnywhere)
@@ -69,9 +67,9 @@ private:
 	float GrapplingSpeed = 3000;
 
 	bool bCanGrapple;
-	
+
 	class UCharacterMovementComponent* CharacterMovement;
-	
+
 	struct FHitResult FloorHit;
 
 	FHitResult GrappleHit;
@@ -87,12 +85,13 @@ private:
 	//Slide
 	void EnterSlide();
 	void ExitSlide();
-	void PhysSlide();
+	void PhysSlide(float DeltaTime);
 	void StopSlide();
 
 	//Grapple
 	void CanGrapple();
 	void StopGrapple();
+	void Grapple(float DeltaTime);
 	//void StopSlidingAfterSeconds();
 	FVector GetSlideSurface(FVector);
 };
