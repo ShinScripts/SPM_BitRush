@@ -32,7 +32,7 @@ private:
 
 	//Variable
 	UPROPERTY(EditAnywhere)
-	float SlideVelocity = 2000;
+	float SlideVelocity = 5000000;
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta=(AllowPrivateAccess))
 	bool CanMove;
@@ -46,13 +46,14 @@ private:
 
 	bool CanDash = true;
 
+	bool bIsDashing = false;
 	UPROPERTY(EditAnywhere)
 	float DashCooldown = 1;
 
 	UPROPERTY()
 	class UCameraComponent* CameraComp;
 	
-	bool ShouldSlide = false;
+	bool bShouldSlide = false;
 	
 	bool ShouldLaunchSlide = false;
 
@@ -68,7 +69,12 @@ private:
 	UPROPERTY(EditAnywhere)
 	float GrapplingSpeed = 3000;
 
+	UPROPERTY(EditAnywhere)
+	float DashSpeed = 2000;
+
 	bool bCanGrapple;
+
+	FVector DashDistance;
 	
 	class UCharacterMovementComponent* CharacterMovement;
 	
@@ -82,17 +88,19 @@ private:
 	//Dash
 	void Dash();
 	void StopDash();
+	void StartDash();
 	void ResetDash();
 
 	//Slide
 	void EnterSlide();
 	void ExitSlide();
-	void PhysSlide();
+	void PhysSlide(float DeltaTime);
 	void StopSlide();
 
 	//Grapple
 	void CanGrapple();
 	void StopGrapple();
+	void Grapple();
 	//void StopSlidingAfterSeconds();
 	FVector GetSlideSurface(FVector);
 };
