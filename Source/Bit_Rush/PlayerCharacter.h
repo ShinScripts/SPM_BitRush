@@ -35,14 +35,14 @@ private:
 	float SlideVelocity = 5000000;
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta=(AllowPrivateAccess))
-	bool CanMove;
+	bool bCanMove;
 
 	// Dash
 	UPROPERTY(EditAnywhere)
 	float DashVelocity = 2000;
 	
 	UPROPERTY(EditAnywhere)
-	float DashLength = 0.15;
+	float DashTime = 0.15;
 
 	bool CanDash = true;
 
@@ -61,16 +61,13 @@ private:
 	FVector SlideSurfNormal;
 
 	UPROPERTY(EditAnywhere)
-	float CharacterSpeed = 100;
+	float CharacterSpeed = 1;
 
 	UPROPERTY(EditAnywhere)
 	float GrapplingHookRange = 1500;
 
 	UPROPERTY(EditAnywhere)
 	float GrapplingSpeed = 3000;
-
-	UPROPERTY(EditAnywhere)
-	float DashSpeed = 2000;
 
 	bool bCanGrapple;
 

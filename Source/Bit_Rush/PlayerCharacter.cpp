@@ -22,12 +22,12 @@ void APlayerCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
-	CanMove = true;
-	CharacterMovement->BrakingFrictionFactor = 2;
+	bCanMove = true;
+	CharacterMovement->BrakingFrictionFactor = 0;
 	CharacterMovement->GravityScale = 1;
 	CharacterMovement->FallingLateralFriction = 10;
 	CharacterMovement->AirControl = 20;
-	CharacterMovement->GroundFriction = 20;
+	CharacterMovement->GroundFriction = 40;
 	CharacterMovement->BrakingDecelerationWalking = 2048;
 	CameraComp = FindComponentByClass<UCameraComponent>();
 }
@@ -75,50 +75,48 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 
 void APlayerCharacter::MoveForward(float AxisValue)
 {
-	if(CanMove)
-		AddMovementInput(GetActorForwardVector() * AxisValue * CharacterSpeed );
+	if(bCanMove)
+		AddMovementInput(GetActorForwardVector() * AxisValue);
 }
 
 void APlayerCharacter::MoveRight(float AxisValue)
 {
-	if(CanMove)
-		AddMovementInput(GetActorRightVector() * AxisValue * CharacterSpeed);
+	if(bCanMove)
+		AddMovementInput(GetActorRightVector() * AxisValue);
 }
 
 void APlayerCharacter::Dash()
 {
-	
-	if(!CanDash) return;
-
+	CanDash = false;
 	bIsDashing = true;
-
-	//CharacterMovement->SetMovementMode(MOVE_Flying);
-
+	float DashSpeed = (GetActorLocation() - DashDistance).Length()/DashTime;
 	SetActorLocation(FMath::VInterpConstantTo(GetActorLocation(), DashDistance + GetActorLocation(),GetWorld()->DeltaTimeSeconds,DashSpeed));
 	
-	//CanDash = false;
-	
-	FTimerHandle TimeHandler;
-	GetWorldTimerManager().SetTimer(TimeHandler,this,&APlayerCharacter::StopDash,0.1,false);
-	
+	FTimerHandle TimerHandle;
+	GetWorldTimerManager().SetTimer(TimerHandle,this,&APlayerCharacter::StopDash,DashTime,false);
 }
 
 void APlayerCharacter::StopDash()
 {
-	//CharacterMovement->BrakingFrictionFactor = 2;
-	//CharacterMovement->GravityScale = 1;
-	//CharacterMovement->FallingLateralFriction = 10;
-	//CanMove = true;
-	//CanDash = true;
-	CharacterMovement->SetMovementMode(MOVE_Walking);
 	bIsDashing = false;
+	FTimerHandle TimerHandle;
+	GetWorldTimerManager().SetTimer(TimerHandle,this,&APlayerCharacter::ResetDash,DashCooldown,false);
 }
 
 void APlayerCharacter::StartDash()
 {
+	if(!CanDash) return;
+	
 	bIsDashing = true;
-	DashDistance = CharacterMovement->Velocity.GetSafeNormal() * 2000;
+	CharacterMovement->Velocity.Z = 0;
+	DashDistance = CharacterMovement->Velocity.GetSafeNormal() * 20;
 	DashDistance.Z = 0;
+	
+}
+
+void APlayerCharacter::ResetDash()
+{
+	CanDash = true;
 }
 
 void APlayerCharacter::EnterSlide()
@@ -132,26 +130,16 @@ void APlayerCharacter::EnterSlide()
 void APlayerCharacter::ExitSlide()
 {
 	bShouldSlide = false;
-	CanMove = true;
+	bCanMove = true;
 	CharacterMovement->GroundFriction = 20;
 	CharacterMovement->BrakingDecelerationWalking = 2048;
 	CharacterMovement->FallingLateralFriction = 10;
-	CharacterMovement->BrakingFrictionFactor = 2;
 }
 
 void APlayerCharacter::PhysSlide(float DeltaTime)
 {
-	//if(SlideSurfNormal.Equals(FVector::Zero()))
-	//{
-		//CharacterMovement->AddImpulse(FVector(GetVelocity().X,GetVelocity().Y,0).GetSafeNormal() *  5000);
-		//FTimerHandle TimerHandle;
-		//GetWorld()->GetTimerManager().SetTimer(TimerHandle,this,&APlayerCharacter::StopSlide,0.5f);
-	//}
-	//else
-	//{
-		CharacterMovement->AddForce(SlideSurfNormal);
-	//}
-	CanMove = false;
+	CharacterMovement->AddForce(SlideSurfNormal);
+	bCanMove = false;
 }
 
 void APlayerCharacter::StopSlide()
@@ -171,10 +159,10 @@ void APlayerCharacter::CanGrapple()
 	GetWorld()->SweepSingleByChannel(GrappleHit,TraceStart,TraceEnd,FQuat::Identity,ECC_GameTraceChannel1,FCollisionShape::MakeSphere(20),QueryParams);
 	if(GrappleHit.Component != nullptr && GrappleHit.Component->ComponentHasTag("GrapplePoint"))
 		bCanGrapple = true;
-	else
-	{
-		bCanGrapple = false;
-	}
+	//else
+	//{
+	//	bCanGrapple = false;
+	//}
 
 }
 
@@ -191,7 +179,6 @@ void APlayerCharacter::Grapple()
 	UE_LOG(LogTemp,Warning,TEXT("HIT"));
 
 	float GrapplingTime = GrappleHit.Distance/GrapplingSpeed;
-
 	SetActorLocation(FMath::VInterpConstantTo(GetActorLocation(),GrappleHit.ImpactPoint, GetWorld()->DeltaTimeSeconds, GrapplingSpeed));
 	if((GetActorLocation() - GrappleHit.Location).Length() < 50)
 		StopGrapple();
