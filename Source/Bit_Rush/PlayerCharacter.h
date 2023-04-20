@@ -7,6 +7,28 @@
 #include "GameFramework/Character.h"
 #include "PlayerCharacter.generated.h"
 
+
+USTRUCT()
+struct FMovementData
+{
+	GENERATED_BODY()
+
+	void  SetCharacterMovement(UCharacterMovementComponent* InCharacterMovementComponent) const;
+	void SetDefaultValues();
+	void SetGroundFriction(float NewGroundFriction);
+	void SetGravityScale(float NewGravityScale);
+	void SetBrakingDecelerationWalking(float NewBrakingDecelerationWalking);
+	void SetFallingLateralFriction(float NewFallingLateralFriction);
+	
+	float GravityScale;
+	float BrakingFrictionFactor;
+	float FallingLateralFriction; 
+	float AirControl;
+	float GroundFriction; 
+	float BrakingDecelerationWalking;
+	float JumpForce;
+};
+
 UCLASS()
 class BIT_RUSH_API APlayerCharacter : public ACharacter
 {
@@ -33,6 +55,9 @@ private:
 	//Variable
 	UPROPERTY(EditAnywhere)
 	float SlideVelocity = 5000000;
+
+	UPROPERTY(VisibleAnywhere,BlueprintReadWrite,meta = (AllowPrivateAccess))
+	float CurrentTime;
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta=(AllowPrivateAccess))
 	bool bCanMove;
@@ -70,6 +95,8 @@ private:
 	float GrapplingSpeed = 3000;
 
 	bool bCanGrapple;
+
+	FMovementData MovementData;
 
 	FVector DashDistance;
 	
