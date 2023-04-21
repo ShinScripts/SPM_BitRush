@@ -23,19 +23,13 @@ struct FMovementData
 	UPROPERTY(BlueprintReadOnly)
 	float GravityScale;
 
-	UPROPERTY(BlueprintReadOnly)
 	float BrakingFrictionFactor;
 
 	UPROPERTY(BlueprintReadOnly)
 	float FallingLateralFriction;
 
-	UPROPERTY(BlueprintReadOnly)
 	float AirControl;
-
-	UPROPERTY(BlueprintReadOnly)
 	float GroundFriction;
-
-	UPROPERTY(BlueprintReadOnly)
 	float BrakingDecelerationWalking;
 
 	UPROPERTY(BlueprintReadOnly)
