@@ -14,6 +14,7 @@ struct FMovementData
 	GENERATED_BODY()
 
 	void SetCharacterMovement(UCharacterMovementComponent* InCharacterMovementComponent) const;
+	void SetCharacterHitBox(UCapsuleComponent* InCharacterMovementComponent) const;
 	void SetDefaultValues();
 	void SetGroundFriction(float NewGroundFriction);
 	void SetGravityScale(float NewGravityScale);
@@ -60,6 +61,9 @@ private:
 	//Variable
 	UPROPERTY(EditAnywhere)
 	float SlideVelocity = 5000000;
+
+	UPROPERTY(EditAnywhere)
+	float FlatSlideVelocity = 7000000;
 
 	UPROPERTY(VisibleAnywhere,BlueprintReadWrite,meta = (AllowPrivateAccess))
 	float CurrentTime;
@@ -109,8 +113,9 @@ private:
 	UCharacterMovementComponent* CharacterMovement;
 	
 	FHitResult FloorHit;
-
 	FHitResult GrappleHit;
+
+	UCapsuleComponent* CharacterHitBox;
 	//Functions
 	void MoveForward(float AxisValue);
 	void MoveRight(float AxisValue);

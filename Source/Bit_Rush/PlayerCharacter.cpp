@@ -5,6 +5,7 @@
 
 #include "AITypes.h"
 #include "Camera/CameraComponent.h"
+#include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 
 void FMovementData::SetCharacterMovement(UCharacterMovementComponent* InCharacterMovementComponent) const
@@ -65,6 +66,8 @@ void APlayerCharacter::BeginPlay()
 	Super::BeginPlay();
 	bCanMove = true;
 	CameraComp = FindComponentByClass<UCameraComponent>();
+	CharacterHitBox = FindComponentByClass<UCapsuleComponent>();
+	
 }
 
 // Called every frame
@@ -158,11 +161,18 @@ void APlayerCharacter::ResetDash()
 void APlayerCharacter::EnterSlide()
 {
 	bShouldSlide = true;
+	CharacterHitBox->SetCapsuleHalfHeight(CharacterHitBox->GetScaledCapsuleHalfHeight()/2);
 	MovementData.SetGroundFriction(0);
-
 	MovementData.SetGroundFriction(0);
 	MovementData.SetBrakingDecelerationWalking(1000);
 	MovementData.SetFallingLateralFriction(0);
+
+	
+	if(FloorHit.Normal.Equals(GetActorUpVector()))
+	{
+		CharacterMovement->AddImpulse(GetVelocity().GetSafeNormal() * FlatSlideVelocity * GetWorld()->DeltaTimeSeconds);
+	}
+		
 }
 
 void APlayerCharacter::ExitSlide()
@@ -170,6 +180,7 @@ void APlayerCharacter::ExitSlide()
 	bShouldSlide = false;
 	bCanMove = true;
 	MovementData.SetDefaultValues();
+	CharacterHitBox->SetCapsuleHalfHeight(CharacterHitBox->GetScaledCapsuleHalfHeight() * 2);
 }
 
 void APlayerCharacter::PhysSlide(float DeltaTime)
