@@ -8,24 +8,31 @@
 #include "PlayerCharacter.generated.h"
 
 
-USTRUCT()
+USTRUCT(BlueprintType)
 struct FMovementData
 {
 	GENERATED_BODY()
 
-	void  SetCharacterMovement(UCharacterMovementComponent* InCharacterMovementComponent) const;
+	void SetCharacterMovement(UCharacterMovementComponent* InCharacterMovementComponent) const;
 	void SetDefaultValues();
 	void SetGroundFriction(float NewGroundFriction);
 	void SetGravityScale(float NewGravityScale);
 	void SetBrakingDecelerationWalking(float NewBrakingDecelerationWalking);
 	void SetFallingLateralFriction(float NewFallingLateralFriction);
-	
+
+	UPROPERTY(BlueprintReadOnly)
 	float GravityScale;
+
 	float BrakingFrictionFactor;
-	float FallingLateralFriction; 
+
+	UPROPERTY(BlueprintReadOnly)
+	float FallingLateralFriction;
+
 	float AirControl;
-	float GroundFriction; 
+	float GroundFriction;
 	float BrakingDecelerationWalking;
+
+	UPROPERTY(BlueprintReadOnly)
 	float JumpForce;
 };
 
@@ -37,7 +44,6 @@ class BIT_RUSH_API APlayerCharacter : public ACharacter
 public:
 	// Sets default values for this character's properties
 	APlayerCharacter();
-
 
 protected:
 	// Called when the game starts or when spawned
@@ -51,7 +57,6 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 private:
-
 	//Variable
 	UPROPERTY(EditAnywhere)
 	float SlideVelocity = 5000000;
@@ -96,13 +101,14 @@ private:
 
 	bool bCanGrapple;
 
+	UPROPERTY(BlueprintReadOnly, meta=(AllowPrivateAccess))
 	FMovementData MovementData;
 
 	FVector DashDistance;
 	
-	class UCharacterMovementComponent* CharacterMovement;
+	UCharacterMovementComponent* CharacterMovement;
 	
-	struct FHitResult FloorHit;
+	FHitResult FloorHit;
 
 	FHitResult GrappleHit;
 	//Functions
