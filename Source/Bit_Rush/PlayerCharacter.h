@@ -16,10 +16,10 @@ struct FMovementData
 	void SetCharacterMovement(UCharacterMovementComponent* InCharacterMovementComponent) const;
 	void SetCharacterHitBox(UCapsuleComponent* InCharacterMovementComponent) const;
 	void SetDefaultValues();
-	void SetGroundFriction(float NewGroundFriction);
-	void SetGravityScale(float NewGravityScale);
-	void SetBrakingDecelerationWalking(float NewBrakingDecelerationWalking);
-	void SetFallingLateralFriction(float NewFallingLateralFriction);
+	void SetGroundFriction(const float NewGroundFriction);
+	void SetGravityScale(const float NewGravityScale);
+	void SetBrakingDecelerationWalking(const float NewBrakingDecelerationWalking);
+	void SetFallingLateralFriction(const float NewFallingLateralFriction);
 
 	UPROPERTY(BlueprintReadOnly)
 	float GravityScale;
@@ -117,8 +117,8 @@ private:
 
 	UCapsuleComponent* CharacterHitBox;
 	//Functions
-	void MoveForward(float AxisValue);
-	void MoveRight(float AxisValue);
+	void MoveForward(const float AxisValue);
+	void MoveRight(const float AxisValue);
 
 	//Dash
 	void Dash();
@@ -137,5 +137,5 @@ private:
 	void StopGrapple();
 	void Grapple();
 	//void StopSlidingAfterSeconds();
-	FVector GetSlideSurface(FVector);
+	FVector GetSlideSurface(const FVector& FloorNormal);
 };
