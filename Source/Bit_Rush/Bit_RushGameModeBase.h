@@ -13,5 +13,7 @@ UCLASS()
 class BIT_RUSH_API ABit_RushGameModeBase : public AGameModeBase
 {
 	GENERATED_BODY()
-	
+
+public:
+	virtual void StartPlay() override;
 };
