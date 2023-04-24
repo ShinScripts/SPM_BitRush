@@ -6,7 +6,9 @@
 #include "AITypes.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
+#include "Components/SplineComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Engine/World.h"
 
 void FMovementData::SetCharacterMovement(UCharacterMovementComponent* InCharacterMovementComponent) const
 {
@@ -58,6 +60,8 @@ APlayerCharacter::APlayerCharacter()
 	
 	CharacterMovement = GetCharacterMovement();
 	MovementData.SetDefaultValues();
+
+
 }
 
 
@@ -94,6 +98,10 @@ void APlayerCharacter::Tick(float DeltaTime)
 	{
 		Grapple();
 	}
+
+	//Reduces players time left
+	CurrentTime -= GetWorld()->GetDeltaSeconds();
+	UE_LOG(LogTemp, Warning, TEXT("Time %f"), CurrentTime);
 }
 
 // Called to bind functionality to input
@@ -160,6 +168,8 @@ void APlayerCharacter::ResetDash()
 {
 	CanDash = true;
 }
+
+
 
 void APlayerCharacter::EnterSlide()
 {
@@ -243,6 +253,18 @@ FVector APlayerCharacter::GetSlideSurface(const FVector& FloorNormal)
 	return FloorInfluence;
 }
 
+//Overrides TakeDamage
+float APlayerCharacter::TakeDamage
+(
+	float DamageAmount,
+	struct FDamageEvent const & DamageEvent,
+	class AController * EventInstigator,
+	AActor * DamageCauser
+)
+{
+	CurrentTime -= DamageAmount;
+	return CurrentTime;
+}
 
 
 
