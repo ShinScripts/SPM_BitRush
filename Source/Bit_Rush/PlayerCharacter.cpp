@@ -5,6 +5,7 @@
 
 #include "AITypes.h"
 #include "Camera/CameraComponent.h"
+#include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 
 void FMovementData::SetCharacterMovement(UCharacterMovementComponent* InCharacterMovementComponent) const
@@ -29,22 +30,22 @@ void FMovementData::SetDefaultValues()
 	BrakingDecelerationWalking = 3000;
 }
 
-void FMovementData::SetGroundFriction(float NewGroundFriction)
+void FMovementData::SetGroundFriction(const float NewGroundFriction)
 {
 	GroundFriction = NewGroundFriction;
 }
 
-void FMovementData::SetGravityScale(float NewGravityScale)
+void FMovementData::SetGravityScale(const float NewGravityScale)
 {
 	GravityScale = NewGravityScale;
 }
 
-void FMovementData::SetBrakingDecelerationWalking(float NewBrakingDecelerationWalking)
+void FMovementData::SetBrakingDecelerationWalking(const float NewBrakingDecelerationWalking)
 {
 	BrakingDecelerationWalking = NewBrakingDecelerationWalking;
 }
 
-void FMovementData::SetFallingLateralFriction(float NewFallingLateralFriction)
+void FMovementData::SetFallingLateralFriction(const float NewFallingLateralFriction)
 {
 	FallingLateralFriction = NewFallingLateralFriction;
 }
@@ -54,6 +55,7 @@ APlayerCharacter::APlayerCharacter()
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+	
 	CharacterMovement = GetCharacterMovement();
 	MovementData.SetDefaultValues();
 }
@@ -63,14 +65,17 @@ APlayerCharacter::APlayerCharacter()
 void APlayerCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+	
 	bCanMove = true;
 	CameraComp = FindComponentByClass<UCameraComponent>();
+	CharacterHitBox = FindComponentByClass<UCapsuleComponent>();
 }
 
 // Called every frame
 void APlayerCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+	
 	MovementData.SetCharacterMovement(CharacterMovement);
 	FloorHit = CharacterMovement->CurrentFloor.HitResult;
 	SlideSurfNormal = GetSlideSurface(FloorHit.Normal);
@@ -95,6 +100,7 @@ void APlayerCharacter::Tick(float DeltaTime)
 void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
+	
 	//Binding Axis
 	PlayerInputComponent->BindAxis(TEXT("MoveForward"),this, &APlayerCharacter::MoveForward);
 	PlayerInputComponent->BindAxis(TEXT("MoveRight"),this, &APlayerCharacter::MoveRight);
@@ -109,13 +115,13 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 	PlayerInputComponent->BindAction(TEXT("Grapple"),EInputEvent::IE_Pressed,this,&APlayerCharacter::CanGrapple);
 }
 
-void APlayerCharacter::MoveForward(float AxisValue)
+void APlayerCharacter::MoveForward(const float AxisValue)
 {
 	if(bCanMove)
 		AddMovementInput(GetActorForwardVector() * AxisValue);
 }
 
-void APlayerCharacter::MoveRight(float AxisValue)
+void APlayerCharacter::MoveRight(const float AxisValue)
 {
 	if(bCanMove)
 		AddMovementInput(GetActorRightVector() * AxisValue);
@@ -125,7 +131,7 @@ void APlayerCharacter::Dash()
 {
 	CanDash = false;
 	bIsDashing = true;
-	float DashSpeed = (GetActorLocation() - DashDistance).Length()/DashTime;
+	const float DashSpeed = (GetActorLocation() - DashDistance).Length()/DashTime;
 	SetActorLocation(FMath::VInterpConstantTo(GetActorLocation(), DashDistance + GetActorLocation(),GetWorld()->DeltaTimeSeconds,DashSpeed));
 	
 	FTimerHandle TimerHandle;
@@ -158,11 +164,17 @@ void APlayerCharacter::ResetDash()
 void APlayerCharacter::EnterSlide()
 {
 	bShouldSlide = true;
+	CharacterHitBox->SetCapsuleHalfHeight(CharacterHitBox->GetScaledCapsuleHalfHeight()/2);
 	MovementData.SetGroundFriction(0);
-
 	MovementData.SetGroundFriction(0);
 	MovementData.SetBrakingDecelerationWalking(1000);
 	MovementData.SetFallingLateralFriction(0);
+	
+	if(FloorHit.Normal.Equals(GetActorUpVector()))
+	{
+		CharacterMovement->AddImpulse(GetVelocity().GetSafeNormal() * FlatSlideVelocity * GetWorld()->DeltaTimeSeconds);
+	}
+		
 }
 
 void APlayerCharacter::ExitSlide()
@@ -170,6 +182,7 @@ void APlayerCharacter::ExitSlide()
 	bShouldSlide = false;
 	bCanMove = true;
 	MovementData.SetDefaultValues();
+	CharacterHitBox->SetCapsuleHalfHeight(CharacterHitBox->GetScaledCapsuleHalfHeight() * 2);
 }
 
 void APlayerCharacter::PhysSlide(float DeltaTime)
@@ -187,12 +200,15 @@ void APlayerCharacter::StopSlide()
 
 void APlayerCharacter::CanGrapple()
 {
-	FVector TraceStart = CameraComp->GetComponentLocation();
-	FVector TraceEnd = TraceStart + CameraComp->GetForwardVector() * GrapplingHookRange;
+	const FVector TraceStart = CameraComp->GetComponentLocation();
+	const FVector TraceEnd = TraceStart + CameraComp->GetForwardVector() * GrapplingHookRange;
+	
 	FCollisionQueryParams QueryParams;
 	QueryParams.AddIgnoredActor(this);
+	
 	DrawDebugLine(GetWorld(),TraceStart,TraceEnd,FColor::Red,false,0,0,5);
 	GetWorld()->SweepSingleByChannel(GrappleHit,TraceStart,TraceEnd,FQuat::Identity,ECC_GameTraceChannel1,FCollisionShape::MakeSphere(20),QueryParams);
+
 	if(GrappleHit.Component != nullptr && GrappleHit.Component->ComponentHasTag("GrapplePoint"))
 		bCanGrapple = true;
 }
@@ -214,16 +230,17 @@ void APlayerCharacter::Grapple()
 		StopGrapple();
 }
 
-FVector APlayerCharacter::GetSlideSurface(FVector FloorNormal)
+FVector APlayerCharacter::GetSlideSurface(const FVector& FloorNormal)
 {
 	if(FloorNormal.Equals(GetActorUpVector()))
 		return FVector::Zero();
 	
-		FVector crossVect = FVector::CrossProduct(FloorNormal,GetActorUpVector());
-	    FVector CrossCrossVect = FVector::CrossProduct(FloorNormal,crossVect.GetSafeNormal());
-		float Direction = 1 - FVector::DotProduct(FloorNormal,GetActorUpVector());
-		FVector FloorInfluence = (FMath::Clamp(Direction,0,1) * SlideVelocity) *  CrossCrossVect.GetSafeNormal();
-		return FloorInfluence;
+	const FVector CrossVector = FVector::CrossProduct(FloorNormal,GetActorUpVector());
+	const FVector CrossCrossVector = FVector::CrossProduct(FloorNormal,CrossVector.GetSafeNormal());
+	const float Direction = 1 - FVector::DotProduct(FloorNormal,GetActorUpVector());
+	const FVector FloorInfluence = FMath::Clamp(Direction,0,1) * SlideVelocity *  CrossCrossVector.GetSafeNormal();
+	
+	return FloorInfluence;
 }
 
 

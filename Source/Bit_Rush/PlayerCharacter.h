@@ -8,24 +8,32 @@
 #include "PlayerCharacter.generated.h"
 
 
-USTRUCT()
+USTRUCT(BlueprintType)
 struct FMovementData
 {
 	GENERATED_BODY()
 
-	void  SetCharacterMovement(UCharacterMovementComponent* InCharacterMovementComponent) const;
+	void SetCharacterMovement(UCharacterMovementComponent* InCharacterMovementComponent) const;
+	void SetCharacterHitBox(UCapsuleComponent* InCharacterMovementComponent) const;
 	void SetDefaultValues();
-	void SetGroundFriction(float NewGroundFriction);
-	void SetGravityScale(float NewGravityScale);
-	void SetBrakingDecelerationWalking(float NewBrakingDecelerationWalking);
-	void SetFallingLateralFriction(float NewFallingLateralFriction);
-	
+	void SetGroundFriction(const float NewGroundFriction);
+	void SetGravityScale(const float NewGravityScale);
+	void SetBrakingDecelerationWalking(const float NewBrakingDecelerationWalking);
+	void SetFallingLateralFriction(const float NewFallingLateralFriction);
+
+	UPROPERTY(BlueprintReadOnly)
 	float GravityScale;
+
 	float BrakingFrictionFactor;
-	float FallingLateralFriction; 
+
+	UPROPERTY(BlueprintReadOnly)
+	float FallingLateralFriction;
+
 	float AirControl;
-	float GroundFriction; 
+	float GroundFriction;
 	float BrakingDecelerationWalking;
+
+	UPROPERTY(BlueprintReadOnly)
 	float JumpForce;
 };
 
@@ -37,7 +45,6 @@ class BIT_RUSH_API APlayerCharacter : public ACharacter
 public:
 	// Sets default values for this character's properties
 	APlayerCharacter();
-
 
 protected:
 	// Called when the game starts or when spawned
@@ -51,10 +58,12 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 private:
-
 	//Variable
 	UPROPERTY(EditAnywhere)
 	float SlideVelocity = 5000000;
+
+	UPROPERTY(EditAnywhere)
+	float FlatSlideVelocity = 7000000;
 
 	UPROPERTY(VisibleAnywhere,BlueprintReadWrite,meta = (AllowPrivateAccess))
 	float CurrentTime;
@@ -96,18 +105,20 @@ private:
 
 	bool bCanGrapple;
 
+	UPROPERTY(BlueprintReadOnly, meta=(AllowPrivateAccess))
 	FMovementData MovementData;
 
 	FVector DashDistance;
 	
-	class UCharacterMovementComponent* CharacterMovement;
+	UCharacterMovementComponent* CharacterMovement;
 	
-	struct FHitResult FloorHit;
-
+	FHitResult FloorHit;
 	FHitResult GrappleHit;
+
+	UCapsuleComponent* CharacterHitBox;
 	//Functions
-	void MoveForward(float AxisValue);
-	void MoveRight(float AxisValue);
+	void MoveForward(const float AxisValue);
+	void MoveRight(const float AxisValue);
 
 	//Dash
 	void Dash();
@@ -126,5 +137,5 @@ private:
 	void StopGrapple();
 	void Grapple();
 	//void StopSlidingAfterSeconds();
-	FVector GetSlideSurface(FVector);
+	FVector GetSlideSurface(const FVector& FloorNormal);
 };
