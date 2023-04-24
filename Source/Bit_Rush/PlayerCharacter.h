@@ -138,4 +138,8 @@ private:
 	void Grapple();
 	//void StopSlidingAfterSeconds();
 	FVector GetSlideSurface(const FVector& FloorNormal);
+
+	UFUNCTION(BlueprintCallable)
+	virtual float TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator,
+	                         AActor* DamageCauser) override;
 };
