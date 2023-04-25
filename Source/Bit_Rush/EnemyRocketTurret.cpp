@@ -41,7 +41,11 @@ void AEnemyRocketTurret::Tick(float DeltaSeconds)
 void AEnemyRocketTurret::Shoot()
 {
 	const auto Rocket = GetWorld()->SpawnActor<ARocketProjectile>(RocketProjectileClass, ProjectileSpawnPoint->GetComponentLocation(), TurretTower->GetComponentRotation());
-	Rocket->SetOwner(this);
+
+	if (Rocket)
+	{
+		Rocket->SetOwner(this);
+	}
 }
 
 void AEnemyRocketTurret::Destroy()

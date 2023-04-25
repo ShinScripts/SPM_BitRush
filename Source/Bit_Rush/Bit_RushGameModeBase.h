@@ -18,6 +18,9 @@ class BIT_RUSH_API ABit_RushGameModeBase : public AGameModeBase
 public:
 	virtual void StartPlay() override;
 
+	UFUNCTION(BlueprintCallable)
+	void SendWebhook(const FString& Content);
+	
 private:
 	void OnResponseReceived(FHttpRequestPtr Request, FHttpResponsePtr Response, bool HasConnectedSuccessfully);
 	

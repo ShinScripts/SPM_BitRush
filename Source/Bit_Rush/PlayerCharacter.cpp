@@ -60,8 +60,7 @@ APlayerCharacter::APlayerCharacter()
 	
 	CharacterMovement = GetCharacterMovement();
 	MovementData.SetDefaultValues();
-
-
+	
 }
 
 
@@ -69,10 +68,12 @@ APlayerCharacter::APlayerCharacter()
 void APlayerCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-	
+	//HitBoxDefaultValue = CharacterHitBox->GetScaledCapsuleHalfHeight();
 	bCanMove = true;
 	CameraComp = FindComponentByClass<UCameraComponent>();
 	CharacterHitBox = FindComponentByClass<UCapsuleComponent>();
+	HitBoxDefaultValue = CharacterHitBox->GetScaledCapsuleHalfHeight();
+	CrouchHitBoxValue = HitBoxDefaultValue/2;
 }
 
 // Called every frame
@@ -86,9 +87,14 @@ void APlayerCharacter::Tick(float DeltaTime)
 	
 	if(bShouldSlide)
 	{
+		CharacterHitBox->SetCapsuleHalfHeight(FMath::FInterpTo(CharacterHitBox->GetScaledCapsuleHalfHeight(),CrouchHitBoxValue,DeltaTime,CrouchSpeed));
 		PhysSlide(DeltaTime);
 	}
-
+	else
+	{
+		CharacterHitBox->SetCapsuleHalfHeight(FMath::FInterpTo(CharacterHitBox->GetScaledCapsuleHalfHeight(),HitBoxDefaultValue,DeltaTime,CrouchSpeed));
+	}
+	
 	if(bIsDashing)
 	{
 		Dash();
@@ -101,7 +107,7 @@ void APlayerCharacter::Tick(float DeltaTime)
 
 	//Reduces players time left
 	CurrentTime -= GetWorld()->GetDeltaSeconds();
-	UE_LOG(LogTemp, Warning, TEXT("Time %f"), CurrentTime);
+	// UE_LOG(LogTemp, Warning, TEXT("Time %f"), CurrentTime);
 }
 
 // Called to bind functionality to input
@@ -174,7 +180,6 @@ void APlayerCharacter::ResetDash()
 void APlayerCharacter::EnterSlide()
 {
 	bShouldSlide = true;
-	CharacterHitBox->SetCapsuleHalfHeight(CharacterHitBox->GetScaledCapsuleHalfHeight()/2);
 	MovementData.SetGroundFriction(0);
 	MovementData.SetGroundFriction(0);
 	MovementData.SetBrakingDecelerationWalking(1000);
@@ -192,7 +197,6 @@ void APlayerCharacter::ExitSlide()
 	bShouldSlide = false;
 	bCanMove = true;
 	MovementData.SetDefaultValues();
-	CharacterHitBox->SetCapsuleHalfHeight(CharacterHitBox->GetScaledCapsuleHalfHeight() * 2);
 }
 
 void APlayerCharacter::PhysSlide(float DeltaTime)
