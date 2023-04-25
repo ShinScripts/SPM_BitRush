@@ -25,22 +25,24 @@ void AAppearingPlatforms::BeginPlay()
 {
 	Super::BeginPlay();
 
-	DisableActor(true);
+	HideActor(true);
 }
 
 // Called every frame
 void AAppearingPlatforms::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
 }
 
-void AAppearingPlatforms::DisableActor(const bool ShouldDisable)
+void AAppearingPlatforms::HideActor(const bool ShouldHide)
 {
 	// Hides the actor 
-	SetActorHiddenInGame(ShouldDisable);
+	SetActorHiddenInGame(ShouldHide);
 
+	// TODO: Disable collision
+	// SetActorEnableCollision(!ShouldHide);
+	
 	// Stop it from ticking
-	SetActorTickEnabled(!ShouldDisable);
+	SetActorTickEnabled(!ShouldHide);
 }
 

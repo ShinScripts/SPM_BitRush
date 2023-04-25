@@ -36,5 +36,5 @@ private:
 	float HitBoxRadius = 7500.f;
 	
 	UFUNCTION(BlueprintCallable)
-	void DisableActor(const bool ShouldDisable);	
+	void HideActor(const bool ShouldHide);	
 };
