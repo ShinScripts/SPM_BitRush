@@ -107,7 +107,7 @@ void APlayerCharacter::Tick(float DeltaTime)
 
 	//Reduces players time left
 	CurrentTime -= GetWorld()->GetDeltaSeconds();
-	UE_LOG(LogTemp, Warning, TEXT("Time %f"), CurrentTime);
+	// UE_LOG(LogTemp, Warning, TEXT("Time %f"), CurrentTime);
 }
 
 // Called to bind functionality to input

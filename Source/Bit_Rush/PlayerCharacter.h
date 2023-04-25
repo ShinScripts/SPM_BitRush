@@ -66,7 +66,7 @@ private:
 	UPROPERTY(EditAnywhere)
 	float FlatSlideVelocity = 7000000;
 
-	UPROPERTY(VisibleAnywhere,BlueprintReadWrite,meta = (AllowPrivateAccess))
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess))
 	float CurrentTime;
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta=(AllowPrivateAccess))
