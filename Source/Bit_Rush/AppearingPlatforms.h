@@ -6,6 +6,8 @@
 #include "GameFramework/Actor.h"
 #include "AppearingPlatforms.generated.h"
 
+class USphereComponent;
+
 UCLASS()
 class BIT_RUSH_API AAppearingPlatforms : public AActor
 {
@@ -24,11 +26,15 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 private:
-	static inline bool HasSetRadius = false;
-	
 	UPROPERTY(EditDefaultsOnly)
 	UStaticMeshComponent* Platform = nullptr;
 
+	UPROPERTY(EditDefaultsOnly)
+	USphereComponent* HitBox = nullptr;
+
+	UPROPERTY(EditDefaultsOnly)
+	float HitBoxRadius = 7500.f;
+	
 	UFUNCTION(BlueprintCallable)
 	void DisableActor(const bool ShouldDisable);	
 };

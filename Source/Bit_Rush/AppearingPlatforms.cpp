@@ -4,7 +4,7 @@
 #include "AppearingPlatforms.h"
 
 #include "Components/SphereComponent.h"
-#include "Kismet/GameplayStatics.h"
+
 
 // Sets default values
 AAppearingPlatforms::AAppearingPlatforms()
@@ -14,6 +14,10 @@ AAppearingPlatforms::AAppearingPlatforms()
 
 	Platform = CreateDefaultSubobject<UStaticMeshComponent>("Platform");
 	Platform->SetupAttachment(RootComponent);
+
+	HitBox = CreateDefaultSubobject<USphereComponent>("HitBox");
+	HitBox->SetupAttachment(Platform);
+	HitBox->SetSphereRadius(HitBoxRadius);
 }
 
 // Called when the game starts or when spawned
@@ -35,9 +39,6 @@ void AAppearingPlatforms::DisableActor(const bool ShouldDisable)
 {
 	// Hides the actor 
 	SetActorHiddenInGame(ShouldDisable);
-
-	// Disable collision
-	// SetActorEnableCollision(!ShouldDisable);
 
 	// Stop it from ticking
 	SetActorTickEnabled(!ShouldDisable);
