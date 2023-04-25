@@ -27,9 +27,9 @@ void FMovementData::SetDefaultValues()
 	GravityScale = 2;
 	BrakingFrictionFactor = 0;
 	FallingLateralFriction = 8;
-	AirControl = 20;
-	GroundFriction = 20;
-	BrakingDecelerationWalking = 3000;
+	AirControl = 0.5;
+	GroundFriction = 10;
+	BrakingDecelerationWalking = 5000;
 }
 
 void FMovementData::SetGroundFriction(const float NewGroundFriction)
