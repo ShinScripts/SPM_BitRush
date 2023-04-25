@@ -105,6 +105,9 @@ private:
 	UPROPERTY(EditAnywhere)
 	float GrapplingSpeed = 3000;
 
+	UPROPERTY(EditAnywhere)
+	float GrapplingLaunchSpeed = 2000;
+
 	bool bCanGrapple;
 
 	float CrouchSpeed = 10;
@@ -141,7 +144,7 @@ private:
 
 	//Grapple
 	void CanGrapple();
-	void StopGrapple();
+	void StopGrapple(FVector VelocityBeforeGrapple);
 	void Grapple();
 	//void StopSlidingAfterSeconds();
 	FVector GetSlideSurface(const FVector& FloorNormal);
