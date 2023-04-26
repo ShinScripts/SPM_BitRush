@@ -50,6 +50,7 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -65,7 +66,7 @@ private:
 	UPROPERTY(EditAnywhere)
 	float FlatSlideVelocity = 7000000;
 
-	UPROPERTY(VisibleAnywhere,BlueprintReadWrite,meta = (AllowPrivateAccess))
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess))
 	float CurrentTime;
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta=(AllowPrivateAccess))
@@ -86,7 +87,8 @@ private:
 
 	UPROPERTY()
 	class UCameraComponent* CameraComp;
-	
+
+	UPROPERTY(BlueprintReadOnly,meta=(AllowPrivateAccess))
 	bool bShouldSlide = false;
 	
 	bool ShouldLaunchSlide = false;
@@ -103,7 +105,15 @@ private:
 	UPROPERTY(EditAnywhere)
 	float GrapplingSpeed = 3000;
 
+	UPROPERTY(EditAnywhere)
+	float GrapplingLaunchSpeed = 2000;
+
 	bool bCanGrapple;
+
+	float CrouchSpeed = 10;
+	
+	float HitBoxDefaultValue;
+	float CrouchHitBoxValue;
 
 	UPROPERTY(BlueprintReadOnly, meta=(AllowPrivateAccess))
 	FMovementData MovementData;
@@ -134,8 +144,12 @@ private:
 
 	//Grapple
 	void CanGrapple();
-	void StopGrapple();
+	void StopGrapple(FVector VelocityBeforeGrapple);
 	void Grapple();
 	//void StopSlidingAfterSeconds();
 	FVector GetSlideSurface(const FVector& FloorNormal);
+
+	UFUNCTION(BlueprintCallable)
+	virtual float TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator,
+	                         AActor* DamageCauser) override;
 };

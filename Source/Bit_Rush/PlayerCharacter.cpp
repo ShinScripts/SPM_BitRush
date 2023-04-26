@@ -6,7 +6,9 @@
 #include "AITypes.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
+#include "Components/SplineComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Engine/World.h"
 
 void FMovementData::SetCharacterMovement(UCharacterMovementComponent* InCharacterMovementComponent) const
 {
@@ -25,9 +27,9 @@ void FMovementData::SetDefaultValues()
 	GravityScale = 2;
 	BrakingFrictionFactor = 0;
 	FallingLateralFriction = 8;
-	AirControl = 20;
-	GroundFriction = 20;
-	BrakingDecelerationWalking = 3000;
+	AirControl = 0.5;
+	GroundFriction = 10;
+	BrakingDecelerationWalking = 5000;
 }
 
 void FMovementData::SetGroundFriction(const float NewGroundFriction)
@@ -58,6 +60,7 @@ APlayerCharacter::APlayerCharacter()
 	
 	CharacterMovement = GetCharacterMovement();
 	MovementData.SetDefaultValues();
+	
 }
 
 
@@ -65,10 +68,12 @@ APlayerCharacter::APlayerCharacter()
 void APlayerCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-	
+	//HitBoxDefaultValue = CharacterHitBox->GetScaledCapsuleHalfHeight();
 	bCanMove = true;
 	CameraComp = FindComponentByClass<UCameraComponent>();
 	CharacterHitBox = FindComponentByClass<UCapsuleComponent>();
+	HitBoxDefaultValue = CharacterHitBox->GetScaledCapsuleHalfHeight();
+	CrouchHitBoxValue = HitBoxDefaultValue/2;
 }
 
 // Called every frame
@@ -82,9 +87,14 @@ void APlayerCharacter::Tick(float DeltaTime)
 	
 	if(bShouldSlide)
 	{
+		CharacterHitBox->SetCapsuleHalfHeight(FMath::FInterpTo(CharacterHitBox->GetScaledCapsuleHalfHeight(),CrouchHitBoxValue,DeltaTime,CrouchSpeed));
 		PhysSlide(DeltaTime);
 	}
-
+	else
+	{
+		CharacterHitBox->SetCapsuleHalfHeight(FMath::FInterpTo(CharacterHitBox->GetScaledCapsuleHalfHeight(),HitBoxDefaultValue,DeltaTime,CrouchSpeed));
+	}
+	
 	if(bIsDashing)
 	{
 		Dash();
@@ -94,6 +104,10 @@ void APlayerCharacter::Tick(float DeltaTime)
 	{
 		Grapple();
 	}
+
+	//Reduces players time left
+	CurrentTime -= GetWorld()->GetDeltaSeconds();
+	// UE_LOG(LogTemp, Warning, TEXT("Time %f"), CurrentTime);
 }
 
 // Called to bind functionality to input
@@ -161,10 +175,11 @@ void APlayerCharacter::ResetDash()
 	CanDash = true;
 }
 
+
+
 void APlayerCharacter::EnterSlide()
 {
 	bShouldSlide = true;
-	CharacterHitBox->SetCapsuleHalfHeight(CharacterHitBox->GetScaledCapsuleHalfHeight()/2);
 	MovementData.SetGroundFriction(0);
 	MovementData.SetGroundFriction(0);
 	MovementData.SetBrakingDecelerationWalking(1000);
@@ -182,7 +197,6 @@ void APlayerCharacter::ExitSlide()
 	bShouldSlide = false;
 	bCanMove = true;
 	MovementData.SetDefaultValues();
-	CharacterHitBox->SetCapsuleHalfHeight(CharacterHitBox->GetScaledCapsuleHalfHeight() * 2);
 }
 
 void APlayerCharacter::PhysSlide(float DeltaTime)
@@ -200,6 +214,9 @@ void APlayerCharacter::StopSlide()
 
 void APlayerCharacter::CanGrapple()
 {
+	if(bCanGrapple)
+		return;
+	
 	const FVector TraceStart = CameraComp->GetComponentLocation();
 	const FVector TraceEnd = TraceStart + CameraComp->GetForwardVector() * GrapplingHookRange;
 	
@@ -208,26 +225,34 @@ void APlayerCharacter::CanGrapple()
 	
 	DrawDebugLine(GetWorld(),TraceStart,TraceEnd,FColor::Red,false,0,0,5);
 	GetWorld()->SweepSingleByChannel(GrappleHit,TraceStart,TraceEnd,FQuat::Identity,ECC_GameTraceChannel1,FCollisionShape::MakeSphere(20),QueryParams);
-
+	
 	if(GrappleHit.Component != nullptr && GrappleHit.Component->ComponentHasTag("GrapplePoint"))
+	{
+		CharacterMovement->Velocity = FVector::Zero();
 		bCanGrapple = true;
+	}
 }
 
-void APlayerCharacter::StopGrapple()
+void APlayerCharacter::StopGrapple(FVector GrapplingDirection)
 {
 	bCanGrapple = false;
 	CharacterMovement->SetMovementMode(MOVE_Walking);
+	if(FVector::DotProduct(FVector(GrapplingDirection.X,GrapplingDirection.Y,GrapplingDirection.Z),CharacterMovement->Velocity) > 0 || bShouldSlide)
+	{
+		CharacterMovement->Velocity = GrapplingDirection.GetSafeNormal() * GrapplingLaunchSpeed;
+	}
 }
 
 void APlayerCharacter::Grapple()
 {
-	CharacterMovement->Velocity = FVector::Zero();
+	FVector GrapplingDirection = GrappleHit.Location - GetActorLocation();
 	CharacterMovement->SetMovementMode(MOVE_Flying);
-	UE_LOG(LogTemp,Warning,TEXT("HIT"));
+	UE_LOG(LogTemp,Warning,TEXT("%f"),FVector::DotProduct(FVector(GrapplingDirection.X,GrapplingDirection.Y,0),CharacterMovement->Velocity));
+	
 	
 	SetActorLocation(FMath::VInterpConstantTo(GetActorLocation(),GrappleHit.ImpactPoint, GetWorld()->DeltaTimeSeconds, GrapplingSpeed));
 	if((GetActorLocation() - GrappleHit.Location).Length() < 50)
-		StopGrapple();
+		StopGrapple(GrapplingDirection);
 }
 
 FVector APlayerCharacter::GetSlideSurface(const FVector& FloorNormal)
@@ -243,6 +268,18 @@ FVector APlayerCharacter::GetSlideSurface(const FVector& FloorNormal)
 	return FloorInfluence;
 }
 
+//Overrides TakeDamage
+float APlayerCharacter::TakeDamage
+(
+	float DamageAmount,
+	struct FDamageEvent const & DamageEvent,
+	class AController * EventInstigator,
+	AActor * DamageCauser
+)
+{
+	CurrentTime -= DamageAmount;
+	return CurrentTime;
+}
 
 
 
