@@ -27,9 +27,9 @@ void FMovementData::SetDefaultValues()
 	GravityScale = 2;
 	BrakingFrictionFactor = 0;
 	FallingLateralFriction = 8;
-	AirControl = 20;
-	GroundFriction = 20;
-	BrakingDecelerationWalking = 3000;
+	AirControl = 0.5;
+	GroundFriction = 10;
+	BrakingDecelerationWalking = 5000;
 }
 
 void FMovementData::SetGroundFriction(const float NewGroundFriction)
@@ -214,6 +214,9 @@ void APlayerCharacter::StopSlide()
 
 void APlayerCharacter::CanGrapple()
 {
+	if(bCanGrapple)
+		return;
+	
 	const FVector TraceStart = CameraComp->GetComponentLocation();
 	const FVector TraceEnd = TraceStart + CameraComp->GetForwardVector() * GrapplingHookRange;
 	
@@ -222,26 +225,34 @@ void APlayerCharacter::CanGrapple()
 	
 	DrawDebugLine(GetWorld(),TraceStart,TraceEnd,FColor::Red,false,0,0,5);
 	GetWorld()->SweepSingleByChannel(GrappleHit,TraceStart,TraceEnd,FQuat::Identity,ECC_GameTraceChannel1,FCollisionShape::MakeSphere(20),QueryParams);
-
+	
 	if(GrappleHit.Component != nullptr && GrappleHit.Component->ComponentHasTag("GrapplePoint"))
+	{
+		CharacterMovement->Velocity = FVector::Zero();
 		bCanGrapple = true;
+	}
 }
 
-void APlayerCharacter::StopGrapple()
+void APlayerCharacter::StopGrapple(FVector GrapplingDirection)
 {
 	bCanGrapple = false;
 	CharacterMovement->SetMovementMode(MOVE_Walking);
+	if(FVector::DotProduct(FVector(GrapplingDirection.X,GrapplingDirection.Y,GrapplingDirection.Z),CharacterMovement->Velocity) > 0 || bShouldSlide)
+	{
+		CharacterMovement->Velocity = GrapplingDirection.GetSafeNormal() * GrapplingLaunchSpeed;
+	}
 }
 
 void APlayerCharacter::Grapple()
 {
-	CharacterMovement->Velocity = FVector::Zero();
+	FVector GrapplingDirection = GrappleHit.Location - GetActorLocation();
 	CharacterMovement->SetMovementMode(MOVE_Flying);
-	UE_LOG(LogTemp,Warning,TEXT("HIT"));
+	UE_LOG(LogTemp,Warning,TEXT("%f"),FVector::DotProduct(FVector(GrapplingDirection.X,GrapplingDirection.Y,0),CharacterMovement->Velocity));
+	
 	
 	SetActorLocation(FMath::VInterpConstantTo(GetActorLocation(),GrappleHit.ImpactPoint, GetWorld()->DeltaTimeSeconds, GrapplingSpeed));
 	if((GetActorLocation() - GrappleHit.Location).Length() < 50)
-		StopGrapple();
+		StopGrapple(GrapplingDirection);
 }
 
 FVector APlayerCharacter::GetSlideSurface(const FVector& FloorNormal)
