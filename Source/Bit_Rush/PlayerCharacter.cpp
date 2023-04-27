@@ -3,6 +3,8 @@
 
 #include "PlayerCharacter.h"
 
+#include <string>
+
 #include "AITypes.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
@@ -237,9 +239,11 @@ void APlayerCharacter::StopGrapple(FVector GrapplingDirection)
 {
 	bCanGrapple = false;
 	CharacterMovement->SetMovementMode(MOVE_Walking);
-	if(FVector::DotProduct(FVector(GrapplingDirection.X,GrapplingDirection.Y,GrapplingDirection.Z),CharacterMovement->Velocity) > 0 || bShouldSlide)
+	if(FVector::DotProduct(FVector(GrapplingDirection.X,GrapplingDirection.Y,0),CharacterMovement->Velocity) > 0 || bShouldSlide)
 	{
 		CharacterMovement->Velocity = GrapplingDirection.GetSafeNormal() * GrapplingLaunchSpeed;
+		CharacterMovement->Velocity.Z *= 10;
+		UE_LOG(LogTemp,Warning,TEXT("%s"),*CharacterMovement->Velocity.ToString())
 	}
 }
 
