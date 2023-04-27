@@ -27,7 +27,7 @@ void FMovementData::SetDefaultValues()
 {
 	JumpForce = 700;
 	GravityScale = 2;
-	BrakingFrictionFactor = 0;
+	BrakingFrictionFactor = 0.05;
 	FallingLateralFriction = 8;
 	AirControl = 0.5;
 	GroundFriction = 10;
