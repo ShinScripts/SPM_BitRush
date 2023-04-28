@@ -3,12 +3,8 @@
 
 #include "PlayerCharacter.h"
 
-#include <string>
-
-#include "AITypes.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
-#include "Components/SplineComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Engine/World.h"
 
