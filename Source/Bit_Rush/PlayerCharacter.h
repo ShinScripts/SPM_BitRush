@@ -21,20 +21,21 @@ struct FMovementData
 	void SetBrakingDecelerationWalking(const float NewBrakingDecelerationWalking);
 	void SetFallingLateralFriction(const float NewFallingLateralFriction);
 
-	UPROPERTY(BlueprintReadOnly)
+	UPROPERTY(BlueprintReadWrite)
 	float GravityScale;
 
-	float BrakingFrictionFactor;
-
-	UPROPERTY(BlueprintReadOnly)
+	UPROPERTY(BlueprintReadWrite)
 	float FallingLateralFriction;
 
+	UPROPERTY(BlueprintReadWrite)
+	float JumpForce;
+
+	UPROPERTY(BlueprintReadWrite)
 	float AirControl;
+	
 	float GroundFriction;
 	float BrakingDecelerationWalking;
-
-	UPROPERTY(BlueprintReadOnly)
-	float JumpForce;
+	float BrakingFrictionFactor;
 	float MaxAcceleration;
 };
 
@@ -120,7 +121,7 @@ private:
 	float HitBoxDefaultValue;
 	float CrouchHitBoxValue;
 
-	UPROPERTY(BlueprintReadOnly, meta=(AllowPrivateAccess))
+	UPROPERTY(BlueprintReadWrite, meta=(AllowPrivateAccess))
 	FMovementData MovementData;
 
 	FVector DashDistance;
@@ -131,6 +132,7 @@ private:
 	FHitResult GrappleHit;
 
 	UCapsuleComponent* CharacterHitBox;
+	
 	//Functions
 	void MoveForward(const float AxisValue);
 	void MoveRight(const float AxisValue);
@@ -158,4 +160,11 @@ private:
 	UFUNCTION(BlueprintCallable)
 	virtual float TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator,
 	                         AActor* DamageCauser) override;
+
+	// Shahin
+	UFUNCTION(BlueprintCallable)
+	void SetDefaultMovementDataValues()
+	{
+		MovementData.SetDefaultValues();
+	}
 };
