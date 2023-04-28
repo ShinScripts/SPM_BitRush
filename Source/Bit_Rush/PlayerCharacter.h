@@ -35,6 +35,7 @@ struct FMovementData
 
 	UPROPERTY(BlueprintReadOnly)
 	float JumpForce;
+	float MaxAcceleration;
 };
 
 UCLASS()
@@ -82,8 +83,12 @@ private:
 	bool CanDash = true;
 
 	bool bIsDashing = false;
+	
 	UPROPERTY(EditAnywhere)
 	float DashCooldown = 1;
+
+	UPROPERTY(EditAnywhere)
+	float MaxSlideVelocity = 3000;
 
 	UPROPERTY()
 	class UCameraComponent* CameraComp;
@@ -129,6 +134,7 @@ private:
 	//Functions
 	void MoveForward(const float AxisValue);
 	void MoveRight(const float AxisValue);
+	void Jump();
 
 	//Dash
 	void Dash();
@@ -144,7 +150,7 @@ private:
 
 	//Grapple
 	void CanGrapple();
-	void StopGrapple(FVector VelocityBeforeGrapple);
+	void StopGrapple();
 	void Grapple();
 	//void StopSlidingAfterSeconds();
 	FVector GetSlideSurface(const FVector& FloorNormal);
