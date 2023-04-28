@@ -30,11 +30,5 @@ private:
 	UStaticMeshComponent* Platform = nullptr;
 
 	UPROPERTY(EditDefaultsOnly)
-	USphereComponent* HitBox = nullptr;
-
-	UPROPERTY(EditDefaultsOnly)
 	float HitBoxRadius = 7500.f;
-	
-	UFUNCTION(BlueprintCallable)
-	void HideActor(const bool ShouldHide);	
 };
