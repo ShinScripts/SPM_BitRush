@@ -25,6 +25,10 @@
 		{
 			"Name": "WaveformEditor",
 			"Enabled": true
+		},
+		{
+			"Name": "TraceSourceFilters",
+			"Enabled": true
 		}
 	]
 }

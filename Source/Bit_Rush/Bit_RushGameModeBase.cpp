@@ -3,7 +3,6 @@
 
 #include "Bit_RushGameModeBase.h"
 
-#include "Kismet/GameplayStatics.h"
 
 void ABit_RushGameModeBase::StartPlay()
 {
