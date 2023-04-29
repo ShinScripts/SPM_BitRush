@@ -175,7 +175,7 @@ void APlayerCharacter::StartDash()
 	if(!CanDash) return;
 	
 	bIsDashing = true;
-	CharacterMovement->Velocity.Z = 0;
+	// CharacterMovement->Velocity.Z = 0;
 	DashDistance = CharacterMovement->Velocity.GetSafeNormal() * 20;
 	DashDistance.Z = 0;
 	
