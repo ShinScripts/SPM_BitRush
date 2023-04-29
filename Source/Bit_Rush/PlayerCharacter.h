@@ -59,6 +59,14 @@ public:
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+	
+	UCharacterMovementComponent* CharacterMovement;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta=(AllowPrivateAccess))
+	bool bCanMove;
+
+	UPROPERTY()
+	class UCameraComponent* CameraComp;
 
 private:
 	//Variable
@@ -70,9 +78,6 @@ private:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess))
 	float CurrentTime;
-	
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta=(AllowPrivateAccess))
-	bool bCanMove;
 
 	// Dash
 	UPROPERTY(EditAnywhere)
@@ -90,9 +95,6 @@ private:
 
 	UPROPERTY(EditAnywhere)
 	float MaxSlideVelocity = 3000;
-
-	UPROPERTY()
-	class UCameraComponent* CameraComp;
 
 	UPROPERTY(BlueprintReadOnly,meta=(AllowPrivateAccess))
 	bool bShouldSlide = false;
@@ -125,8 +127,6 @@ private:
 	FMovementData MovementData;
 
 	FVector DashDistance;
-	
-	UCharacterMovementComponent* CharacterMovement;
 	
 	FHitResult FloorHit;
 	FHitResult GrappleHit;
