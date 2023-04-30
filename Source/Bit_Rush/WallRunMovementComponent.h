@@ -3,11 +3,12 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "PlayerCharacter.h"
-#include "Camera/CameraComponent.h"
 #include "Components/ActorComponent.h"
 #include "WallRunMovementComponent.generated.h"
 
+
+class UCameraComponent;
+class APlayerCharacter;
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class BIT_RUSH_API UWallRunMovementComponent : public UActorComponent
@@ -22,22 +23,34 @@ protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
-public:
+public:	
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
-private:
-	void SetWallRunVelocity(const FVector& CrossProduct);
-	void TiltCamera(UCameraComponent* CameraComp, float RollDegrees, float InterpolationSpeed);
 
 private:
+	void SetWallRunVelocity(APlayerCharacter* PlayerCharacter, const FVector& CrossProduct);
+	void TiltCamera(UCameraComponent* CameraComp, float Degrees, float InterpSpeed, float DeltaTime);
+	void OffWall(APlayerCharacter* PlayerCharacter, float DeltaTime);
+	
+	UFUNCTION(BlueprintCallable)
+	void JumpOffWall(APlayerCharacter* PlayerCharacter);
+	
 	float LineTraceLength = 120.f;
 	float JumpOffWallForce = 1.5f;
 	float InterpolationSpeed = 10.f;
 	float RollDegrees = 15.f;
-	
+
+	UPROPERTY(BlueprintReadOnly, meta=(AllowPrivateAccess))
+	float JumpOffWallVelocityMultiplier = 1.5f;
+
+	UPROPERTY(BlueprintReadOnly, meta=(AllowPrivateAccess))
 	bool OnRightSide = false;
+
+	UPROPERTY(BlueprintReadOnly, meta=(AllowPrivateAccess))
 	bool OnLeftSide = false;
+
+	UPROPERTY(BlueprintReadWrite, meta=(AllowPrivateAccess))
 	bool IsJumpingOffWall = false;
 	
-	FString WallRunTag = "WallRunnable";
+	FName WallRunTag = "WallRunnable";
 };

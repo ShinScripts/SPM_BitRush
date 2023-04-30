@@ -52,22 +52,22 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-	
-	UCharacterMovementComponent* CharacterMovement;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta=(AllowPrivateAccess))
-	bool bCanMove;
 
 	UPROPERTY()
 	class UCameraComponent* CameraComp;
+	
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	bool bCanMove;
 
+	UPROPERTY(BlueprintReadWrite, meta=(AllowPrivateAccess))
+	FMovementData MovementData;
+	
 private:
 	//Variable
 	UPROPERTY(EditAnywhere)
@@ -123,10 +123,9 @@ private:
 	float HitBoxDefaultValue;
 	float CrouchHitBoxValue;
 
-	UPROPERTY(BlueprintReadWrite, meta=(AllowPrivateAccess))
-	FMovementData MovementData;
-
 	FVector DashDistance;
+	
+	UCharacterMovementComponent* CharacterMovement;
 	
 	FHitResult FloorHit;
 	FHitResult GrappleHit;
