@@ -52,7 +52,6 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -60,6 +59,15 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	UPROPERTY()
+	class UCameraComponent* CameraComp;
+	
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	bool bCanMove;
+
+	UPROPERTY(BlueprintReadWrite, meta=(AllowPrivateAccess))
+	FMovementData MovementData;
+	
 private:
 	//Variable
 	UPROPERTY(EditAnywhere)
@@ -70,9 +78,6 @@ private:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess))
 	float CurrentTime;
-	
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta=(AllowPrivateAccess))
-	bool bCanMove;
 
 	// Dash
 	UPROPERTY(EditAnywhere)
@@ -90,9 +95,6 @@ private:
 
 	UPROPERTY(EditAnywhere)
 	float MaxSlideVelocity = 3000;
-
-	UPROPERTY()
-	class UCameraComponent* CameraComp;
 
 	UPROPERTY(BlueprintReadOnly,meta=(AllowPrivateAccess))
 	bool bShouldSlide = false;
@@ -120,9 +122,6 @@ private:
 	
 	float HitBoxDefaultValue;
 	float CrouchHitBoxValue;
-
-	UPROPERTY(BlueprintReadWrite, meta=(AllowPrivateAccess))
-	FMovementData MovementData;
 
 	FVector DashDistance;
 	
