@@ -61,9 +61,6 @@ void UWallRunMovementComponent::TickComponent(float DeltaTime, ELevelTick TickTy
 	{
 		PlayerCharacter->bCanMove = false;
 		OnRightSide = true;	
-
-		GetWorld()->LineTraceSingleByChannel(HitResultRight, StartTrace, RightSideEndTrace, ECC_GameTraceChannel1, Params);
-		DrawDebugLine(GetWorld(), StartTrace, RightSideEndTrace, FColor::Cyan, false, 5.f);
 		
 		if(!IsJumpingOffWall)
 		{
