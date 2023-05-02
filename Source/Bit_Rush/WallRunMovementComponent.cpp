@@ -40,28 +40,31 @@ void UWallRunMovementComponent::TickComponent(float DeltaTime, ELevelTick TickTy
 		OffWall(PlayerCharacter, DeltaTime);
 		return; 
 	}
-
+	
 	const FVector StartTrace = PlayerCharacter->GetActorLocation();
 	const FVector RightSideEndTrace = LineTraceLength * PlayerCharacter->GetActorRightVector() + PlayerCharacter->GetActorLocation();
 	const FVector LeftSideEndTrace = LineTraceLength * (PlayerCharacter->GetActorRightVector() * -1) + PlayerCharacter->GetActorLocation();
-
+	
 	FHitResult HitResultRight;
 	FHitResult HitResultLeft;
+	
 	FCollisionQueryParams Params;
-
 	Params.AddIgnoredActor(PlayerCharacter);
-
+	
 	GetWorld()->LineTraceSingleByChannel(HitResultRight, StartTrace, RightSideEndTrace, ECC_GameTraceChannel1, Params);
 	GetWorld()->LineTraceSingleByChannel(HitResultLeft, StartTrace, LeftSideEndTrace, ECC_GameTraceChannel1, Params);
 	DrawDebugLine(GetWorld(), StartTrace, RightSideEndTrace, FColor::Cyan, false, 5.f);
 	DrawDebugLine(GetWorld(), StartTrace, LeftSideEndTrace, FColor::Cyan, false, 5.f);
-
+	
 	// Right side
 	if(HitResultRight.bBlockingHit && HitResultRight.GetComponent()->ComponentTags.Contains(WallRunTag))
 	{
 		PlayerCharacter->bCanMove = false;
-		OnRightSide = true;
+		OnRightSide = true;	
 
+		GetWorld()->LineTraceSingleByChannel(HitResultRight, StartTrace, RightSideEndTrace, ECC_GameTraceChannel1, Params);
+		DrawDebugLine(GetWorld(), StartTrace, RightSideEndTrace, FColor::Cyan, false, 5.f);
+		
 		if(!IsJumpingOffWall)
 		{
 			SetWallRunVelocity(PlayerCharacter, FVector::CrossProduct(HitResultRight.Normal, FVector(0.f, 0.f, -1.f)));
@@ -71,17 +74,17 @@ void UWallRunMovementComponent::TickComponent(float DeltaTime, ELevelTick TickTy
 	else
 	{
 		OnRightSide = false;
-
+		
 		if(!OnLeftSide)
 			OffWall(PlayerCharacter, DeltaTime);
 	}
-
+	
 	// Left side
 	if(HitResultLeft.bBlockingHit && HitResultLeft.GetComponent()->ComponentTags.Contains(WallRunTag))
 	{
 		PlayerCharacter->bCanMove = false;
 		OnLeftSide = true;
-
+	
 		if(!IsJumpingOffWall)
 		{
 			SetWallRunVelocity(PlayerCharacter, FVector::CrossProduct(HitResultLeft.Normal, FVector(0.f, 0.f, 1.f)));
@@ -91,7 +94,7 @@ void UWallRunMovementComponent::TickComponent(float DeltaTime, ELevelTick TickTy
 	else
 	{
 		OnLeftSide = false;
-
+	
 		if(!OnRightSide)
 			OffWall(PlayerCharacter, DeltaTime);
 	}
