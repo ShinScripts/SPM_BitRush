@@ -35,8 +35,10 @@ private:
 	UFUNCTION(BlueprintCallable)
 	void JumpOffWall(APlayerCharacter* PlayerCharacter);
 
+	bool ContainsTag(FHitResult HitResult);
+	
 	UPROPERTY(EditAnywhere)
-	float LineTraceLength = 120.f;
+	float LineTraceLength = 110.f;
 	
 	UPROPERTY(EditAnywhere)
 	float JumpOffWallForce = 1.5f;
@@ -47,7 +49,7 @@ private:
 	UPROPERTY(EditAnywhere)
 	float RollDegrees = 15.f;
 
-	UPROPERTY(BlueprintReadOnly, meta=(AllowPrivateAccess))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(AllowPrivateAccess))
 	float JumpOffWallVelocityMultiplier = 1.5f;
 
 	UPROPERTY(BlueprintReadWrite, meta=(AllowPrivateAccess))
