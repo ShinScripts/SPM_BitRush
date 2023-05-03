@@ -2,6 +2,8 @@
 
 
 #include "RocketProjectile.h"
+#include "Kismet/GameplayStatics.h" 
+#include "NiagaraFunctionLibrary.h"
 
 // Sets default values
 ARocketProjectile::ARocketProjectile()
@@ -20,4 +22,9 @@ void ARocketProjectile::BeginPlay()
 void ARocketProjectile::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+}
+
+void ARocketProjectile::SpawnHitParticles(UNiagaraSystem* ParticlesToSpawn, FVector ScaleOfSystem) const
+{
+	UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, ParticlesToSpawn, GetActorLocation(), GetActorRotation(), ScaleOfSystem);
 }
