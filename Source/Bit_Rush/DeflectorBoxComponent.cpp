@@ -3,44 +3,80 @@
 
 #include "DeflectorBoxComponent.h"
 
+#include "PlayerCharacter.h"
+#include "Engine/GameEngine.h"
+
+UDeflectorBoxComponent::UDeflectorBoxComponent()
+{
+	PrimaryComponentTick.bCanEverTick = true;
+}
+
 void UDeflectorBoxComponent::BeginPlay()
 {
 	Super::BeginPlay();
-	//UE_LOG(LogTemp, Warning, TEXT("Test.")); //It works at least.
 }
 
 void UDeflectorBoxComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 	//-----------------------------------------------------------------------------------------------------------------
-	
-	CheckOverlappingTags(ProjectileTags);
-	//UE_LOG(LogTemp, Warning, TEXT("Vozmozshmno..."));
+	CheckOverlappingTags(DeflectableProjectileTags);
 }
 
-void UDeflectorBoxComponent::CheckOverlappingTags(TArray<FName> Tags) const
+void UDeflectorBoxComponent::ScreenPrint(FString Message)
+{
+	if(GEngine)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Emerald, TEXT(""+Message));
+	}
+}
+
+void UDeflectorBoxComponent::CheckOverlappingTags(TArray<FName> Tags)
 {
 	
 	TArray<AActor*> Actors;
-	
 	GetOverlappingActors(Actors);
+
+	
 	for(AActor* TargetActor : Actors)
 	{
-		for(FName CurrentTag : Tags)
-		{
-			if(Tags.Num() <= 0)
+		//UE_LOG(LogTemp, Warning, TEXT("%s is overlapping without tag"), *TargetActor->GetActorNameOrLabel());
+		
+			/*if(Tags.Num() <= 0)
 			{
 				UE_LOG(LogTemp, Warning, TEXT("%s is overlapping without tag"), *TargetActor->GetActorNameOrLabel());
 				//return;
-			}
-			if (TargetActor->ActorHasTag(CurrentTag))
+			}*/
+			if (TargetActor == nullptr)
 			{
-				UE_LOG(LogTemp, Warning, TEXT("%s is overlapping with tag"), *TargetActor->GetActorNameOrLabel());
-				//return TargetActor;
+				return;
 			}
-		}
+			if (TargetActor != nullptr)
+			{
+				for(FName CurrentTag : Tags)
+				{
+					if (TargetActor->ActorHasTag(CurrentTag))
+					{
+						//UE_LOG(LogTemp, Warning, TEXT("%s is overlapping with %s using the tag: %s"), *TargetActor->GetActorNameOrLabel(), *GetOwner()->GetActorNameOrLabel(), *CurrentTag.ToString());
+						ScreenPrint(TargetActor->GetActorNameOrLabel() + " is overlapping with " + GetOwner()->GetActorNameOrLabel() + " using the tag: " + CurrentTag.ToString());
+						if(IsDeflecting)
+						{
+							ScreenPrint(TargetActor->GetActorNameOrLabel() + " was deflected");
+							TargetActor->Destroy();
+						}
+					}
+				}
+			}
+		
 		
 	}
-	//return nullptr;
 }
 
+void UDeflectorBoxComponent::StartDeflect()
+{
+	IsDeflecting = true;
+}
+void UDeflectorBoxComponent::StopDeflect()
+{
+	IsDeflecting = false;
+}

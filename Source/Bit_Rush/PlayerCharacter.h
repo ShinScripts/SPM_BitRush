@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "DeflectorBoxComponent.h"
 
 #include "GameFramework/Character.h"
 #include "PlayerCharacter.generated.h"
@@ -67,6 +68,10 @@ public:
 
 	UPROPERTY(BlueprintReadWrite, meta=(AllowPrivateAccess))
 	FMovementData MovementData;
+
+	//Deflect
+	UFUNCTION(BlueprintCallable)
+	UDeflectorBoxComponent* GetDeflectorBox();
 	
 private:
 	//Variable
@@ -153,6 +158,15 @@ private:
 	void CanGrapple();
 	void StopGrapple();
 	void Grapple();
+
+	//Deflect
+	// - variables
+	UDeflectorBoxComponent* DeflectorBox;
+	// - functions
+	void DeflectON();
+	void DeflectOFF();
+	void SetDeflectBoxVariable();
+	
 	//void StopSlidingAfterSeconds();
 	FVector GetSlideSurface(const FVector& FloorNormal);
 
@@ -166,4 +180,8 @@ private:
 	{
 		MovementData.SetDefaultValues();
 	}
+
+	//Debug utility
+	void ScreenPrint(FString Message);
+	void ScreenPrint(FString Message, FColor Color);
 };

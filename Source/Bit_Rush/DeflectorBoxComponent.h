@@ -5,7 +5,6 @@
 #include "CoreMinimal.h"
 #include "Components/BoxComponent.h"
 #include "Containers/Array.h"
-//#include "Components/ActorComponent.h"
 
 #include "DeflectorBoxComponent.generated.h"
 
@@ -16,6 +15,9 @@ UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class BIT_RUSH_API UDeflectorBoxComponent : public UBoxComponent
 {
 	GENERATED_BODY()
+public:
+	UDeflectorBoxComponent();
+	
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
@@ -23,10 +25,17 @@ protected:
 public:
 	// Called every frame-------------------------------------------
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
-
+	//FName GetDeflectInput();
+	void StartDeflect();
+	void StopDeflect();
+	
 private:
-	void CheckOverlappingTags(TArray<FName> Tags) const;
-
-	UPROPERTY(EditAnywhere, Category="Box Component")
-	TArray<FName> ProjectileTags;
+	UPROPERTY(EditAnywhere, Category="Deflect Component")
+	bool IsDeflecting;
+	
+	void ScreenPrint(FString Message);
+	void CheckOverlappingTags(TArray<FName> Tags);
+	
+	UPROPERTY(EditAnywhere, Category="Deflect Component")
+	TArray<FName> DeflectableProjectileTags;
 };
