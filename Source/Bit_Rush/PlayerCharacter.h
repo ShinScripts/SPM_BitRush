@@ -21,20 +21,22 @@ struct FMovementData
 	void SetBrakingDecelerationWalking(const float NewBrakingDecelerationWalking);
 	void SetFallingLateralFriction(const float NewFallingLateralFriction);
 
-	UPROPERTY(BlueprintReadOnly)
+	UPROPERTY(BlueprintReadWrite)
 	float GravityScale;
 
-	float BrakingFrictionFactor;
-
-	UPROPERTY(BlueprintReadOnly)
+	UPROPERTY(BlueprintReadWrite)
 	float FallingLateralFriction;
 
+	UPROPERTY(BlueprintReadWrite)
+	float JumpForce;
+
+	UPROPERTY(BlueprintReadWrite)
 	float AirControl;
+	
 	float GroundFriction;
 	float BrakingDecelerationWalking;
-
-	UPROPERTY(BlueprintReadOnly)
-	float JumpForce;
+	float BrakingFrictionFactor;
+	float MaxAcceleration;
 };
 
 UCLASS()
@@ -50,7 +52,6 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -58,6 +59,15 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	UPROPERTY()
+	class UCameraComponent* CameraComp;
+	
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	bool bCanMove;
+
+	UPROPERTY(BlueprintReadWrite, meta=(AllowPrivateAccess))
+	FMovementData MovementData;
+	
 private:
 	//Variable
 	UPROPERTY(EditAnywhere)
@@ -68,9 +78,6 @@ private:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess))
 	float CurrentTime;
-	
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta=(AllowPrivateAccess))
-	bool bCanMove;
 
 	// Dash
 	UPROPERTY(EditAnywhere)
@@ -82,11 +89,12 @@ private:
 	bool CanDash = true;
 
 	bool bIsDashing = false;
+	
 	UPROPERTY(EditAnywhere)
 	float DashCooldown = 1;
 
-	UPROPERTY()
-	class UCameraComponent* CameraComp;
+	UPROPERTY(EditAnywhere)
+	float MaxSlideVelocity = 3000;
 
 	UPROPERTY(BlueprintReadOnly,meta=(AllowPrivateAccess))
 	bool bShouldSlide = false;
@@ -115,9 +123,6 @@ private:
 	float HitBoxDefaultValue;
 	float CrouchHitBoxValue;
 
-	UPROPERTY(BlueprintReadOnly, meta=(AllowPrivateAccess))
-	FMovementData MovementData;
-
 	FVector DashDistance;
 	
 	UCharacterMovementComponent* CharacterMovement;
@@ -126,9 +131,11 @@ private:
 	FHitResult GrappleHit;
 
 	UCapsuleComponent* CharacterHitBox;
+	
 	//Functions
 	void MoveForward(const float AxisValue);
 	void MoveRight(const float AxisValue);
+	void Jump();
 
 	//Dash
 	void Dash();
@@ -144,7 +151,7 @@ private:
 
 	//Grapple
 	void CanGrapple();
-	void StopGrapple(FVector VelocityBeforeGrapple);
+	void StopGrapple();
 	void Grapple();
 	//void StopSlidingAfterSeconds();
 	FVector GetSlideSurface(const FVector& FloorNormal);
@@ -152,4 +159,11 @@ private:
 	UFUNCTION(BlueprintCallable)
 	virtual float TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator,
 	                         AActor* DamageCauser) override;
+
+	// Shahin
+	UFUNCTION(BlueprintCallable)
+	void SetDefaultMovementDataValues()
+	{
+		MovementData.SetDefaultValues();
+	}
 };

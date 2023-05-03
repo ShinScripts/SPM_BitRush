@@ -3,12 +3,8 @@
 
 #include "PlayerCharacter.h"
 
-#include <string>
-
-#include "AITypes.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
-#include "Components/SplineComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Engine/World.h"
 
@@ -21,17 +17,19 @@ void FMovementData::SetCharacterMovement(UCharacterMovementComponent* InCharacte
 	InCharacterMovementComponent->GroundFriction = GroundFriction;
 	InCharacterMovementComponent->BrakingDecelerationWalking = BrakingDecelerationWalking;
 	InCharacterMovementComponent->JumpZVelocity = JumpForce;
+	InCharacterMovementComponent->MaxAcceleration = MaxAcceleration;
 }
 
 void FMovementData::SetDefaultValues()
 {
 	JumpForce = 700;
 	GravityScale = 2;
-	BrakingFrictionFactor = 0;
+	BrakingFrictionFactor = 0.05;
 	FallingLateralFriction = 8;
-	AirControl = 0.5;
+	AirControl = 0.4;
 	GroundFriction = 10;
 	BrakingDecelerationWalking = 5000;
+	MaxAcceleration = 3200;
 }
 
 void FMovementData::SetGroundFriction(const float NewGroundFriction)
@@ -143,6 +141,17 @@ void APlayerCharacter::MoveRight(const float AxisValue)
 		AddMovementInput(GetActorRightVector() * AxisValue);
 }
 
+void APlayerCharacter::Jump()
+{
+	Super::Jump();
+	
+	if(bCanGrapple)
+	{
+		StopGrapple();
+		LaunchCharacter(CameraComp->GetComponentRotation().Vector(),true,true);
+	}
+}
+
 void APlayerCharacter::Dash()
 {
 	CanDash = false;
@@ -166,7 +175,7 @@ void APlayerCharacter::StartDash()
 	if(!CanDash) return;
 	
 	bIsDashing = true;
-	CharacterMovement->Velocity.Z = 0;
+	// CharacterMovement->Velocity.Z = 0;
 	DashDistance = CharacterMovement->Velocity.GetSafeNormal() * 20;
 	DashDistance.Z = 0;
 	
@@ -176,8 +185,6 @@ void APlayerCharacter::ResetDash()
 {
 	CanDash = true;
 }
-
-
 
 void APlayerCharacter::EnterSlide()
 {
@@ -203,7 +210,14 @@ void APlayerCharacter::ExitSlide()
 
 void APlayerCharacter::PhysSlide(float DeltaTime)
 {
-	CharacterMovement->AddForce(SlideSurfNormal);
+	if(CharacterMovement->Velocity.Length() > MaxSlideVelocity)
+	{
+		CharacterMovement->Velocity.GetSafeNormal() *= MaxSlideVelocity;
+	}
+	else
+	{
+		CharacterMovement->AddForce(SlideSurfNormal);
+	}
 	bCanMove = false;
 }
 
@@ -235,28 +249,20 @@ void APlayerCharacter::CanGrapple()
 	}
 }
 
-void APlayerCharacter::StopGrapple(FVector GrapplingDirection)
+void APlayerCharacter::StopGrapple()
 {
 	bCanGrapple = false;
 	CharacterMovement->SetMovementMode(MOVE_Walking);
-	if(FVector::DotProduct(FVector(GrapplingDirection.X,GrapplingDirection.Y,0),CharacterMovement->Velocity) > 0 || bShouldSlide)
-	{
-		CharacterMovement->Velocity = GrapplingDirection.GetSafeNormal() * GrapplingLaunchSpeed;
-		CharacterMovement->Velocity.Z *= 10;
-		UE_LOG(LogTemp,Warning,TEXT("%s"),*CharacterMovement->Velocity.ToString())
-	}
+	LaunchCharacter(CameraComp->GetComponentRotation().Vector() * GrapplingLaunchSpeed,true,true);
 }
 
 void APlayerCharacter::Grapple()
 {
-	FVector GrapplingDirection = GrappleHit.Location - GetActorLocation();
+	//FVector GrapplingDirection = GrappleHit.Location - GetActorLocation();
 	CharacterMovement->SetMovementMode(MOVE_Flying);
-	UE_LOG(LogTemp,Warning,TEXT("%f"),FVector::DotProduct(FVector(GrapplingDirection.X,GrapplingDirection.Y,0),CharacterMovement->Velocity));
-	
-	
 	SetActorLocation(FMath::VInterpConstantTo(GetActorLocation(),GrappleHit.ImpactPoint, GetWorld()->DeltaTimeSeconds, GrapplingSpeed));
 	if((GetActorLocation() - GrappleHit.Location).Length() < 50)
-		StopGrapple(GrapplingDirection);
+		StopGrapple();
 }
 
 FVector APlayerCharacter::GetSlideSurface(const FVector& FloorNormal)

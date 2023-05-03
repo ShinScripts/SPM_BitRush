@@ -3,8 +3,6 @@
 
 #include "AppearingPlatforms.h"
 
-#include "Components/SphereComponent.h"
-
 
 // Sets default values
 AAppearingPlatforms::AAppearingPlatforms()
@@ -14,10 +12,6 @@ AAppearingPlatforms::AAppearingPlatforms()
 
 	Platform = CreateDefaultSubobject<UStaticMeshComponent>("Platform");
 	Platform->SetupAttachment(RootComponent);
-
-	HitBox = CreateDefaultSubobject<USphereComponent>("HitBox");
-	HitBox->SetupAttachment(Platform);
-	HitBox->SetSphereRadius(HitBoxRadius);
 }
 
 // Called when the game starts or when spawned
@@ -25,24 +19,11 @@ void AAppearingPlatforms::BeginPlay()
 {
 	Super::BeginPlay();
 
-	HideActor(true);
 }
 
 // Called every frame
 void AAppearingPlatforms::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-}
-
-void AAppearingPlatforms::HideActor(const bool ShouldHide)
-{
-	// Hides the actor 
-	SetActorHiddenInGame(ShouldHide);
-
-	// TODO: Disable collision
-	// SetActorEnableCollision(!ShouldHide);
-	
-	// Stop it from ticking
-	SetActorTickEnabled(!ShouldHide);
 }
 
