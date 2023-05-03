@@ -33,7 +33,6 @@ void AEnemyRocketTurret::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
 	
-	
 	//TODO If player in sight, aim at player
 	//Shoot on cooldown
 }
@@ -41,8 +40,12 @@ void AEnemyRocketTurret::Tick(float DeltaSeconds)
 //Turret fires a rocket that follows the player
 void AEnemyRocketTurret::Shoot()
 {
-	auto Rocket = GetWorld()->SpawnActor<ARocketProjectile>(RocketProjectileClass, ProjectileSpawnPoint->GetComponentLocation(), TurretTower->GetComponentRotation());
-	Rocket->SetOwner(this);
+	const auto Rocket = GetWorld()->SpawnActor<ARocketProjectile>(RocketProjectileClass, ProjectileSpawnPoint->GetComponentLocation(), TurretTower->GetComponentRotation());
+
+	if (Rocket)
+	{
+		Rocket->SetOwner(this);
+	}
 }
 
 void AEnemyRocketTurret::Destroy()

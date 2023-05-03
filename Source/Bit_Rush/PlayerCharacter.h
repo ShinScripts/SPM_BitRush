@@ -7,6 +7,38 @@
 #include "GameFramework/Character.h"
 #include "PlayerCharacter.generated.h"
 
+
+USTRUCT(BlueprintType)
+struct FMovementData
+{
+	GENERATED_BODY()
+
+	void SetCharacterMovement(UCharacterMovementComponent* InCharacterMovementComponent) const;
+	void SetCharacterHitBox(UCapsuleComponent* InCharacterMovementComponent) const;
+	void SetDefaultValues();
+	void SetGroundFriction(const float NewGroundFriction);
+	void SetGravityScale(const float NewGravityScale);
+	void SetBrakingDecelerationWalking(const float NewBrakingDecelerationWalking);
+	void SetFallingLateralFriction(const float NewFallingLateralFriction);
+
+	UPROPERTY(BlueprintReadWrite)
+	float GravityScale;
+
+	UPROPERTY(BlueprintReadWrite)
+	float FallingLateralFriction;
+
+	UPROPERTY(BlueprintReadWrite)
+	float JumpForce;
+
+	UPROPERTY(BlueprintReadWrite)
+	float AirControl;
+	
+	float GroundFriction;
+	float BrakingDecelerationWalking;
+	float BrakingFrictionFactor;
+	float MaxAcceleration;
+};
+
 UCLASS()
 class BIT_RUSH_API APlayerCharacter : public ACharacter
 {
@@ -15,7 +47,6 @@ class BIT_RUSH_API APlayerCharacter : public ACharacter
 public:
 	// Sets default values for this character's properties
 	APlayerCharacter();
-
 
 protected:
 	// Called when the game starts or when spawned
@@ -28,14 +59,25 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-private:
+	UPROPERTY()
+	class UCameraComponent* CameraComp;
+	
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	bool bCanMove;
 
+	UPROPERTY(BlueprintReadWrite, meta=(AllowPrivateAccess))
+	FMovementData MovementData;
+	
+private:
 	//Variable
 	UPROPERTY(EditAnywhere)
 	float SlideVelocity = 5000000;
-	
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta=(AllowPrivateAccess))
-	bool bCanMove;
+
+	UPROPERTY(EditAnywhere)
+	float FlatSlideVelocity = 7000000;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess))
+	float CurrentTime;
 
 	// Dash
 	UPROPERTY(EditAnywhere)
@@ -47,12 +89,14 @@ private:
 	bool CanDash = true;
 
 	bool bIsDashing = false;
+	
 	UPROPERTY(EditAnywhere)
 	float DashCooldown = 1;
 
-	UPROPERTY()
-	class UCameraComponent* CameraComp;
-	
+	UPROPERTY(EditAnywhere)
+	float MaxSlideVelocity = 3000;
+
+	UPROPERTY(BlueprintReadOnly,meta=(AllowPrivateAccess))
 	bool bShouldSlide = false;
 	
 	bool ShouldLaunchSlide = false;
@@ -69,18 +113,29 @@ private:
 	UPROPERTY(EditAnywhere)
 	float GrapplingSpeed = 3000;
 
+	UPROPERTY(EditAnywhere)
+	float GrapplingLaunchSpeed = 2000;
+
 	bool bCanGrapple;
+
+	float CrouchSpeed = 10;
+	
+	float HitBoxDefaultValue;
+	float CrouchHitBoxValue;
 
 	FVector DashDistance;
 	
-	class UCharacterMovementComponent* CharacterMovement;
+	UCharacterMovementComponent* CharacterMovement;
 	
-	struct FHitResult FloorHit;
-
+	FHitResult FloorHit;
 	FHitResult GrappleHit;
+
+	UCapsuleComponent* CharacterHitBox;
+	
 	//Functions
-	void MoveForward(float AxisValue);
-	void MoveRight(float AxisValue);
+	void MoveForward(const float AxisValue);
+	void MoveRight(const float AxisValue);
+	void Jump();
 
 	//Dash
 	void Dash();
@@ -99,5 +154,16 @@ private:
 	void StopGrapple();
 	void Grapple();
 	//void StopSlidingAfterSeconds();
-	FVector GetSlideSurface(FVector);
+	FVector GetSlideSurface(const FVector& FloorNormal);
+
+	UFUNCTION(BlueprintCallable)
+	virtual float TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator,
+	                         AActor* DamageCauser) override;
+
+	// Shahin
+	UFUNCTION(BlueprintCallable)
+	void SetDefaultMovementDataValues()
+	{
+		MovementData.SetDefaultValues();
+	}
 };

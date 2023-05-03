@@ -6,22 +6,17 @@
 #include "EnemyPawn.h"
 #include "EnemyLaserTurret.generated.h"
 
-/**
- * 
- */
+
 UCLASS()
 class BIT_RUSH_API AEnemyLaserTurret : public AEnemyPawn
 {
 	GENERATED_BODY()
 	FHitResult HitResult;
 	
-
-
 public: 
 	AEnemyLaserTurret();
 	
 private:
-
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Body", meta = (AllowPrivateAccess))
 	class UCapsuleComponent* CapsuleComp;
 
@@ -39,6 +34,5 @@ private:
 	
 	virtual void Tick(float DeltaSeconds) override;
 	virtual void Shoot() override;
-
 	virtual void Destroy() override;
 };

@@ -6,19 +6,14 @@
 #include "EnemyPawn.h"
 #include "EnemyRocketTurret.generated.h"
 
-/**
- * 
- */
+
 UCLASS()
 class BIT_RUSH_API AEnemyRocketTurret : public AEnemyPawn
 {
 	GENERATED_BODY()
 
 public:
-	
 	virtual void BeginPlay() override;
-
-
 	virtual void Tick(float DeltaSeconds) override;
 	
 protected:
@@ -46,6 +41,5 @@ private:
 	virtual void Destroy() override;
 
 	UFUNCTION(BlueprintCallable)
-	virtual void Shoot() override;
-	
+	virtual void Shoot() override;	
 };
