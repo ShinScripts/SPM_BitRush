@@ -7,6 +7,7 @@
 #include "GameFramework/Character.h"
 #include "PlayerCharacter.generated.h"
 
+class UBoxComponent;
 
 USTRUCT(BlueprintType)
 struct FMovementData
@@ -69,6 +70,12 @@ public:
 	FMovementData MovementData;
 	
 private:
+	UPROPERTY(EditDefaultsOnly)
+	UBoxComponent* BoxLeft;
+
+	UPROPERTY(EditDefaultsOnly)
+	UBoxComponent* BoxRight;
+	
 	//Variable
 	UPROPERTY(EditAnywhere)
 	float SlideVelocity = 5000000;
@@ -163,8 +170,5 @@ private:
 
 	// Shahin
 	UFUNCTION(BlueprintCallable)
-	void SetDefaultMovementDataValues()
-	{
-		MovementData.SetDefaultValues();
-	}
+	void SetDefaultMovementDataValues();
 };

@@ -4,6 +4,7 @@
 #include "PlayerCharacter.h"
 
 #include "Camera/CameraComponent.h"
+#include "Components/BoxComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Engine/World.h"
@@ -60,7 +61,15 @@ APlayerCharacter::APlayerCharacter()
 	
 	CharacterMovement = GetCharacterMovement();
 	MovementData.SetDefaultValues();
-	
+
+	// BoxLeft = CreateDefaultSubobject<UBoxComponent>("BoxLeft");
+	// BoxLeft->SetupAttachment(RootComponent);
+	//
+	// BoxRight = CreateDefaultSubobject<UBoxComponent>("BoxRight");
+	// BoxRight->SetupAttachment(RootComponent);
+	//
+	// BoxLeft->OnComponentBeginOverlap.AddDynamic(this, &APlayerCharacter::BeginOverlap);
+	// BoxRight->OnComponentBeginOverlap.AddDynamic(this, &APlayerCharacter::BeginOverlap);
 }
 
 
@@ -296,5 +305,8 @@ float APlayerCharacter::TakeDamage
 	return CurrentTime;
 }
 
-
-
+// Shahin
+void APlayerCharacter::SetDefaultMovementDataValues()
+{
+	MovementData.SetDefaultValues();
+}

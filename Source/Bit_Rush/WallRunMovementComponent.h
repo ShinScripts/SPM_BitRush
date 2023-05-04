@@ -34,23 +34,33 @@ private:
 	
 	UFUNCTION(BlueprintCallable)
 	void JumpOffWall(APlayerCharacter* PlayerCharacter);
+
+	bool ContainsTag(FHitResult HitResult);
 	
-	float LineTraceLength = 120.f;
+	UPROPERTY(EditAnywhere)
+	float LineTraceLength = 110.f;
+	
+	UPROPERTY(EditAnywhere)
 	float JumpOffWallForce = 1.5f;
+
+	UPROPERTY(EditAnywhere)
 	float InterpolationSpeed = 10.f;
+
+	UPROPERTY(EditAnywhere)
 	float RollDegrees = 15.f;
 
-	UPROPERTY(BlueprintReadOnly, meta=(AllowPrivateAccess))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(AllowPrivateAccess))
 	float JumpOffWallVelocityMultiplier = 1.5f;
 
-	UPROPERTY(BlueprintReadOnly, meta=(AllowPrivateAccess))
+	UPROPERTY(BlueprintReadWrite, meta=(AllowPrivateAccess))
 	bool OnRightSide = false;
 
-	UPROPERTY(BlueprintReadOnly, meta=(AllowPrivateAccess))
+	UPROPERTY(BlueprintReadWrite, meta=(AllowPrivateAccess))
 	bool OnLeftSide = false;
 
 	UPROPERTY(BlueprintReadWrite, meta=(AllowPrivateAccess))
 	bool IsJumpingOffWall = false;
-	
+
+	UPROPERTY(EditAnywhere)
 	FName WallRunTag = "WallRunnable";
 };
