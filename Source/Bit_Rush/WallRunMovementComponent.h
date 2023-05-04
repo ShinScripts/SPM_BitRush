@@ -34,7 +34,7 @@ private:
 	
 	UFUNCTION(BlueprintCallable)
 	void JumpOffWall(APlayerCharacter* PlayerCharacter);
-
+	
 	bool ContainsTag(FHitResult HitResult);
 	
 	UPROPERTY(EditAnywhere)
