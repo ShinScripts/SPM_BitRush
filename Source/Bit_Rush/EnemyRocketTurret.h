@@ -32,9 +32,6 @@ private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Body", meta = (AllowPrivateAccess))
 	USceneComponent* ProjectileSpawnPoint;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Body", meta = (AllowPrivateAccess))
-	UStaticMeshComponent* WeakSpot;
-
 	UPROPERTY(EditDefaultsOnly, Category = "Rockets")
 	TSubclassOf<class ARocketProjectile> RocketProjectileClass;
 	
