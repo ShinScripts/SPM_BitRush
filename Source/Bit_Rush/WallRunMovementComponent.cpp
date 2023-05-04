@@ -61,10 +61,10 @@ void UWallRunMovementComponent::TickComponent(float DeltaTime, ELevelTick TickTy
 	GetWorld()->LineTraceSingleByChannel(HitResultRightAngle, StartTrace, RightSideEndAngleTrace, ECC_GameTraceChannel1, Params);
 	GetWorld()->LineTraceSingleByChannel(HitResultLeftAngle, StartTrace, LeftSideEndAngleTrace, ECC_GameTraceChannel1, Params);
 	
-	DrawDebugLine(GetWorld(), StartTrace, RightSideEndTrace, FColor::Cyan, false, 5.f);
-	DrawDebugLine(GetWorld(), StartTrace, LeftSideEndTrace, FColor::Cyan, false, 5.f);
-	DrawDebugLine(GetWorld(), StartTrace, RightSideEndAngleTrace, FColor::Red, false, 5.f);
-	DrawDebugLine(GetWorld(), StartTrace, LeftSideEndAngleTrace, FColor::Red, false, 5.f);
+	// DrawDebugLine(GetWorld(), StartTrace, RightSideEndTrace, FColor::Cyan, false, 5.f);
+	// DrawDebugLine(GetWorld(), StartTrace, LeftSideEndTrace, FColor::Cyan, false, 5.f);
+	// DrawDebugLine(GetWorld(), StartTrace, RightSideEndAngleTrace, FColor::Red, false, 5.f);
+	// DrawDebugLine(GetWorld(), StartTrace, LeftSideEndAngleTrace, FColor::Red, false, 5.f);
 	
 	// Right side
 	if(HitResultRight.bBlockingHit && ContainsTag(HitResultRight))
