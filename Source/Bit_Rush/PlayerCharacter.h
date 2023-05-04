@@ -131,6 +131,7 @@ private:
 	float CrouchHitBoxValue;
 
 	FVector DashDistance;
+	FVector DashDirection;
 	
 	UCharacterMovementComponent* CharacterMovement;
 	

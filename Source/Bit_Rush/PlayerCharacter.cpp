@@ -141,13 +141,19 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 void APlayerCharacter::MoveForward(const float AxisValue)
 {
 	if(bCanMove)
+	{
 		AddMovementInput(GetActorForwardVector() * AxisValue);
+		DashDirection.X = AxisValue;
+	}
 }
 
 void APlayerCharacter::MoveRight(const float AxisValue)
 {
 	if(bCanMove)
+	{
 		AddMovementInput(GetActorRightVector() * AxisValue);
+		DashDirection.Y = AxisValue;
+	}
 }
 
 void APlayerCharacter::Jump()
@@ -184,10 +190,8 @@ void APlayerCharacter::StartDash()
 	if(!CanDash) return;
 	
 	bIsDashing = true;
-	// CharacterMovement->Velocity.Z = 0;
-	DashDistance = CharacterMovement->Velocity.GetSafeNormal() * 20;
+	DashDistance = GetActorRotation().RotateVector(DashDirection.GetSafeNormal()) * 20;
 	DashDistance.Z = 0;
-	
 }
 
 void APlayerCharacter::ResetDash()
@@ -219,6 +223,7 @@ void APlayerCharacter::ExitSlide()
 
 void APlayerCharacter::PhysSlide(float DeltaTime)
 {
+	bCanMove = false;
 	if(CharacterMovement->Velocity.Length() > MaxSlideVelocity)
 	{
 		CharacterMovement->Velocity.GetSafeNormal() *= MaxSlideVelocity;
@@ -227,7 +232,7 @@ void APlayerCharacter::PhysSlide(float DeltaTime)
 	{
 		CharacterMovement->AddForce(SlideSurfNormal);
 	}
-	bCanMove = false;
+	
 }
 
 void APlayerCharacter::StopSlide()
