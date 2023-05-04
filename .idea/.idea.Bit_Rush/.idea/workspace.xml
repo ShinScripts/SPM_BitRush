@@ -10,12 +10,6 @@
   <component name="ChangeListManager">
     <list default="true" id="2a97e929-d2b1-4ad0-bc3e-9f94598a1990" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.Bit_Rush/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Bit_Rush/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Blueprints/BP_EMPGrenade.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Blueprints/BP_EMPGrenade.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Blueprints/BP_PlayerCharacter.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Blueprints/BP_PlayerCharacter.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/Bit_Rush/DeflectorBoxComponent.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Bit_Rush/DeflectorBoxComponent.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/Bit_Rush/DeflectorBoxComponent.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Bit_Rush/DeflectorBoxComponent.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/Bit_Rush/PlayerCharacter.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Bit_Rush/PlayerCharacter.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/Bit_Rush/PlayerCharacter.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Bit_Rush/PlayerCharacter.h" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -178,7 +172,7 @@
       <workItem from="1681835826569" duration="2123000" />
       <workItem from="1681849247011" duration="217000" />
       <workItem from="1682006451127" duration="13275000" />
-      <workItem from="1683124427208" duration="9095000" />
+      <workItem from="1683124427208" duration="9755000" />
     </task>
     <servers />
   </component>
