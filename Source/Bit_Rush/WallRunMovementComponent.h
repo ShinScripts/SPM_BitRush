@@ -39,9 +39,6 @@ private:
 	
 	UPROPERTY(EditAnywhere)
 	float LineTraceLength = 110.f;
-	
-	UPROPERTY(EditAnywhere)
-	float JumpOffWallForce = 1.5f;
 
 	UPROPERTY(EditAnywhere)
 	float InterpolationSpeed = 10.f;
