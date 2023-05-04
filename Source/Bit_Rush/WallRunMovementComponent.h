@@ -39,9 +39,6 @@ private:
 	
 	UPROPERTY(EditAnywhere)
 	float LineTraceLength = 110.f;
-	
-	UPROPERTY(EditAnywhere)
-	float JumpOffWallForce = 1.5f;
 
 	UPROPERTY(EditAnywhere)
 	float InterpolationSpeed = 10.f;
@@ -57,6 +54,8 @@ private:
 
 	UPROPERTY(BlueprintReadWrite, meta=(AllowPrivateAccess))
 	bool OnLeftSide = false;
+
+	bool IsOffWall = false;
 
 	UPROPERTY(BlueprintReadWrite, meta=(AllowPrivateAccess))
 	bool IsJumpingOffWall = false;
