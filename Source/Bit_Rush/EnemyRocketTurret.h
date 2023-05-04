@@ -20,19 +20,19 @@ protected:
 	AEnemyRocketTurret();
 	
 private:
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Body", meta = (AllowPrivateAccess))
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Body", meta = (AllowPrivateAccess))
 	class UCapsuleComponent* CapsuleComp;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Body", meta = (AllowPrivateAccess))
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Body", meta = (AllowPrivateAccess))
 	UStaticMeshComponent* TurretBase;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Body", meta = (AllowPrivateAccess))
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Body", meta = (AllowPrivateAccess))
 	UStaticMeshComponent* TurretTower;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Body", meta = (AllowPrivateAccess))
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Body", meta = (AllowPrivateAccess))
 	USceneComponent* ProjectileSpawnPoint;
 
-	UPROPERTY(EditDefaultsOnly, Category = "Rockets")
+	UPROPERTY(VisibleDefaultsOnly, Category = "Rockets")
 	TSubclassOf<class ARocketProjectile> RocketProjectileClass;
 	
 	virtual void Destroy() override;
