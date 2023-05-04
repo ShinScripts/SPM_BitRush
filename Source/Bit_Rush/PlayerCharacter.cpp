@@ -304,9 +304,3 @@ float APlayerCharacter::TakeDamage
 	CurrentTime -= DamageAmount;
 	return CurrentTime;
 }
-
-// Shahin
-void APlayerCharacter::SetDefaultMovementDataValues()
-{
-	MovementData.SetDefaultValues();
-}

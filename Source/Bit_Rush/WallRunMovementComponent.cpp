@@ -35,7 +35,6 @@ void UWallRunMovementComponent::TickComponent(float DeltaTime, ELevelTick TickTy
 	{
 		OnRightSide = false;
 		OnLeftSide = false;
-		PlayerCharacter->bCanMove = true;
 		
 		OffWall(PlayerCharacter, DeltaTime);
 		return; 
@@ -94,7 +93,10 @@ void UWallRunMovementComponent::TickComponent(float DeltaTime, ELevelTick TickTy
 		OnRightSide = false;
 		
 		if(!OnLeftSide)
+		{
+			IsOffWall = true;
 			OffWall(PlayerCharacter, DeltaTime);
+		}
 	}
 	
 	
@@ -126,7 +128,10 @@ void UWallRunMovementComponent::TickComponent(float DeltaTime, ELevelTick TickTy
 		OnLeftSide = false;
 	
 		if(!OnRightSide)
+		{
+			IsOffWall = true;
 			OffWall(PlayerCharacter, DeltaTime);
+		}
 	}
 }
 
@@ -154,12 +159,14 @@ void UWallRunMovementComponent::TiltCamera(UCameraComponent* CameraComp, float D
 
 void UWallRunMovementComponent::OffWall(APlayerCharacter* PlayerCharacter, float DeltaTime)
 {
-	PlayerCharacter->MovementData.SetDefaultValues();
+	if(IsOffWall)
+	{
+		PlayerCharacter->bCanMove = true;
+		PlayerCharacter->MovementData.SetDefaultValues();
+		IsOffWall = false;
+	}
 	
 	TiltCamera(PlayerCharacter->CameraComp, 0.f, InterpolationSpeed, DeltaTime);
-
-	if(!OnLeftSide && !OnRightSide)
-		PlayerCharacter->bCanMove = true;
 }
 
 void UWallRunMovementComponent::JumpOffWall(APlayerCharacter* PlayerCharacter)
