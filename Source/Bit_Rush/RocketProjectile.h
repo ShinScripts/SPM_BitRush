@@ -26,4 +26,18 @@ public:
 private:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, meta=(AllowPrivateAccess))
 	float ProjectileDamage;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Combat", meta=(AllowPrivateAccess))
+	class UNiagaraSystem* HitParticles;
+	
+	UFUNCTION(BlueprintCallable)
+	void SpawnHitParticles(UNiagaraSystem* ParticlesToSpawn, FVector ScaleOfSystem) const;
+	
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly,Category = "Combat", meta=(AllowPrivateAccess))
+	class UNiagaraSystem* HitParticlesPlayer;
+	
+
+	
+	
 };
