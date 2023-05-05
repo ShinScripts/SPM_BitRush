@@ -68,6 +68,10 @@ public:
 
 	UPROPERTY(BlueprintReadWrite, meta=(AllowPrivateAccess))
 	FMovementData MovementData;
+
+	//Deflect
+	UFUNCTION(BlueprintCallable)
+	UDeflectorBoxComponent* GetDeflectorBox();
 	
 private:
 	UPROPERTY(EditDefaultsOnly)
@@ -161,10 +165,23 @@ private:
 	void CanGrapple();
 	void StopGrapple();
 	void Grapple();
+
+	//Deflect
+	// - variables
+	UDeflectorBoxComponent* DeflectorBox;
+	// - functions
+	void DeflectON();
+	void DeflectOFF();
+	void SetDeflectBoxVariable();
+	
 	//void StopSlidingAfterSeconds();
 	FVector GetSlideSurface(const FVector& FloorNormal);
 
 	UFUNCTION(BlueprintCallable)
 	virtual float TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator,
 	                         AActor* DamageCauser) override;
+
+	//Debug utility
+	void ScreenPrint(FString Message);
+	void ScreenPrint(FString Message, FColor Color);
 };
