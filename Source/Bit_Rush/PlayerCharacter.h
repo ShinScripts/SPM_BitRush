@@ -183,4 +183,8 @@ private:
 	//Debug utility
 	void ScreenPrint(FString Message);
 	void ScreenPrint(FString Message, FColor Color);
+
+	//Shoot
+	/*UFUNCTION(BlueprintCallable)
+	void Shoot();*/
 };
