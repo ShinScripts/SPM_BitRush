@@ -71,6 +71,7 @@ void APlayerCharacter::BeginPlay()
 	//HitBoxDefaultValue = CharacterHitBox->GetScaledCapsuleHalfHeight();
 	bCanMove = true;
 	CameraComp = FindComponentByClass<UCameraComponent>();
+	SetDeflectBoxVariable();
 	CharacterHitBox = FindComponentByClass<UCapsuleComponent>();
 	HitBoxDefaultValue = CharacterHitBox->GetScaledCapsuleHalfHeight();
 	CrouchHitBoxValue = HitBoxDefaultValue/2;
@@ -127,7 +128,28 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 	PlayerInputComponent->BindAction(TEXT("Slide"),EInputEvent::IE_Pressed,this, &APlayerCharacter::EnterSlide);
 	PlayerInputComponent->BindAction(TEXT("Slide"),EInputEvent::IE_Released,this,&APlayerCharacter::ExitSlide);
 	PlayerInputComponent->BindAction(TEXT("Grapple"),EInputEvent::IE_Pressed,this,&APlayerCharacter::CanGrapple);
+	//Deflect
+	PlayerInputComponent->BindAction(TEXT("Deflect"),EInputEvent::IE_Pressed,this,&APlayerCharacter::DeflectON);
+	PlayerInputComponent->BindAction(TEXT("Deflect"),EInputEvent::IE_Released,this,&APlayerCharacter::DeflectOFF);
 }
+
+void APlayerCharacter::DeflectON()
+{
+	if(DeflectorBox == nullptr)
+	{
+		return;
+	}
+	DeflectorBox->StartDeflect();
+}
+void APlayerCharacter::DeflectOFF()
+{
+	if(DeflectorBox == nullptr)
+	{
+		return;
+	}
+	DeflectorBox->StopDeflect();
+}
+
 
 void APlayerCharacter::MoveForward(const float AxisValue)
 {
@@ -302,4 +324,45 @@ float APlayerCharacter::TakeDamage
 	return CurrentTime;
 }
 
+//Finding the DeflectorBoxComponent and setting a pointer to it
+void APlayerCharacter::SetDeflectBoxVariable()
+{
+	TArray<USceneComponent*> ChildList;
+	CameraComp->GetChildrenComponents(false, ChildList);
+	for(USceneComponent* Child : ChildList)
+	{
+		UDeflectorBoxComponent* DefBox = Cast<UDeflectorBoxComponent>(Child);
+		if(DefBox)
+		{
+			DeflectorBox = DefBox;
+			//ScreenPrint("This loop object does match", FColor::Green);
+		}
+		else
+		{
+			//ScreenPrint("This loop object does not match", FColor::Red);
+		}
+	}
+}
 
+//Debug utility----------------------------------------------------
+void APlayerCharacter::ScreenPrint(FString Message)
+{
+	if(GEngine)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Emerald, TEXT(""+Message));
+	}
+}
+
+void APlayerCharacter::ScreenPrint(FString Message, FColor Color)
+{
+	if(GEngine)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 2.0f, Color, TEXT(""+Message));
+	}
+}
+//----------------------------------------------------
+
+UDeflectorBoxComponent* APlayerCharacter::GetDeflectorBox()
+{
+	return DeflectorBox;
+}
