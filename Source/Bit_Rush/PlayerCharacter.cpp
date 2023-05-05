@@ -127,7 +127,6 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 	PlayerInputComponent->BindAction(TEXT("Slide"),EInputEvent::IE_Pressed,this, &APlayerCharacter::EnterSlide);
 	PlayerInputComponent->BindAction(TEXT("Slide"),EInputEvent::IE_Released,this,&APlayerCharacter::ExitSlide);
 	PlayerInputComponent->BindAction(TEXT("Grapple"),EInputEvent::IE_Pressed,this,&APlayerCharacter::CanGrapple);
-	PlayerInputComponent->BindAction("DetectKey",EInputEvent::IE_Pressed,this,&APlayerCharacter::KeyPressed);
 }
 
 void APlayerCharacter::MoveForward(const float AxisValue)
@@ -216,6 +215,12 @@ void APlayerCharacter::ExitSlide()
 void APlayerCharacter::PhysSlide(float DeltaTime)
 {
 	bCanMove = false;
+	
+	MovementData.SetGroundFriction(0);
+    	MovementData.SetGroundFriction(0);
+    	MovementData.SetBrakingDecelerationWalking(1000);
+    	MovementData.SetFallingLateralFriction(0);
+	
 	if(CharacterMovement->Velocity.Length() > MaxSlideVelocity)
 	{
 		CharacterMovement->Velocity.GetSafeNormal() *= MaxSlideVelocity;
@@ -297,8 +302,4 @@ float APlayerCharacter::TakeDamage
 	return CurrentTime;
 }
 
-void APlayerCharacter::KeyPressed(FKey key)
-{
-	UE_LOG(LogTemp,Warning,TEXT("%s"),*key.GetFName().ToString());
-}
 
