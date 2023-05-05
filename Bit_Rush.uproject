@@ -29,10 +29,6 @@
 		{
 			"Name": "TraceSourceFilters",
 			"Enabled": true
-		},
-		{
-			"Name": "GeometryScripting",
-			"Enabled": true
 		}
 	]
 }
