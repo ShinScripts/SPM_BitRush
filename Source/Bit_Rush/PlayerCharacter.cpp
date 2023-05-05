@@ -7,6 +7,7 @@
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Engine/World.h"
+#include "Kismet/GameplayStatics.h"
 
 void FMovementData::SetCharacterMovement(UCharacterMovementComponent* InCharacterMovementComponent) const
 {
@@ -60,7 +61,6 @@ APlayerCharacter::APlayerCharacter()
 	
 	CharacterMovement = GetCharacterMovement();
 	MovementData.SetDefaultValues();
-	
 }
 
 
@@ -71,7 +71,6 @@ void APlayerCharacter::BeginPlay()
 	//HitBoxDefaultValue = CharacterHitBox->GetScaledCapsuleHalfHeight();
 	bCanMove = true;
 	CameraComp = FindComponentByClass<UCameraComponent>();
-	SetDeflectBoxVariable();
 	CharacterHitBox = FindComponentByClass<UCapsuleComponent>();
 	HitBoxDefaultValue = CharacterHitBox->GetScaledCapsuleHalfHeight();
 	CrouchHitBoxValue = HitBoxDefaultValue/2;
@@ -123,44 +122,29 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 	PlayerInputComponent->BindAxis(TEXT("MouseYaw"),this, &APawn::AddControllerYawInput);
 
 	//Binding Action
-	//Movement
 	PlayerInputComponent->BindAction(TEXT("Jump"),EInputEvent::IE_Pressed,this, &ACharacter::Jump);
 	PlayerInputComponent->BindAction(TEXT("Dash"),EInputEvent::IE_Pressed,this, &APlayerCharacter::StartDash);
 	PlayerInputComponent->BindAction(TEXT("Slide"),EInputEvent::IE_Pressed,this, &APlayerCharacter::EnterSlide);
 	PlayerInputComponent->BindAction(TEXT("Slide"),EInputEvent::IE_Released,this,&APlayerCharacter::ExitSlide);
 	PlayerInputComponent->BindAction(TEXT("Grapple"),EInputEvent::IE_Pressed,this,&APlayerCharacter::CanGrapple);
-	//Deflect
-	PlayerInputComponent->BindAction(TEXT("Deflect"),EInputEvent::IE_Pressed,this,&APlayerCharacter::DeflectON);
-	PlayerInputComponent->BindAction(TEXT("Deflect"),EInputEvent::IE_Released,this,&APlayerCharacter::DeflectOFF);
-}
-
-void APlayerCharacter::DeflectON()
-{
-	if(DeflectorBox == nullptr)
-	{
-		return;
-	}
-	DeflectorBox->StartDeflect();
-}
-void APlayerCharacter::DeflectOFF()
-{
-	if(DeflectorBox == nullptr)
-	{
-		return;
-	}
-	DeflectorBox->StopDeflect();
 }
 
 void APlayerCharacter::MoveForward(const float AxisValue)
 {
 	if(bCanMove)
+	{
 		AddMovementInput(GetActorForwardVector() * AxisValue);
+		DashDirection.X = AxisValue;
+	}
 }
 
 void APlayerCharacter::MoveRight(const float AxisValue)
 {
 	if(bCanMove)
+	{
 		AddMovementInput(GetActorRightVector() * AxisValue);
+		DashDirection.Y = AxisValue;
+	}
 }
 
 void APlayerCharacter::Jump()
@@ -197,10 +181,8 @@ void APlayerCharacter::StartDash()
 	if(!CanDash) return;
 	
 	bIsDashing = true;
-	// CharacterMovement->Velocity.Z = 0;
-	DashDistance = CharacterMovement->Velocity.GetSafeNormal() * 20;
+	DashDistance = GetActorRotation().RotateVector(DashDirection.GetSafeNormal()) * 20;
 	DashDistance.Z = 0;
-	
 }
 
 void APlayerCharacter::ResetDash()
@@ -232,6 +214,13 @@ void APlayerCharacter::ExitSlide()
 
 void APlayerCharacter::PhysSlide(float DeltaTime)
 {
+	bCanMove = false;
+	
+	MovementData.SetGroundFriction(0);
+    	MovementData.SetGroundFriction(0);
+    	MovementData.SetBrakingDecelerationWalking(1000);
+    	MovementData.SetFallingLateralFriction(0);
+	
 	if(CharacterMovement->Velocity.Length() > MaxSlideVelocity)
 	{
 		CharacterMovement->Velocity.GetSafeNormal() *= MaxSlideVelocity;
@@ -240,7 +229,7 @@ void APlayerCharacter::PhysSlide(float DeltaTime)
 	{
 		CharacterMovement->AddForce(SlideSurfNormal);
 	}
-	bCanMove = false;
+	
 }
 
 void APlayerCharacter::StopSlide()
@@ -313,44 +302,4 @@ float APlayerCharacter::TakeDamage
 	return CurrentTime;
 }
 
-//Finding the DeflectorBoxComponent and setting a pointer to it
-void APlayerCharacter::SetDeflectBoxVariable()
-{
-	TArray<USceneComponent*> ChildList;
-	CameraComp->GetChildrenComponents(false, ChildList);
-	for(USceneComponent* Child : ChildList)
-	{
-		UDeflectorBoxComponent* DefBox = Cast<UDeflectorBoxComponent>(Child);
-		if(DefBox)
-		{
-			DeflectorBox = DefBox;
-			//ScreenPrint("This loop object does match", FColor::Green);
-		}
-		else
-		{
-			//ScreenPrint("This loop object does not match", FColor::Red);
-		}
-	}
-}
 
-//Debug utility
-void APlayerCharacter::ScreenPrint(FString Message)
-{
-	if(GEngine)
-	{
-		GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Emerald, TEXT(""+Message));
-	}
-}
-
-void APlayerCharacter::ScreenPrint(FString Message, FColor Color)
-{
-	if(GEngine)
-	{
-		GEngine->AddOnScreenDebugMessage(-1, 2.0f, Color, TEXT(""+Message));
-	}
-}
-
-UDeflectorBoxComponent* APlayerCharacter::GetDeflectorBox()
-{
-	return DeflectorBox;
-}

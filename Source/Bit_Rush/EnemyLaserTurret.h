@@ -28,9 +28,6 @@ private:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Body", meta = (AllowPrivateAccess))
 	USceneComponent* LaserSpawnPoint;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Body", meta = (AllowPrivateAccess))
-	UStaticMeshComponent* WeakSpot;
 	
 	virtual void Tick(float DeltaSeconds) override;
 	virtual void Shoot() override;

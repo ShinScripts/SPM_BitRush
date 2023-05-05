@@ -3,11 +3,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "DeflectorBoxComponent.h"
 
 #include "GameFramework/Character.h"
 #include "PlayerCharacter.generated.h"
 
+class UBoxComponent;
 
 USTRUCT(BlueprintType)
 struct FMovementData
@@ -68,12 +68,14 @@ public:
 
 	UPROPERTY(BlueprintReadWrite, meta=(AllowPrivateAccess))
 	FMovementData MovementData;
-
-	//Deflect
-	UFUNCTION(BlueprintCallable)
-	UDeflectorBoxComponent* GetDeflectorBox();
 	
 private:
+	UPROPERTY(EditDefaultsOnly)
+	UBoxComponent* BoxLeft;
+
+	UPROPERTY(EditDefaultsOnly)
+	UBoxComponent* BoxRight;
+	
 	//Variable
 	UPROPERTY(EditAnywhere)
 	float SlideVelocity = 5000000;
@@ -129,6 +131,7 @@ private:
 	float CrouchHitBoxValue;
 
 	FVector DashDistance;
+	FVector DashDirection;
 	
 	UCharacterMovementComponent* CharacterMovement;
 	
@@ -158,30 +161,10 @@ private:
 	void CanGrapple();
 	void StopGrapple();
 	void Grapple();
-
-	//Deflect
-	// - variables
-	UDeflectorBoxComponent* DeflectorBox;
-	// - functions
-	void DeflectON();
-	void DeflectOFF();
-	void SetDeflectBoxVariable();
-	
 	//void StopSlidingAfterSeconds();
 	FVector GetSlideSurface(const FVector& FloorNormal);
 
 	UFUNCTION(BlueprintCallable)
 	virtual float TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator,
 	                         AActor* DamageCauser) override;
-
-	// Shahin
-	UFUNCTION(BlueprintCallable)
-	void SetDefaultMovementDataValues()
-	{
-		MovementData.SetDefaultValues();
-	}
-
-	//Debug utility
-	void ScreenPrint(FString Message);
-	void ScreenPrint(FString Message, FColor Color);
 };

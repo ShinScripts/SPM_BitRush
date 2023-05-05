@@ -14,9 +14,6 @@ AEnemyLaserTurret::AEnemyLaserTurret()
 	TurretBase = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Turret base"));
 	TurretBase->SetupAttachment(CapsuleComp);
 
-	WeakSpot = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Weakspot"));
-	WeakSpot->SetupAttachment(CapsuleComp);
-
 	TurretTower = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Turret tower"));
 	TurretTower->SetupAttachment(TurretBase);
 
