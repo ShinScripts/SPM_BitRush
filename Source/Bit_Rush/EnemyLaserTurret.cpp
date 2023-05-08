@@ -24,18 +24,35 @@ AEnemyLaserTurret::AEnemyLaserTurret()
 void AEnemyLaserTurret::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
-	Shoot();
-	//TODO if player in sight track enemy and aim with a lead
-	//shoot on cooldown
+
 }
 
+void AEnemyLaserTurret::Recharge()
+{
+	CanFire = true;
+}
+void AEnemyLaserTurret::FireLaser()
+{
+	//DrawDebugLine(GetWorld(), LaserSpawnPoint->GetComponentLocation(), Hit.Location, FColor::Red, false, RechargeTimer, 10, 15);
+
+	CanFire = false;
+	FTimerHandle ChargeHandle;
+	FVector LaserStart = LaserSpawnPoint->GetComponentLocation();
+	FVector LaserEnd = (LaserSpawnPoint->GetComponentLocation() + (GetActorRotation().Vector() * 2000));
+
+	FHitResult Hit;
+
+	FCollisionQueryParams Params;
+	Params.AddIgnoredActor(this);
+
+
+	GetWorld()->SweepSingleByChannel(Hit, LaserStart, LaserEnd, FQuat::Identity, ECC_GameTraceChannel1, FCollisionShape::MakeSphere(12.0f), Params);
+	DrawDebugLine(GetWorld(), LaserStart, Hit.Location, FColor::Red, false, RechargeTimer, 10, 15);
+	GetWorldTimerManager().SetTimer(ChargeHandle, this, &AEnemyLaserTurret::Recharge, RechargeTimer, false);
+}
 //Turret creates an outliner for the laser that is about to activate
 void AEnemyLaserTurret::Shoot()
 {
-	//TODO Render a line
-	//stop turret movement
-	//generate damaging laser
-
 	ACharacter* Char = UGameplayStatics::GetPlayerCharacter(this, 0);
 	FVector LaserStart = LaserSpawnPoint->GetComponentLocation();
 	FVector LaserEnd = (LaserSpawnPoint->GetComponentLocation() + (GetActorRotation().Vector() * 2000));
@@ -45,12 +62,15 @@ void AEnemyLaserTurret::Shoot()
 	FCollisionQueryParams Params;
 	Params.AddIgnoredActor(this);
 
-	// TODO add all enemies? Params.AddIgnoredActor()
-	GetWorld()->SweepSingleByChannel(Hit, LaserStart, LaserEnd, FQuat::Identity, ECC_GameTraceChannel1, FCollisionShape::MakeSphere(12.0f), Params);
-	DrawDebugLine(GetWorld(), LaserStart, Hit.Location, FColor::Red, false, 0, 10);
 
-	//	FColor(255,0,0),true , 0, 0, 1); 
+	GetWorld()->SweepSingleByChannel(Hit, LaserStart, LaserEnd, FQuat::Identity, ECC_GameTraceChannel1, FCollisionShape::MakeSphere(12.0f), Params);
+	DrawDebugLine(GetWorld(), LaserStart, Hit.Location, FColor::Red, false, 0, 10, 5);
+	FTimerHandle ChargeHandl;
+	GetWorldTimerManager().SetTimer(ChargeHandl, this, &AEnemyLaserTurret::FireLaser, 2, false);
+
 }
+
+
 
 void AEnemyLaserTurret::Destroy()
 {
