@@ -28,8 +28,20 @@ private:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Body", meta = (AllowPrivateAccess))
 	USceneComponent* LaserSpawnPoint;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Combat", meta = (AllowPrivateAccess))
+	float RechargeTimer = 2;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category ="Combat", meta = (AllowPrivateAccess))
+	bool CanFire = true;
 	
 	virtual void Tick(float DeltaSeconds) override;
+	void Recharge();
+
+	UFUNCTION(BlueprintCallable)
 	virtual void Shoot() override;
+	
+	void FireLaser();
+
 	virtual void Destroy() override;
 };
