@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-
+#include "DeflectorBoxComponent.h"
 #include "GameFramework/Character.h"
 #include "PlayerCharacter.generated.h"
 
@@ -68,6 +68,10 @@ public:
 
 	UPROPERTY(BlueprintReadWrite, meta=(AllowPrivateAccess))
 	FMovementData MovementData;
+
+	//Deflect
+	UFUNCTION(BlueprintCallable)
+	UDeflectorBoxComponent* GetDeflectorBox();
 	
 private:
 	UPROPERTY(EditDefaultsOnly)
@@ -164,7 +168,23 @@ private:
 	//void StopSlidingAfterSeconds();
 	FVector GetSlideSurface(const FVector& FloorNormal);
 
+	//Deflect
+	// - variables
+	UDeflectorBoxComponent* DeflectorBox;
+	// - functions
+	void DeflectON();
+	void DeflectOFF();
+	void SetDeflectBoxVariable();
+
 	UFUNCTION(BlueprintCallable)
 	virtual float TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator,
 	                         AActor* DamageCauser) override;
+
+	//Debug utility
+	void ScreenPrint(FString Message);
+	void ScreenPrint(FString Message, FColor Color);
+
+	//Shoot
+	/*UFUNCTION(BlueprintCallable)
+	void Shoot();*/
 };
