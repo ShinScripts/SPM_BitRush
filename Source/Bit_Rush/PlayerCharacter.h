@@ -89,6 +89,12 @@ private:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess))
 	float CurrentTime;
+	
+	UPROPERTY(EditAnywhere)
+	int MaxAmmo = 8;
+	
+	UPROPERTY(EditAnywhere)
+	int Ammo = MaxAmmo;
 
 	// Dash
 	UPROPERTY(EditAnywhere)
