@@ -55,10 +55,10 @@ private:
 	UPROPERTY(BlueprintReadWrite, meta=(AllowPrivateAccess))
 	bool OnLeftSide = false;
 
-	bool IsOffWall = false;
-
 	UPROPERTY(BlueprintReadWrite, meta=(AllowPrivateAccess))
 	bool IsJumpingOffWall = false;
+
+	float InitialVelocity = 0.f;
 
 	UPROPERTY(EditAnywhere)
 	FName WallRunTag = "WallRunnable";
