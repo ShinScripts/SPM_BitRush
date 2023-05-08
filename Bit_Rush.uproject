@@ -7,7 +7,11 @@
 		{
 			"Name": "Bit_Rush",
 			"Type": "Runtime",
-			"LoadingPhase": "Default"
+			"LoadingPhase": "Default",
+			"AdditionalDependencies": [
+				"Engine",
+				"UMG"
+			]
 		}
 	],
 	"Plugins": [
@@ -17,6 +21,18 @@
 			"TargetAllowList": [
 				"Editor"
 			]
+		},
+		{
+			"Name": "WaveformEditor",
+			"Enabled": true
+		},
+		{
+			"Name": "TraceSourceFilters",
+			"Enabled": true
+		},
+		{
+			"Name": "GeometryScripting",
+			"Enabled": true
 		}
 	]
 }

@@ -2,9 +2,6 @@
 
 #include "MPlatformVInterpActorComponent.h"
 
-#include "VectorTypes.h"
-#include "EntitySystem/MovieSceneEntitySystemRunner.h"
-#include "Math/UnitConversion.h"
 
 // Sets default values for this component's properties
 UMPlatformVInterpActorComponent::UMPlatformVInterpActorComponent()
