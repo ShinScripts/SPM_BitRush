@@ -130,7 +130,7 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 	PlayerInputComponent->BindAction(TEXT("Grapple"),EInputEvent::IE_Pressed,this,&APlayerCharacter::CanGrapple);
 	PlayerInputComponent->BindAction(TEXT("Deflect"),EInputEvent::IE_Pressed,this,&APlayerCharacter::DeflectON);
 	PlayerInputComponent->BindAction(TEXT("Deflect"),EInputEvent::IE_Released,this,&APlayerCharacter::DeflectOFF);
-	//PlayerInputComponent->BindAction(TEXT("Shoot"),EInputEvent::IE_Pressed,this,&APlayerCharacter::Shoot);
+	PlayerInputComponent->BindAction(TEXT("Terminate"),EInputEvent::IE_Pressed,this,&APlayerCharacter::TerminatePlay);
 }
 
 void APlayerCharacter::DeflectON()
@@ -365,7 +365,7 @@ UDeflectorBoxComponent* APlayerCharacter::GetDeflectorBox()
 	return DeflectorBox;
 }
 
-//ShootProjectile
-/*void APlayerCharacter::Shoot()
+//Terminate game session
+void APlayerCharacter::TerminatePlay()
 {
-}*/
+}

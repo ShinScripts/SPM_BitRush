@@ -184,7 +184,7 @@ private:
 	void ScreenPrint(FString Message);
 	void ScreenPrint(FString Message, FColor Color);
 
-	//Shoot
-	/*UFUNCTION(BlueprintCallable)
-	void Shoot();*/
+	//Terminate game session
+	UFUNCTION(BlueprintCallable)
+	void TerminatePlay();
 };
