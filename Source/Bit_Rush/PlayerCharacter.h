@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-
+#include "DeflectorBoxComponent.h"
 #include "GameFramework/Character.h"
 #include "PlayerCharacter.generated.h"
 
@@ -68,6 +68,10 @@ public:
 
 	UPROPERTY(BlueprintReadWrite, meta=(AllowPrivateAccess))
 	FMovementData MovementData;
+
+	//Deflect
+	UFUNCTION(BlueprintCallable)
+	UDeflectorBoxComponent* GetDeflectorBox();
 	
 private:
 	UPROPERTY(EditDefaultsOnly)
@@ -85,6 +89,12 @@ private:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess))
 	float CurrentTime;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess))
+	int MaxAmmo = 8;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess))
+	int Ammo = 8;
 
 	// Dash
 	UPROPERTY(EditAnywhere)
@@ -126,6 +136,7 @@ private:
 
 	UPROPERTY(BlueprintReadOnly, meta = (AllowPrivateAccess))
 	bool bCanGrapple;
+	bool bIsGrappling;
 
 	float CrouchSpeed = 10;
 	
@@ -160,13 +171,30 @@ private:
 	void StopSlide();
 
 	//Grapple
-	void CanGrapple();
+	void ScanGrapple();
+	void StartGrapple();
 	void StopGrapple();
 	void Grapple();
 	//void StopSlidingAfterSeconds();
 	FVector GetSlideSurface(const FVector& FloorNormal);
 
+	//Deflect
+	// - variables
+	UDeflectorBoxComponent* DeflectorBox;
+	// - functions
+	void DeflectON();
+	void DeflectOFF();
+	void SetDeflectBoxVariable();
+
 	UFUNCTION(BlueprintCallable)
 	virtual float TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator,
 	                         AActor* DamageCauser) override;
+
+	//Debug utility
+	void ScreenPrint(FString Message);
+	void ScreenPrint(FString Message, FColor Color);
+
+	//Shoot
+	/*UFUNCTION(BlueprintCallable)
+	void Shoot();*/
 };

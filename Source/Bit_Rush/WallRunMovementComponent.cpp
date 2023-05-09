@@ -30,7 +30,7 @@ void UWallRunMovementComponent::TickComponent(float DeltaTime, ELevelTick TickTy
 
 	APlayerCharacter* PlayerCharacter = Cast<APlayerCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
 	
-	// Is user is NOT pressing W or is NOT falling
+	// If is NOT falling
 	if(!UGameplayStatics::GetPlayerCharacter(GetWorld(), 0)->GetMovementComponent()->IsFalling())
 	{
 		OnRightSide = false;
@@ -44,8 +44,8 @@ void UWallRunMovementComponent::TickComponent(float DeltaTime, ELevelTick TickTy
 	const FVector RightSideEndTrace = LineTraceLength * PlayerCharacter->GetActorRightVector() + PlayerCharacter->GetActorLocation();
 	const FVector LeftSideEndTrace = LineTraceLength * (PlayerCharacter->GetActorRightVector() * -1) + PlayerCharacter->GetActorLocation();
 
-	const FVector RightSideEndAngleTrace = LineTraceLength * (PlayerCharacter->GetActorRightVector() * 1.25f - PlayerCharacter->GetActorForwardVector()) + PlayerCharacter->GetActorLocation();
-	const FVector LeftSideEndAngleTrace = LineTraceLength * (PlayerCharacter->GetActorRightVector() * -1.25f - PlayerCharacter->GetActorForwardVector()) + PlayerCharacter->GetActorLocation();
+	const FVector RightSideEndAngleTrace = LineTraceLength * (PlayerCharacter->GetActorRightVector() - PlayerCharacter->GetActorForwardVector()) + PlayerCharacter->GetActorLocation();
+	const FVector LeftSideEndAngleTrace = LineTraceLength * (PlayerCharacter->GetActorRightVector() * -1.f - PlayerCharacter->GetActorForwardVector()) + PlayerCharacter->GetActorLocation();
 	
 	FHitResult HitResultRight;
 	FHitResult HitResultLeft;
@@ -60,43 +60,52 @@ void UWallRunMovementComponent::TickComponent(float DeltaTime, ELevelTick TickTy
 	GetWorld()->LineTraceSingleByChannel(HitResultRightAngle, StartTrace, RightSideEndAngleTrace, ECC_GameTraceChannel1, Params);
 	GetWorld()->LineTraceSingleByChannel(HitResultLeftAngle, StartTrace, LeftSideEndAngleTrace, ECC_GameTraceChannel1, Params);
 	
-	// DrawDebugLine(GetWorld(), StartTrace, RightSideEndTrace, FColor::Cyan, false, 5.f);
-	// DrawDebugLine(GetWorld(), StartTrace, LeftSideEndTrace, FColor::Cyan, false, 5.f);
-	// DrawDebugLine(GetWorld(), StartTrace, RightSideEndAngleTrace, FColor::Red, false, 5.f);
-	// DrawDebugLine(GetWorld(), StartTrace, LeftSideEndAngleTrace, FColor::Red, false, 5.f);
+	DrawDebugLine(GetWorld(), StartTrace, RightSideEndTrace, FColor::Cyan, false, 3.f);
+	DrawDebugLine(GetWorld(), StartTrace, LeftSideEndTrace, FColor::Cyan, false, 3.f);
+	DrawDebugLine(GetWorld(), StartTrace, RightSideEndAngleTrace, FColor::Red, false, 3.f);
+	DrawDebugLine(GetWorld(), StartTrace, LeftSideEndAngleTrace, FColor::Red, false, 3.f);
 	
 	// Right side
 	if(HitResultRight.bBlockingHit && ContainsTag(HitResultRight))
 	{
 		PlayerCharacter->bCanMove = false;
 		OnRightSide = true;	
+
+		if(FVector::DotProduct(HitResultRight.Normal, PlayerCharacter->GetActorForwardVector()) > OffWallThreshold)
+		{
+			OffWall(PlayerCharacter, DeltaTime);
+			return;
+		}
 		
 		if(!IsJumpingOffWall)
 		{
 			SetWallRunVelocity(PlayerCharacter, FVector::CrossProduct(HitResultRight.Normal, FVector(0.f, 0.f, -1.f)));
 			TiltCamera(PlayerCharacter->CameraComp, -RollDegrees, InterpolationSpeed, DeltaTime);
+			return;
 		}
 	}
 	else if (HitResultRightAngle.bBlockingHit && ContainsTag(HitResultRightAngle))
 	{
 		PlayerCharacter->bCanMove = false;
 		OnRightSide = true;	
+
+		if(FVector::DotProduct(HitResultRightAngle.Normal, PlayerCharacter->GetActorForwardVector()) > OffWallThreshold)
+		{
+			OffWall(PlayerCharacter, DeltaTime);
+			return;
+		}
 		
 		if(!IsJumpingOffWall)
 		{
 			SetWallRunVelocity(PlayerCharacter, FVector::CrossProduct(HitResultRightAngle.Normal, FVector(0.f, 0.f, -1.f)));
 			TiltCamera(PlayerCharacter->CameraComp, -RollDegrees, InterpolationSpeed, DeltaTime);
+			return;
 		}
 	}
 	else
 	{
-		OnRightSide = false;
-		
 		if(!OnLeftSide)
-		{
-			IsOffWall = true;
 			OffWall(PlayerCharacter, DeltaTime);
-		}
 	}
 	
 	
@@ -105,7 +114,13 @@ void UWallRunMovementComponent::TickComponent(float DeltaTime, ELevelTick TickTy
 	{
 		PlayerCharacter->bCanMove = false;
 		OnLeftSide = true;
-	
+
+		if(FVector::DotProduct(HitResultLeft.Normal, PlayerCharacter->GetActorForwardVector()) > OffWallThreshold)
+		{
+			OffWall(PlayerCharacter, DeltaTime);
+			return;
+		}
+		
 		if(!IsJumpingOffWall)
 		{
 			SetWallRunVelocity(PlayerCharacter, FVector::CrossProduct(HitResultLeft.Normal, FVector(0.f, 0.f, 1.f)));
@@ -116,7 +131,13 @@ void UWallRunMovementComponent::TickComponent(float DeltaTime, ELevelTick TickTy
 	{
 		PlayerCharacter->bCanMove = false;
 		OnLeftSide = true;
-	
+
+		if(FVector::DotProduct(HitResultLeftAngle.Normal, PlayerCharacter->GetActorForwardVector()) > OffWallThreshold)
+		{
+			OffWall(PlayerCharacter, DeltaTime);
+			return;
+		}
+		
 		if(!IsJumpingOffWall)
 		{
 			SetWallRunVelocity(PlayerCharacter, FVector::CrossProduct(HitResultLeftAngle.Normal, FVector(0.f, 0.f, 1.f)));
@@ -125,20 +146,19 @@ void UWallRunMovementComponent::TickComponent(float DeltaTime, ELevelTick TickTy
 	}
 	else
 	{
-		OnLeftSide = false;
-	
 		if(!OnRightSide)
-		{
-			IsOffWall = true;
 			OffWall(PlayerCharacter, DeltaTime);
-		}
 	}
 }
 
 void UWallRunMovementComponent::SetWallRunVelocity(APlayerCharacter* PlayerCharacter, const FVector& CrossProduct)
 {
-	FVector Velocity = PlayerCharacter->GetMovementComponent()->GetMaxSpeed() * CrossProduct;
-	Velocity.Z = 0;
+	if(InitialVelocity == 0.f)
+		InitialVelocity = PlayerCharacter->GetMovementComponent()->Velocity.Size();
+	
+	const FVector Velocity = (InitialVelocity > MaxVelocity ? MaxVelocity : InitialVelocity < MinVelocity ? MinVelocity : InitialVelocity) * CrossProduct;
+	
+	// UE_LOG(LogTemp, Warning, TEXT("%s"), *Velocity.ToString());
 	
 	PlayerCharacter->LaunchCharacter(Velocity, true, true);
 	PlayerCharacter->MovementData.SetGravityScale(0.f);
@@ -159,13 +179,16 @@ void UWallRunMovementComponent::TiltCamera(UCameraComponent* CameraComp, float D
 
 void UWallRunMovementComponent::OffWall(APlayerCharacter* PlayerCharacter, float DeltaTime)
 {
-	if(IsOffWall)
+	if(OnLeftSide || OnRightSide)
 	{
 		PlayerCharacter->bCanMove = true;
 		PlayerCharacter->MovementData.SetDefaultValues();
-		IsOffWall = false;
+		
+		OnRightSide = false;
+		OnLeftSide = false;
 	}
 	
+	InitialVelocity = 0.f;
 	TiltCamera(PlayerCharacter->CameraComp, 0.f, InterpolationSpeed, DeltaTime);
 }
 
