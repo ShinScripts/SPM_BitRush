@@ -45,14 +45,22 @@ void APlayerCharacter::Tick(float DeltaTime)
 	}
 
 	if(bIsDashing)
-	{
 		Dash();
-	}
 
-	if(bCanGrapple)
-	{
+	
+
+	if(bIsGrappling)
 		Grapple();
+<<<<<<< Updated upstream
 	}
+=======
+	else
+		ScanGrapple();
+
+	//Reduces players time left
+	CurrentTime -= GetWorld()->GetDeltaSeconds();
+	// UE_LOG(LogTemp, Warning, TEXT("Time %f"), CurrentTime);
+>>>>>>> Stashed changes
 }
 
 // Called to bind functionality to input
@@ -70,7 +78,14 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 	PlayerInputComponent->BindAction(TEXT("Dash"),EInputEvent::IE_Pressed,this, &APlayerCharacter::StartDash);
 	PlayerInputComponent->BindAction(TEXT("Slide"),EInputEvent::IE_Pressed,this, &APlayerCharacter::EnterSlide);
 	PlayerInputComponent->BindAction(TEXT("Slide"),EInputEvent::IE_Released,this,&APlayerCharacter::ExitSlide);
+<<<<<<< Updated upstream
 	PlayerInputComponent->BindAction(TEXT("Grapple"),EInputEvent::IE_Pressed,this,&APlayerCharacter::CanGrapple);
+=======
+	PlayerInputComponent->BindAction(TEXT("Grapple"),EInputEvent::IE_Pressed,this,&APlayerCharacter::StartGrapple);
+	PlayerInputComponent->BindAction(TEXT("Deflect"),EInputEvent::IE_Pressed,this,&APlayerCharacter::DeflectON);
+	PlayerInputComponent->BindAction(TEXT("Deflect"),EInputEvent::IE_Released,this,&APlayerCharacter::DeflectOFF);
+	//PlayerInputComponent->BindAction(TEXT("Shoot"),EInputEvent::IE_Pressed,this,&APlayerCharacter::Shoot);
+>>>>>>> Stashed changes
 }
 
 void APlayerCharacter::MoveForward(float AxisValue)
@@ -149,26 +164,84 @@ void APlayerCharacter::StopSlide()
 }
 
 
-void APlayerCharacter::CanGrapple()
+void APlayerCharacter::ScanGrapple()
 {
+<<<<<<< Updated upstream
 	FVector TraceStart = CameraComp->GetComponentLocation();
 	FVector TraceEnd = TraceStart + CameraComp->GetForwardVector() * GrapplingHookRange;
+=======
+	/*if(bCanGrapple)
+		return;
+	
+	const FVector TraceStart = CameraComp->GetComponentLocation();
+	const FVector TraceEnd = TraceStart + CameraComp->GetForwardVector() * GrapplingHookRange;
+	
+>>>>>>> Stashed changes
 	FCollisionQueryParams QueryParams;
 	QueryParams.AddIgnoredActor(this);
 	DrawDebugLine(GetWorld(),TraceStart,TraceEnd,FColor::Red,false,0,0,5);
 	GetWorld()->SweepSingleByChannel(GrappleHit,TraceStart,TraceEnd,FQuat::Identity,ECC_GameTraceChannel1,FCollisionShape::MakeSphere(20),QueryParams);
 	if(GrappleHit.Component != nullptr && GrappleHit.Component->ComponentHasTag("GrapplePoint"))
 		bCanGrapple = true;
+<<<<<<< Updated upstream
 	//else
 	//{
 	//	bCanGrapple = false;
 	//}
 
+=======
+	}
+	*/
+
+	if(bIsGrappling)
+		return;
+	
+	const FVector TraceStart = CameraComp->GetComponentLocation();
+	const FVector TraceEnd = TraceStart + CameraComp->GetForwardVector() * GrapplingHookRange;
+	
+	TArray<FHitResult> OutHits;
+
+	FCollisionQueryParams QueryParams;
+	QueryParams.AddIgnoredActor(this);
+	
+	DrawDebugLine(GetWorld(),TraceStart,TraceEnd,FColor::Red,false,0,0,5);
+	bool bIsHit = GetWorld()->SweepMultiByChannel(OutHits,TraceStart,TraceEnd, FQuat::Identity,ECC_GameTraceChannel1,FCollisionShape::MakeSphere(50),QueryParams);
+
+	if(bIsHit)
+	{
+		for(auto& Hit : OutHits)
+		{
+			if(Hit.GetComponent()->ComponentHasTag("GrapplePoint"))
+			{
+				GrappleHit = Hit;
+				UE_LOG(LogTemp,Warning,TEXT("%s"),*GrappleHit.GetActor()->GetName());
+				bCanGrapple = true;
+				break;
+			}
+			else
+			{
+				bCanGrapple = false;
+				GrappleHit.Reset();
+			}
+		}
+	}
+}
+
+void APlayerCharacter::StartGrapple()
+{
+	if(bCanGrapple)
+	{
+		CharacterMovement->Velocity = FVector::Zero();
+		bIsGrappling = true;
+	}
+>>>>>>> Stashed changes
 }
 
 void APlayerCharacter::StopGrapple()
 {
+	bIsGrappling = false;
 	bCanGrapple = false;
+	GrappleHit.Reset();
 	CharacterMovement->SetMovementMode(MOVE_Walking);
 }
 
@@ -176,11 +249,16 @@ void APlayerCharacter::Grapple()
 {
 	CharacterMovement->Velocity = FVector::Zero();
 	CharacterMovement->SetMovementMode(MOVE_Flying);
+<<<<<<< Updated upstream
 	UE_LOG(LogTemp,Warning,TEXT("HIT"));
 
 	float GrapplingTime = GrappleHit.Distance/GrapplingSpeed;
 	SetActorLocation(FMath::VInterpConstantTo(GetActorLocation(),GrappleHit.ImpactPoint, GetWorld()->DeltaTimeSeconds, GrapplingSpeed));
 	if((GetActorLocation() - GrappleHit.Location).Length() < 50)
+=======
+	SetActorLocation(FMath::VInterpConstantTo(GetActorLocation(),GrappleHit.GetComponent()->GetComponentLocation(), GetWorld()->DeltaTimeSeconds, GrapplingSpeed));
+	if((GetActorLocation() - GrappleHit.GetComponent()->GetComponentLocation()).Length() < 70)
+>>>>>>> Stashed changes
 		StopGrapple();
 }
 

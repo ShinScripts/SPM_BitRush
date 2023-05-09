@@ -71,6 +71,16 @@ private:
 
 	bool bCanGrapple;
 
+<<<<<<< Updated upstream
+=======
+	bool bIsGrappling;
+
+	float CrouchSpeed = 10;
+	
+	float HitBoxDefaultValue;
+	float CrouchHitBoxValue;
+
+>>>>>>> Stashed changes
 	FVector DashDistance;
 	
 	class UCharacterMovementComponent* CharacterMovement;
@@ -95,7 +105,8 @@ private:
 	void StopSlide();
 
 	//Grapple
-	void CanGrapple();
+	void ScanGrapple();
+	void StartGrapple();
 	void StopGrapple();
 	void Grapple();
 	//void StopSlidingAfterSeconds();
