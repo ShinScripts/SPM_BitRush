@@ -30,7 +30,7 @@ private:
 	USceneComponent* LaserSpawnPoint;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Laser", meta = (AllowPrivateAccess))
-	USceneComponent* LaserBeam;
+	UStaticMeshComponent* LaserBeam;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Combat", meta = (AllowPrivateAccess))
 	float RechargeTimer = 2;

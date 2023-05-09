@@ -21,8 +21,8 @@ AEnemyLaserTurret::AEnemyLaserTurret()
 	LaserSpawnPoint = CreateDefaultSubobject<USceneComponent>(TEXT("Projectile spawn point"));
 	LaserSpawnPoint->SetupAttachment(TurretTower);
 
-	LaserBeam = CreateDefaultSubobject<USceneComponent>(TEXT("Laserbeam"));
-	LaserBeam->SetupAttachment(LaserSpawnPoint);
+	LaserBeam = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Laserbeam"));
+	LaserBeam->SetupAttachment(TurretTower);
 
 
 }
