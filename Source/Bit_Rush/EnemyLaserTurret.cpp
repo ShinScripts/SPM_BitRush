@@ -3,6 +3,7 @@
 
 #include "EnemyLaserTurret.h"
 
+#include "SAdvancedTransformInputBox.h"
 #include "Components/CapsuleComponent.h"
 #include "Kismet/GameplayStatics.h"
 
@@ -19,6 +20,11 @@ AEnemyLaserTurret::AEnemyLaserTurret()
 
 	LaserSpawnPoint = CreateDefaultSubobject<USceneComponent>(TEXT("Projectile spawn point"));
 	LaserSpawnPoint->SetupAttachment(TurretTower);
+
+	LaserBeam = CreateDefaultSubobject<USceneComponent>(TEXT("Laserbeam"));
+	LaserBeam->SetupAttachment(LaserSpawnPoint);
+
+
 }
 
 void AEnemyLaserTurret::Tick(float DeltaSeconds)
@@ -64,12 +70,14 @@ void AEnemyLaserTurret::Shoot()
 
 
 	GetWorld()->SweepSingleByChannel(Hit, LaserStart, LaserEnd, FQuat::Identity, ECC_GameTraceChannel1, FCollisionShape::MakeSphere(12.0f), Params);
+	
+	
 	DrawDebugLine(GetWorld(), LaserStart, Hit.Location, FColor::Red, false, 0, 10, 5);
 	FTimerHandle ChargeHandl;
 	GetWorldTimerManager().SetTimer(ChargeHandl, this, &AEnemyLaserTurret::FireLaser, 2, false);
 
+	LaserBeam->SetWorldScale3D(FVector(	(Hit.Location-LaserStart).Size(), 1, 1));
 }
-
 
 
 void AEnemyLaserTurret::Destroy()
