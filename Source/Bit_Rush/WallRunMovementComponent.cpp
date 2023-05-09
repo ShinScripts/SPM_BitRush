@@ -104,8 +104,6 @@ void UWallRunMovementComponent::TickComponent(float DeltaTime, ELevelTick TickTy
 	}
 	else
 	{
-		OnRightSide = false;
-		
 		if(!OnLeftSide)
 			OffWall(PlayerCharacter, DeltaTime);
 	}
@@ -148,8 +146,6 @@ void UWallRunMovementComponent::TickComponent(float DeltaTime, ELevelTick TickTy
 	}
 	else
 	{
-		OnLeftSide = false;
-	
 		if(!OnRightSide)
 			OffWall(PlayerCharacter, DeltaTime);
 	}
@@ -183,10 +179,16 @@ void UWallRunMovementComponent::TiltCamera(UCameraComponent* CameraComp, float D
 
 void UWallRunMovementComponent::OffWall(APlayerCharacter* PlayerCharacter, float DeltaTime)
 {
-	PlayerCharacter->bCanMove = true;
-	PlayerCharacter->MovementData.SetDefaultValues();
-	InitialVelocity = 0.f;
+	if(OnLeftSide || OnRightSide)
+	{
+		PlayerCharacter->bCanMove = true;
+		PlayerCharacter->MovementData.SetDefaultValues();
+		
+		OnRightSide = false;
+		OnLeftSide = false;
+	}
 	
+	InitialVelocity = 0.f;
 	TiltCamera(PlayerCharacter->CameraComp, 0.f, InterpolationSpeed, DeltaTime);
 }
 
