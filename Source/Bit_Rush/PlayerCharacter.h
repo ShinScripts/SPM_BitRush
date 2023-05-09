@@ -134,6 +134,7 @@ private:
 	float GrapplingLaunchSpeed = 2000;
 
 	bool bCanGrapple;
+	bool bIsGrappling;
 
 	float CrouchSpeed = 10;
 	
@@ -168,7 +169,8 @@ private:
 	void StopSlide();
 
 	//Grapple
-	void CanGrapple();
+	void ScanGrapple();
+	void StartGrapple();
 	void StopGrapple();
 	void Grapple();
 	//void StopSlidingAfterSeconds();

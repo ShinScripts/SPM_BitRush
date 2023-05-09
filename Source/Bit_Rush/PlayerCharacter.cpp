@@ -8,6 +8,7 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Engine/World.h"
 #include "Kismet/GameplayStatics.h"
+#include "GrapplingFeedbackComponent.h"
 
 void FMovementData::SetCharacterMovement(UCharacterMovementComponent* InCharacterMovementComponent) const
 {
@@ -101,9 +102,13 @@ void APlayerCharacter::Tick(float DeltaTime)
 		Dash();
 	}
 
-	if(bCanGrapple)
+	if(bIsGrappling)
 	{
 		Grapple();
+	}
+	else
+	{
+		ScanGrapple();
 	}
 
 	//Reduces players time left
@@ -127,7 +132,7 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 	PlayerInputComponent->BindAction(TEXT("Dash"),EInputEvent::IE_Pressed,this, &APlayerCharacter::StartDash);
 	PlayerInputComponent->BindAction(TEXT("Slide"),EInputEvent::IE_Pressed,this, &APlayerCharacter::EnterSlide);
 	PlayerInputComponent->BindAction(TEXT("Slide"),EInputEvent::IE_Released,this,&APlayerCharacter::ExitSlide);
-	PlayerInputComponent->BindAction(TEXT("Grapple"),EInputEvent::IE_Pressed,this,&APlayerCharacter::CanGrapple);
+	PlayerInputComponent->BindAction(TEXT("Grapple"),EInputEvent::IE_Pressed,this,&APlayerCharacter::StartGrapple);
 	PlayerInputComponent->BindAction(TEXT("Deflect"),EInputEvent::IE_Pressed,this,&APlayerCharacter::DeflectON);
 	PlayerInputComponent->BindAction(TEXT("Deflect"),EInputEvent::IE_Released,this,&APlayerCharacter::DeflectOFF);
 	PlayerInputComponent->BindAction(TEXT("Terminate"),EInputEvent::IE_Pressed,this,&APlayerCharacter::TerminatePlay);
@@ -171,12 +176,6 @@ void APlayerCharacter::MoveRight(const float AxisValue)
 void APlayerCharacter::Jump()
 {
 	Super::Jump();
-	
-	if(bCanGrapple)
-	{
-		StopGrapple();
-		LaunchCharacter(CameraComp->GetComponentRotation().Vector(),true,true);
-	}
 }
 
 void APlayerCharacter::Dash()
@@ -216,7 +215,7 @@ void APlayerCharacter::EnterSlide()
 	bShouldSlide = true;
 	MovementData.SetGroundFriction(0);
 	MovementData.SetGroundFriction(0);
-	MovementData.SetBrakingDecelerationWalking(1000);
+	MovementData.SetBrakingDecelerationWalking(1500);
 	MovementData.SetFallingLateralFriction(0);
 	
 	if(FloorHit.Normal.Equals(GetActorUpVector()))
@@ -237,9 +236,8 @@ void APlayerCharacter::PhysSlide(float DeltaTime)
 {
 	bCanMove = false;
 	
-	MovementData.SetGroundFriction(0);
     	MovementData.SetGroundFriction(0);
-    	MovementData.SetBrakingDecelerationWalking(1000);
+    	MovementData.SetBrakingDecelerationWalking(1500);
     	MovementData.SetFallingLateralFriction(0);
 	
 	if(CharacterMovement->Velocity.Length() > MaxSlideVelocity)
@@ -250,7 +248,6 @@ void APlayerCharacter::PhysSlide(float DeltaTime)
 	{
 		CharacterMovement->AddForce(SlideSurfNormal);
 	}
-	
 }
 
 void APlayerCharacter::StopSlide()
@@ -259,31 +256,67 @@ void APlayerCharacter::StopSlide()
 		ExitSlide();
 }
 
-
-void APlayerCharacter::CanGrapple()
+void APlayerCharacter::ScanGrapple()
 {
-	if(bCanGrapple)
+	if(bIsGrappling)
 		return;
 	
 	const FVector TraceStart = CameraComp->GetComponentLocation();
 	const FVector TraceEnd = TraceStart + CameraComp->GetForwardVector() * GrapplingHookRange;
 	
+	TArray<FHitResult> OutHits;
+
 	FCollisionQueryParams QueryParams;
 	QueryParams.AddIgnoredActor(this);
 	
 	DrawDebugLine(GetWorld(),TraceStart,TraceEnd,FColor::Red,false,0,0,5);
-	GetWorld()->SweepSingleByChannel(GrappleHit,TraceStart,TraceEnd,FQuat::Identity,ECC_GameTraceChannel1,FCollisionShape::MakeSphere(20),QueryParams);
-	
-	if(GrappleHit.Component != nullptr && GrappleHit.Component->ComponentHasTag("GrapplePoint"))
+	bool bIsHit = GetWorld()->SweepMultiByChannel(OutHits,TraceStart,TraceEnd, FQuat::Identity,ECC_GameTraceChannel1,FCollisionShape::MakeSphere(70),QueryParams);
+	UGrapplingFeedbackComponent* GrapplingFeedComp;
+	if(bIsHit)
+	{
+		for(auto& Hit : OutHits)
+		{
+			if(Hit.GetComponent()->ComponentHasTag("GrapplePoint"))
+			{
+				GrappleHit = Hit;
+				GrapplingFeedComp = Cast<UGrapplingFeedbackComponent>(GrappleHit.GetActor()->FindComponentByClass<UGrapplingFeedbackComponent>());
+				GrapplingFeedComp->PlayerCanGrapple = true;
+				
+				UE_LOG(LogTemp,Warning,TEXT("%s"),*GrappleHit.GetActor()->GetName());
+				bCanGrapple = true;
+				//break;
+			}
+			else
+			{
+				if(GrappleHit.GetActor() != nullptr)
+				{
+					GrapplingFeedComp = Cast<UGrapplingFeedbackComponent>(GrappleHit.GetActor()->FindComponentByClass<UGrapplingFeedbackComponent>());
+					GrapplingFeedComp->PlayerCanGrapple = false;
+					GrappleHit.Reset();
+					GrapplingFeedComp = nullptr;
+				}
+				bCanGrapple = false;
+			}
+		}
+	}
+}
+
+
+
+void APlayerCharacter::StartGrapple()
+{
+	if(bCanGrapple)
 	{
 		CharacterMovement->Velocity = FVector::Zero();
-		bCanGrapple = true;
+		bIsGrappling = true;
 	}
 }
 
 void APlayerCharacter::StopGrapple()
 {
 	bCanGrapple = false;
+	bIsGrappling = false;
+	GrappleHit.Reset();
 	CharacterMovement->SetMovementMode(MOVE_Walking);
 	LaunchCharacter(CameraComp->GetComponentRotation().Vector() * GrapplingLaunchSpeed,true,true);
 }
@@ -292,8 +325,8 @@ void APlayerCharacter::Grapple()
 {
 	//FVector GrapplingDirection = GrappleHit.Location - GetActorLocation();
 	CharacterMovement->SetMovementMode(MOVE_Flying);
-	SetActorLocation(FMath::VInterpConstantTo(GetActorLocation(),GrappleHit.ImpactPoint, GetWorld()->DeltaTimeSeconds, GrapplingSpeed));
-	if((GetActorLocation() - GrappleHit.Location).Length() < 50)
+	SetActorLocation(FMath::VInterpConstantTo(GetActorLocation(),GrappleHit.GetComponent()->GetComponentLocation(), GetWorld()->DeltaTimeSeconds, GrapplingSpeed));
+	if((GetActorLocation() - GrappleHit.GetComponent()->GetComponentLocation()).Length() < 70)
 		StopGrapple();
 }
 
