@@ -70,6 +70,12 @@ void UWallRunMovementComponent::TickComponent(float DeltaTime, ELevelTick TickTy
 	{
 		PlayerCharacter->bCanMove = false;
 		OnRightSide = true;	
+
+		if(FVector::DotProduct(HitResultRight.Normal, PlayerCharacter->GetActorForwardVector()) > OffWallThreshold)
+		{
+			OffWall(PlayerCharacter, DeltaTime);
+			return;
+		}
 		
 		if(!IsJumpingOffWall)
 		{
@@ -82,6 +88,12 @@ void UWallRunMovementComponent::TickComponent(float DeltaTime, ELevelTick TickTy
 	{
 		PlayerCharacter->bCanMove = false;
 		OnRightSide = true;	
+
+		if(FVector::DotProduct(HitResultRightAngle.Normal, PlayerCharacter->GetActorForwardVector()) > OffWallThreshold)
+		{
+			OffWall(PlayerCharacter, DeltaTime);
+			return;
+		}
 		
 		if(!IsJumpingOffWall)
 		{
@@ -104,7 +116,13 @@ void UWallRunMovementComponent::TickComponent(float DeltaTime, ELevelTick TickTy
 	{
 		PlayerCharacter->bCanMove = false;
 		OnLeftSide = true;
-	
+
+		if(FVector::DotProduct(HitResultLeft.Normal, PlayerCharacter->GetActorForwardVector()) > OffWallThreshold)
+		{
+			OffWall(PlayerCharacter, DeltaTime);
+			return;
+		}
+		
 		if(!IsJumpingOffWall)
 		{
 			SetWallRunVelocity(PlayerCharacter, FVector::CrossProduct(HitResultLeft.Normal, FVector(0.f, 0.f, 1.f)));
@@ -115,7 +133,13 @@ void UWallRunMovementComponent::TickComponent(float DeltaTime, ELevelTick TickTy
 	{
 		PlayerCharacter->bCanMove = false;
 		OnLeftSide = true;
-	
+
+		if(FVector::DotProduct(HitResultLeftAngle.Normal, PlayerCharacter->GetActorForwardVector()) > OffWallThreshold)
+		{
+			OffWall(PlayerCharacter, DeltaTime);
+			return;
+		}
+		
 		if(!IsJumpingOffWall)
 		{
 			SetWallRunVelocity(PlayerCharacter, FVector::CrossProduct(HitResultLeftAngle.Normal, FVector(0.f, 0.f, 1.f)));
@@ -136,9 +160,9 @@ void UWallRunMovementComponent::SetWallRunVelocity(APlayerCharacter* PlayerChara
 	if(InitialVelocity == 0.f)
 		InitialVelocity = PlayerCharacter->GetMovementComponent()->Velocity.Size();
 	
-	const FVector Velocity = InitialVelocity * CrossProduct;
-
-	UE_LOG(LogTemp, Warning, TEXT("%s"), *Velocity.ToString());
+	const FVector Velocity = (InitialVelocity > MaxVelocity ? MaxVelocity : InitialVelocity < MinVelocity ? MinVelocity : InitialVelocity) * CrossProduct;
+	
+	// UE_LOG(LogTemp, Warning, TEXT("%s"), *Velocity.ToString());
 	
 	PlayerCharacter->LaunchCharacter(Velocity, true, true);
 	PlayerCharacter->MovementData.SetGravityScale(0.f);

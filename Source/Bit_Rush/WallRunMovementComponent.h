@@ -61,5 +61,14 @@ private:
 	float InitialVelocity = 0.f;
 
 	UPROPERTY(EditAnywhere)
+	float MinVelocity = 700.f;
+
+	UPROPERTY(EditAnywhere)
+	float MaxVelocity = 1500.f;
+
+	UPROPERTY(EditAnywhere)
+	float OffWallThreshold = 0.85f;
+
+	UPROPERTY(EditAnywhere)
 	FName WallRunTag = "WallRunnable";
 };
