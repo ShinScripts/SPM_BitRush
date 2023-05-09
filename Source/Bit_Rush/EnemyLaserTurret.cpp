@@ -3,6 +3,7 @@
 
 #include "EnemyLaserTurret.h"
 
+#include "PlayerCharacter.h"
 #include "SAdvancedTransformInputBox.h"
 #include "Components/CapsuleComponent.h"
 #include "Kismet/GameplayStatics.h"
@@ -39,7 +40,7 @@ void AEnemyLaserTurret::Recharge()
 }
 void AEnemyLaserTurret::FireLaser()
 {
-	//DrawDebugLine(GetWorld(), LaserSpawnPoint->GetComponentLocation(), Hit.Location, FColor::Red, false, RechargeTimer, 10, 15);
+
 
 	CanFire = false;
 	FTimerHandle ChargeHandle;
@@ -50,6 +51,7 @@ void AEnemyLaserTurret::FireLaser()
 
 	FCollisionQueryParams Params;
 	Params.AddIgnoredActor(this);
+	Params.AddIgnoredActor(Cast<APlayerCharacter>(UGameplayStatics::GetPlayerCharacter(this, 0)));
 
 
 	GetWorld()->SweepSingleByChannel(Hit, LaserStart, LaserEnd, FQuat::Identity, ECC_GameTraceChannel1, FCollisionShape::MakeSphere(12.0f), Params);
@@ -67,6 +69,7 @@ void AEnemyLaserTurret::Shoot()
 
 	FCollisionQueryParams Params;
 	Params.AddIgnoredActor(this);
+	Params.AddIgnoredActor(Cast<APlayerCharacter>(UGameplayStatics::GetPlayerCharacter(this, 0)));
 
 
 	GetWorld()->SweepSingleByChannel(Hit, LaserStart, LaserEnd, FQuat::Identity, ECC_GameTraceChannel1, FCollisionShape::MakeSphere(12.0f), Params);
