@@ -9,10 +9,10 @@
 
 class UBoxComponent;
 
-USTRUCT()
+USTRUCT(BlueprintType)
 struct FSlideComponent
 {
-	GENERATED_BODY()
+	GENERATED_USTRUCT_BODY()
 
 	void Initialize(FMovementData* InMovementData, APlayerCharacter* InPlayerCharacter);
 	void SlideBegin();
@@ -42,7 +42,6 @@ struct FSlideComponent
 
 	UPROPERTY(EditAnywhere)
 	float MaxSlideVelocity = 3000;
-
 	
 	FVector SlideSurfNormal;
 	
@@ -55,7 +54,7 @@ struct FSlideComponent
 USTRUCT(BlueprintType)
 struct FGrappleComponent
 {
-	GENERATED_BODY()
+	GENERATED_USTRUCT_BODY()
 
 	void Initialize(APlayerCharacter* InPlayerCharacter);
 	void GrappleUpdate();
@@ -73,9 +72,10 @@ struct FGrappleComponent
 	UPROPERTY(EditAnywhere)
 	float GrapplingLaunchSpeed = 2000;
 
-	UPROPERTY(BlueprintReadOnly, meta = (AllowPrivateAccess))
+	UPROPERTY(BlueprintReadOnly)
 	bool bCanGrapple;
-	
+
+	UPROPERTY(BlueprintReadOnly)
 	bool bIsGrappling;
 
 	FHitResult GrappleHit;
@@ -86,7 +86,7 @@ struct FGrappleComponent
 USTRUCT(BlueprintType)
 struct FGunComponent
 {
-	GENERATED_BODY()
+	GENERATED_USTRUCT_BODY()
 
 	void Initialize(APlayerCharacter* InPlayerCharacter);
 	void GunUpdate(float DeltaTime);
@@ -105,7 +105,7 @@ struct FGunComponent
 USTRUCT(BlueprintType)
 struct FDashComponent
 {
-	GENERATED_BODY()
+	GENERATED_USTRUCT_BODY()
 
 	void Initialize(APlayerCharacter* PlayerCharacter);
 	void DashUpdate(float DeltaTime);
@@ -126,6 +126,7 @@ struct FDashComponent
 
 	bool bDashIsOnCooldown = false;
 
+	UPROPERTY(BlueprintReadOnly)
 	bool bIsDashing = false;
 
 	float CurrentDashTime;
@@ -139,7 +140,7 @@ struct FDashComponent
 USTRUCT(BlueprintType)
 struct FMovementData
 {
-	GENERATED_BODY()
+	GENERATED_USTRUCT_BODY()
 
 	void SetCharacterMovement(UCharacterMovementComponent* InCharacterMovementComponent) const;
 	void SetCharacterHitBox(UCapsuleComponent* InCharacterMovementComponent) const;
@@ -180,7 +181,6 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -201,84 +201,27 @@ public:
 	UFUNCTION(BlueprintCallable)
 	UDeflectorBoxComponent* GetDeflectorBox();
 
+	UPROPERTY(BlueprintReadWrite)
 	FMovementData MovementData;
+	UPROPERTY(BlueprintReadWrite)
 	FDashComponent DashComponent;
+	UPROPERTY(BlueprintReadWrite)
 	FGunComponent GunComponent;
+	UPROPERTY(BlueprintReadWrite)
 	FGrappleComponent GrappleComponent;
+	UPROPERTY(BlueprintReadWrite)
 	FSlideComponent SlideComponent;
 	
 	UCharacterMovementComponent* CharacterMovement;
 	UCapsuleComponent* CharacterHitBox;
 	
 private:
-	UPROPERTY(EditDefaultsOnly)
-	UBoxComponent* BoxLeft;
-
-	UPROPERTY(EditDefaultsOnly)
-	UBoxComponent* BoxRight;
-	
-	//Variable
-	UPROPERTY(EditAnywhere)
-	float SlideVelocity = 5000000;
-
-	UPROPERTY(EditAnywhere)
-	float FlatSlideVelocity = 7000000;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess))
-	float CurrentTime;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess))
 	float InvincibilityTimer;
 
-	// Dash
-	UPROPERTY(EditAnywhere)
-	float DashVelocity = 2000;
-	
-	UPROPERTY(EditAnywhere)
-	float DashTime = 0.15;
-
-	UPROPERTY(BlueprintReadOnly, meta = (AllowPrivateAccess))
-	bool CanDash = true;
-
-	bool bIsDashing = false;
-	
-	UPROPERTY(EditAnywhere)
-	float DashCooldown = 1;
-
-	UPROPERTY(EditAnywhere)
-	float MaxSlideVelocity = 3000;
-
-	UPROPERTY(BlueprintReadOnly,meta=(AllowPrivateAccess))
-	bool bShouldSlide = false;
-	
-	bool ShouldLaunchSlide = false;
-
-	UPROPERTY(BlueprintReadWrite,meta=(AllowPrivateAccess))
-	FVector SlideSurfNormal;
-
-	UPROPERTY(EditAnywhere)
-	float CharacterSpeed = 1;
-
-	UPROPERTY(EditAnywhere)
-	float GrapplingHookRange = 1500;
-
-	UPROPERTY(EditAnywhere)
-	float GrapplingSpeed = 3000;
-
-	UPROPERTY(EditAnywhere)
-	float GrapplingLaunchSpeed = 2000;
-
-	UPROPERTY(BlueprintReadOnly, meta = (AllowPrivateAccess))
-	bool bCanGrapple;
-	bool bIsGrappling;
-	
-	FVector DashDistance;
-	FVector DashDirection;
-	
-	FHitResult FloorHit;
-	FHitResult GrappleHit;
-
-	
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess))
+	float CurrentTime;
 	
 	//Functions
 	void MoveForward(const float AxisValue);
@@ -292,23 +235,6 @@ private:
 	void ActionEnterSlide();
 	void ActionExitSlide();
 	
-
-	//Slide
-/*
-	void EnterSlide();
-	void ExitSlide();
-	void PhysSlide(float DeltaTime);
-	void StopSlide();
-*/
-	//Grapple
-	/*void ScanGrapple();
-	void StartGrapple();
-	void StopGrapple();
-	void Grapple();
-*/
-	//void StopSlidingAfterSeconds();
-	//FVector GetSlideSurface(const FVector& FloorNormal);
-
 	//Deflect
 	// - variables
 	UDeflectorBoxComponent* DeflectorBox;
