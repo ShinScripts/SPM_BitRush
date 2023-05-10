@@ -3,6 +3,8 @@
 
 #include "EnemyLaserTurret.h"
 
+#include "PlayerCharacter.h"
+#include "SAdvancedTransformInputBox.h"
 #include "Components/CapsuleComponent.h"
 #include "Kismet/GameplayStatics.h"
 
@@ -19,6 +21,11 @@ AEnemyLaserTurret::AEnemyLaserTurret()
 
 	LaserSpawnPoint = CreateDefaultSubobject<USceneComponent>(TEXT("Projectile spawn point"));
 	LaserSpawnPoint->SetupAttachment(TurretTower);
+
+	LaserBeam = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Laserbeam"));
+	LaserBeam->SetupAttachment(TurretTower);
+
+
 }
 
 void AEnemyLaserTurret::Tick(float DeltaSeconds)
@@ -33,7 +40,7 @@ void AEnemyLaserTurret::Recharge()
 }
 void AEnemyLaserTurret::FireLaser()
 {
-	//DrawDebugLine(GetWorld(), LaserSpawnPoint->GetComponentLocation(), Hit.Location, FColor::Red, false, RechargeTimer, 10, 15);
+
 
 	CanFire = false;
 	FTimerHandle ChargeHandle;
@@ -44,10 +51,11 @@ void AEnemyLaserTurret::FireLaser()
 
 	FCollisionQueryParams Params;
 	Params.AddIgnoredActor(this);
+	Params.AddIgnoredActor(Cast<APlayerCharacter>(UGameplayStatics::GetPlayerCharacter(this, 0)));
 
 
 	GetWorld()->SweepSingleByChannel(Hit, LaserStart, LaserEnd, FQuat::Identity, ECC_GameTraceChannel1, FCollisionShape::MakeSphere(12.0f), Params);
-	DrawDebugLine(GetWorld(), LaserStart, Hit.Location, FColor::Red, false, RechargeTimer, 10, 15);
+	//DrawDebugLine(GetWorld(), LaserStart, Hit.Location, FColor::Red, false, RechargeTimer, 10, 15);
 	GetWorldTimerManager().SetTimer(ChargeHandle, this, &AEnemyLaserTurret::Recharge, RechargeTimer, false);
 }
 //Turret creates an outliner for the laser that is about to activate
@@ -61,15 +69,18 @@ void AEnemyLaserTurret::Shoot()
 
 	FCollisionQueryParams Params;
 	Params.AddIgnoredActor(this);
+	Params.AddIgnoredActor(Cast<APlayerCharacter>(UGameplayStatics::GetPlayerCharacter(this, 0)));
 
 
 	GetWorld()->SweepSingleByChannel(Hit, LaserStart, LaserEnd, FQuat::Identity, ECC_GameTraceChannel1, FCollisionShape::MakeSphere(12.0f), Params);
-	DrawDebugLine(GetWorld(), LaserStart, Hit.Location, FColor::Red, false, 0, 10, 5);
+	
+	
+	//DrawDebugLine(GetWorld(), LaserStart, Hit.Location, FColor::Red, false, 0, 10, 5);
 	FTimerHandle ChargeHandl;
 	GetWorldTimerManager().SetTimer(ChargeHandl, this, &AEnemyLaserTurret::FireLaser, 2, false);
 
+	LaserBeam->SetWorldScale3D(FVector(	1, 1, (Hit.Location-LaserStart).Size()/100));
 }
-
 
 
 void AEnemyLaserTurret::Destroy()
