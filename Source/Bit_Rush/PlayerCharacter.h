@@ -62,6 +62,9 @@ public:
 
 	UPROPERTY()
 	class UCameraComponent* CameraComp;
+
+	UFUNCTION(BlueprintCallable)
+	UCharacterMovementComponent* GetPlayerCharacterComponent() const;
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	bool bCanMove;
@@ -72,7 +75,7 @@ public:
 	//Deflect
 	UFUNCTION(BlueprintCallable)
 	UDeflectorBoxComponent* GetDeflectorBox();
-	
+
 private:
 	UPROPERTY(EditDefaultsOnly)
 	UBoxComponent* BoxLeft;
@@ -105,6 +108,7 @@ private:
 
 	bool CanDash = true;
 
+	UPROPERTY(BlueprintReadOnly,meta = (AllowPrivateAccess))
 	bool bIsDashing = false;
 	
 	UPROPERTY(EditAnywhere)
@@ -134,6 +138,8 @@ private:
 	float GrapplingLaunchSpeed = 2000;
 
 	bool bCanGrapple;
+	UPROPERTY(BlueprintReadOnly,meta = (AllowPrivateAccess))
+	
 	bool bIsGrappling;
 
 	float CrouchSpeed = 10;
@@ -150,6 +156,9 @@ private:
 	FHitResult GrappleHit;
 
 	UCapsuleComponent* CharacterHitBox;
+
+
+
 	
 	//Functions
 	void MoveForward(const float AxisValue);

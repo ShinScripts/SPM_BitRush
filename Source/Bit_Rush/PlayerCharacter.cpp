@@ -110,7 +110,7 @@ void APlayerCharacter::Tick(float DeltaTime)
 	{
 		ScanGrapple();
 	}
-
+	
 	//Reduces players time left
 	CurrentTime -= GetWorld()->GetDeltaSeconds();
 	// UE_LOG(LogTemp, Warning, TEXT("Time %f"), CurrentTime);
@@ -138,6 +138,11 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 	//PlayerInputComponent->BindAction(TEXT("Shoot"),EInputEvent::IE_Pressed,this,&APlayerCharacter::Shoot);
 }
 
+UCharacterMovementComponent* APlayerCharacter::GetPlayerCharacterComponent() const
+{
+	return CharacterMovement;
+}
+
 void APlayerCharacter::DeflectON()
 {
 	if(DeflectorBox == nullptr)
@@ -154,6 +159,8 @@ void APlayerCharacter::DeflectOFF()
 	}
 	DeflectorBox->StopDeflect();
 }
+
+
 
 void APlayerCharacter::MoveForward(const float AxisValue)
 {
