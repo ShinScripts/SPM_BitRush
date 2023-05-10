@@ -10,6 +10,40 @@
 class UBoxComponent;
 
 USTRUCT(BlueprintType)
+struct FDashComponent
+{
+	GENERATED_BODY()
+
+	void Initialize(APlayerCharacter* PlayerCharacter);
+	void Update(float DeltaTime);
+	
+	void Dash(float DeltaTime);
+	void StartDash();
+
+	UPROPERTY(EditAnywhere)
+	float DashCooldown = 1;
+	
+	float DashCurrentCooldown = DashCooldown;
+	
+	UPROPERTY(EditAnywhere)
+	float DashVelocity = 2000;
+	
+	UPROPERTY(EditAnywhere)
+	float DashTime = 0.15;
+
+	bool bDashIsOnCooldown = false;
+
+	bool bIsDashing = false;
+
+	float CurrentDashTime;
+	
+	FVector DashDistance;
+	FVector DashDirection;
+	
+	APlayerCharacter* PlayerCharacter;
+};
+
+USTRUCT(BlueprintType)
 struct FMovementData
 {
 	GENERATED_BODY()
@@ -53,6 +87,7 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -66,12 +101,12 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	bool bCanMove;
 
-	UPROPERTY(BlueprintReadWrite, meta=(AllowPrivateAccess))
-	FMovementData MovementData;
-
 	//Deflect
 	UFUNCTION(BlueprintCallable)
 	UDeflectorBoxComponent* GetDeflectorBox();
+
+	FMovementData MovementData;
+	FDashComponent DashComponent;
 	
 private:
 	UPROPERTY(EditDefaultsOnly)
@@ -107,6 +142,7 @@ private:
 	UPROPERTY(EditAnywhere)
 	float DashTime = 0.15;
 
+	UPROPERTY(BlueprintReadOnly, meta = (AllowPrivateAccess))
 	bool CanDash = true;
 
 	bool bIsDashing = false;
@@ -137,7 +173,9 @@ private:
 	UPROPERTY(EditAnywhere)
 	float GrapplingLaunchSpeed = 2000;
 
+	UPROPERTY(BlueprintReadOnly, meta = (AllowPrivateAccess))
 	bool bCanGrapple;
+	bool bIsGrappling;
 
 	float CrouchSpeed = 10;
 	
@@ -160,11 +198,12 @@ private:
 	void Jump();
 
 	//Dash
-	void Dash();
+	void ActionStartDash();
+	/*void Dash();
 	void StopDash();
 	void StartDash();
 	void ResetDash();
-
+	*/
 	//Slide
 	void EnterSlide();
 	void ExitSlide();
@@ -172,7 +211,8 @@ private:
 	void StopSlide();
 
 	//Grapple
-	void CanGrapple();
+	void ScanGrapple();
+	void StartGrapple();
 	void StopGrapple();
 	void Grapple();
 	//void StopSlidingAfterSeconds();
