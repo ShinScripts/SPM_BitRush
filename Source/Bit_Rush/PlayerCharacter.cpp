@@ -194,6 +194,13 @@ void FGrappleComponent::ScanForGrapplePoint()
 			}
 		}
 	}
+	else if(GrappleHit.GetActor() != nullptr)
+	{
+		GrapplingFeedComp = Cast<UGrapplingFeedbackComponent>(GrappleHit.GetActor()->FindComponentByClass<UGrapplingFeedbackComponent>());
+		GrapplingFeedComp->PlayerCanGrapple = false;
+		GrappleHit.Reset();
+		GrapplingFeedComp = nullptr;
+	}
 }
 
 void FGrappleComponent::StartGrapple()
