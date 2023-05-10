@@ -56,12 +56,10 @@ void FMovementData::SetFallingLateralFriction(const float NewFallingLateralFrict
 }
 
 //FDashComponent
-
 void FDashComponent::Initialize(APlayerCharacter* InPlayerCharacter)
 {
 	PlayerCharacter = InPlayerCharacter;
 }
-
 
 void FDashComponent::Update(float DeltaTime)
 {
@@ -73,7 +71,7 @@ void FDashComponent::Update(float DeltaTime)
 		DashCurrentCooldown-= DeltaTime;
 	}
 	
-	if(DashCurrentCooldown <= 0.0f)
+	if(DashCurrentCooldown < 0.0f)
 	{
 		bDashIsOnCooldown = false;
 		DashCurrentCooldown = DashCooldown;
@@ -106,9 +104,37 @@ void FDashComponent::Dash(float DeltaTime)
 		bIsDashing = false;
 	}
 		
-		
+	
 }
 
+//FGunComponent
+void FGunComponent::Initialize(APlayerCharacter* InPlayerCharacter)
+{
+	PlayerCharacter = InPlayerCharacter;
+}
+
+void FGunComponent::Update(float DeltaTime)
+{
+	if(bIsReloading)
+		Reload();
+}
+
+
+void FGunComponent::Reload()
+{
+	if(PlayerCharacter->Ammo != 8)
+	{
+		bIsReloading = true;
+		CurrentReloadTime -= PlayerCharacter->GetWorld()->GetDeltaSeconds();
+	}
+	
+	if(CurrentReloadTime < 0.0f)
+	{
+		CurrentReloadTime = ReloadTimer;
+		PlayerCharacter->Ammo = 8;
+		bIsReloading = false;
+	}
+}
 //APlayerCharacter
 // Sets default values
 APlayerCharacter::APlayerCharacter()
@@ -126,6 +152,7 @@ void APlayerCharacter::BeginPlay()
 	
 	MovementData.SetDefaultValues();
 	DashComponent.Initialize(this);
+	GunComponent.Initialize(this);
 	bCanMove = true;
 	CameraComp = FindComponentByClass<UCameraComponent>();
 
@@ -140,8 +167,10 @@ void APlayerCharacter::BeginPlay()
 void APlayerCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+	
 	MovementData.SetCharacterMovement(CharacterMovement);
 	DashComponent.Update(DeltaTime);
+	GunComponent.Update(DeltaTime);
 	
 	FloorHit = CharacterMovement->CurrentFloor.HitResult;
 	SlideSurfNormal = GetSlideSurface(FloorHit.Normal);
@@ -194,6 +223,7 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 	PlayerInputComponent->BindAction(TEXT("Grapple"),EInputEvent::IE_Pressed,this,&APlayerCharacter::StartGrapple);
 	PlayerInputComponent->BindAction(TEXT("Deflect"),EInputEvent::IE_Pressed,this,&APlayerCharacter::DeflectON);
 	PlayerInputComponent->BindAction(TEXT("Deflect"),EInputEvent::IE_Released,this,&APlayerCharacter::DeflectOFF);
+	PlayerInputComponent->BindAction(TEXT("Reload"),EInputEvent::IE_Pressed,this,&APlayerCharacter::ActionReload);
 	//PlayerInputComponent->BindAction(TEXT("Shoot"),EInputEvent::IE_Pressed,this,&APlayerCharacter::Shoot);
 }
 
@@ -237,43 +267,15 @@ void APlayerCharacter::Jump()
 	Super::Jump();
 }
 
+void APlayerCharacter::ActionReload()
+{
+	GunComponent.Reload();
+}
+
 void APlayerCharacter::ActionStartDash()
 {
 	DashComponent.StartDash();
 }
-
-/*void APlayerCharacter::Dash()
-{
-	CanDash = false;
-	bIsDashing = true;
-	const float DashSpeed = (GetActorLocation() - DashDistance).Length()/DashTime;
-	SetActorLocation(FMath::VInterpConstantTo(GetActorLocation(), DashDistance + GetActorLocation(),GetWorld()->DeltaTimeSeconds,DashSpeed));
-	
-	FTimerHandle TimerHandle;
-	GetWorldTimerManager().SetTimer(TimerHandle,this,&APlayerCharacter::StopDash,DashTime,false);
-}
-
-void APlayerCharacter::StopDash()
-{
-	bIsDashing = false;
-	FTimerHandle TimerHandle;
-	GetWorldTimerManager().SetTimer(TimerHandle,this,&APlayerCharacter::ResetDash,DashCooldown,false);
-}
-
-void APlayerCharacter::StartDash()
-{
-	if(!CanDash) return;
-	
-	bIsDashing = true;
-	DashDistance = GetActorRotation().RotateVector(DashDirection.GetSafeNormal()) * 20;
-	DashDistance.Z = 0;
-}
-
-void APlayerCharacter::ResetDash()
-{
-	CanDash = true;
-}
-*/
 
 void APlayerCharacter::EnterSlide()
 {
