@@ -10,6 +10,24 @@
 class UBoxComponent;
 
 USTRUCT(BlueprintType)
+struct FGunComponent
+{
+	GENERATED_BODY()
+
+	void Initialize(APlayerCharacter* InPlayerCharacter);
+	void Update(float DeltaTime);
+	void Reload();
+
+	UPROPERTY(EditDefaultsOnly)
+	float ReloadTimer = 2;
+	
+	float CurrentReloadTime = 2;
+
+	bool bIsReloading = false;
+	APlayerCharacter* PlayerCharacter;
+};
+
+USTRUCT(BlueprintType)
 struct FDashComponent
 {
 	GENERATED_BODY()
@@ -87,7 +105,7 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-	
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -101,12 +119,16 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	bool bCanMove;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess))
+	int Ammo = 8;
+	
 	//Deflect
 	UFUNCTION(BlueprintCallable)
 	UDeflectorBoxComponent* GetDeflectorBox();
 
 	FMovementData MovementData;
 	FDashComponent DashComponent;
+	FGunComponent GunComponent;
 	
 private:
 	UPROPERTY(EditDefaultsOnly)
@@ -125,11 +147,7 @@ private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess))
 	float CurrentTime;
 	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess))
-	int MaxAmmo = 8;
 	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess))
-	int Ammo = 8;
 
 	// Dash
 	UPROPERTY(EditAnywhere)
@@ -193,13 +211,12 @@ private:
 	void MoveRight(const float AxisValue);
 	void Jump();
 
+	//Gun
+	void ActionReload();
+	
 	//Dash
 	void ActionStartDash();
-	/*void Dash();
-	void StopDash();
-	void StartDash();
-	void ResetDash();
-	*/
+
 	//Slide
 	void EnterSlide();
 	void ExitSlide();
