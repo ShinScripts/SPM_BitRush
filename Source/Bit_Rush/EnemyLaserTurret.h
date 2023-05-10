@@ -38,6 +38,9 @@ private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category ="Combat", meta = (AllowPrivateAccess))
 	bool CanFire = true;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Combat", meta = (AllowPrivateAccess))
+	float Damage = 20;
+
 	UPROPERTY(VisibleDefaultsOnly, Category = "Rockets")
 	TSubclassOf<class AActor> LaserClass;
 	

@@ -321,10 +321,10 @@ float APlayerCharacter::TakeDamage
 	AActor * DamageCauser
 )
 {
-	if (InvnincibilityTimer <= 0)
+	if (InvincibilityTimer <= 0)
 	{
 	CurrentTime -= DamageAmount;
-	InvnincibilityTimer = 0.4;
+	InvincibilityTimer = 0.4;
 	}
 	return CurrentTime;
 }

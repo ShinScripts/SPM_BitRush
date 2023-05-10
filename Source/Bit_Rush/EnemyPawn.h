@@ -30,6 +30,6 @@ private:
 	virtual void Shoot();
 	virtual void Destroy();
 	
-	UPROPERTY(EditDefaultsOnly)
-	float Damage = 0;
+
+
 };

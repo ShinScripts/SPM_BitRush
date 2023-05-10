@@ -97,7 +97,8 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess))
 	int Ammo = 8;
 
-	float InvnincibilityTimer;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess))
+	float InvincibilityTimer;
 
 	// Dash
 	UPROPERTY(EditAnywhere)
