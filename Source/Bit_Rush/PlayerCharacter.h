@@ -89,12 +89,15 @@ private:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess))
 	float CurrentTime;
-	
+
+	//Combat
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess))
 	int MaxAmmo = 8;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess))
 	int Ammo = 8;
+
+	float InvnincibilityTimer;
 
 	// Dash
 	UPROPERTY(EditAnywhere)

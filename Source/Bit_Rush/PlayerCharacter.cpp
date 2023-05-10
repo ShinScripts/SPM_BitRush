@@ -81,6 +81,8 @@ void APlayerCharacter::BeginPlay()
 void APlayerCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	InvnincibilityTimer -= DeltaTime;
 	
 	MovementData.SetCharacterMovement(CharacterMovement);
 	FloorHit = CharacterMovement->CurrentFloor.HitResult;
@@ -319,7 +321,11 @@ float APlayerCharacter::TakeDamage
 	AActor * DamageCauser
 )
 {
+	if (InvnincibilityTimer <= 0)
+	{
 	CurrentTime -= DamageAmount;
+	InvnincibilityTimer = 0.4;
+	}
 	return CurrentTime;
 }
 
