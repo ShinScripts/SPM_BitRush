@@ -82,7 +82,7 @@ void APlayerCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	InvnincibilityTimer -= DeltaTime;
+	InvincibilityTimer -= DeltaTime;
 	
 	MovementData.SetCharacterMovement(CharacterMovement);
 	FloorHit = CharacterMovement->CurrentFloor.HitResult;
