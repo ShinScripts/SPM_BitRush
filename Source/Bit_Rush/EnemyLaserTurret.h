@@ -29,11 +29,20 @@ private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Body", meta = (AllowPrivateAccess))
 	USceneComponent* LaserSpawnPoint;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Laser", meta = (AllowPrivateAccess))
+	UStaticMeshComponent* LaserBeam;
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Combat", meta = (AllowPrivateAccess))
 	float RechargeTimer = 2;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category ="Combat", meta = (AllowPrivateAccess))
 	bool CanFire = true;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Combat", meta = (AllowPrivateAccess))
+	float Damage = 20;
+
+	UPROPERTY(VisibleDefaultsOnly, Category = "Rockets")
+	TSubclassOf<class AActor> LaserClass;
 	
 	virtual void Tick(float DeltaSeconds) override;
 	void Recharge();

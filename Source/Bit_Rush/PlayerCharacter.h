@@ -10,6 +10,58 @@
 class UBoxComponent;
 
 USTRUCT(BlueprintType)
+struct FGunComponent
+{
+	GENERATED_BODY()
+
+	void Initialize(APlayerCharacter* InPlayerCharacter);
+	void Update(float DeltaTime);
+	void Reload();
+
+	UPROPERTY(EditDefaultsOnly)
+	float ReloadTimer = 2;
+	
+	float CurrentReloadTime = 2;
+
+	bool bIsReloading = false;
+	APlayerCharacter* PlayerCharacter;
+};
+
+USTRUCT(BlueprintType)
+struct FDashComponent
+{
+	GENERATED_BODY()
+
+	void Initialize(APlayerCharacter* PlayerCharacter);
+	void Update(float DeltaTime);
+	
+	void Dash(float DeltaTime);
+	void StartDash();
+
+	UPROPERTY(EditAnywhere)
+	float DashCooldown = 1;
+	
+	float DashCurrentCooldown = DashCooldown;
+	
+	UPROPERTY(EditAnywhere)
+	float DashVelocity = 2000;
+	
+	UPROPERTY(EditAnywhere)
+	float DashTime = 0.15;
+
+	bool bDashIsOnCooldown = false;
+
+	bool bIsDashing = false;
+
+	float CurrentDashTime;
+	
+	FVector DashDistance;
+	FVector DashDirection;
+	
+	APlayerCharacter* PlayerCharacter;
+};
+
+USTRUCT(BlueprintType)
 struct FMovementData
 {
 	GENERATED_BODY()
@@ -53,6 +105,7 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -66,12 +119,16 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	bool bCanMove;
 
-	UPROPERTY(BlueprintReadWrite, meta=(AllowPrivateAccess))
-	FMovementData MovementData;
-
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess))
+	int Ammo = 8;
+	
 	//Deflect
 	UFUNCTION(BlueprintCallable)
 	UDeflectorBoxComponent* GetDeflectorBox();
+
+	FMovementData MovementData;
+	FDashComponent DashComponent;
+	FGunComponent GunComponent;
 	
 private:
 	UPROPERTY(EditDefaultsOnly)
@@ -89,12 +146,9 @@ private:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess))
 	float CurrentTime;
-	
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess))
-	int MaxAmmo = 8;
-	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess))
-	int Ammo = 8;
+	float InvincibilityTimer;
 
 	// Dash
 	UPROPERTY(EditAnywhere)
@@ -103,6 +157,7 @@ private:
 	UPROPERTY(EditAnywhere)
 	float DashTime = 0.15;
 
+	UPROPERTY(BlueprintReadOnly, meta = (AllowPrivateAccess))
 	bool CanDash = true;
 
 	bool bIsDashing = false;
@@ -133,6 +188,7 @@ private:
 	UPROPERTY(EditAnywhere)
 	float GrapplingLaunchSpeed = 2000;
 
+	UPROPERTY(BlueprintReadOnly, meta = (AllowPrivateAccess))
 	bool bCanGrapple;
 	bool bIsGrappling;
 
@@ -156,11 +212,11 @@ private:
 	void MoveRight(const float AxisValue);
 	void Jump();
 
+	//Gun
+	void ActionReload();
+	
 	//Dash
-	void Dash();
-	void StopDash();
-	void StartDash();
-	void ResetDash();
+	void ActionStartDash();
 
 	//Slide
 	void EnterSlide();
