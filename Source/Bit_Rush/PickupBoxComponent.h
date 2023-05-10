@@ -4,17 +4,25 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
-#include "ProjectileComponent.generated.h"
+#include "PlayerCharacter.h"
 
+#include "PickupBoxComponent.generated.h"
+
+UENUM(BlueprintType)
+enum EPickupType
+{
+	Time UMETA(DisplayName = "Time"),
+	Ammo UMETA(DisplayName = "Ammo"),
+};
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
-class BIT_RUSH_API UProjectileComponent : public UActorComponent
+class BIT_RUSH_API UPickupBoxComponent : public UBoxComponent
 {
 	GENERATED_BODY()
 
 public:	
 	// Sets default values for this component's properties
-	UProjectileComponent();
+	UPickupBoxComponent();
 
 protected:
 	// Called when the game starts
@@ -24,5 +32,14 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
-		
+private:
+	//Variables
+	
+	//Functions
+	APlayerCharacter* GetPlayer();
+	void GiveToPlayer();
+
+	//Debug utility
+	void ScreenPrint(FString Message);
+	void ScreenPrint(FString Message, FColor Color);
 };
