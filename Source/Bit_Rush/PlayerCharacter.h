@@ -103,6 +103,7 @@ private:
 	UPROPERTY(EditAnywhere)
 	float DashTime = 0.15;
 
+	UPROPERTY(BlueprintReadOnly, meta = (AllowPrivateAccess))
 	bool CanDash = true;
 
 	bool bIsDashing = false;
@@ -133,6 +134,7 @@ private:
 	UPROPERTY(EditAnywhere)
 	float GrapplingLaunchSpeed = 2000;
 
+	UPROPERTY(BlueprintReadOnly, meta = (AllowPrivateAccess))
 	bool bCanGrapple;
 	bool bIsGrappling;
 
