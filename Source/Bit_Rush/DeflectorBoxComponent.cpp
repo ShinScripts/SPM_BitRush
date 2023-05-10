@@ -88,6 +88,7 @@ void UDeflectorBoxComponent::CheckOverlappingTags(TArray<FName> Tags)
 void UDeflectorBoxComponent::StartDeflect()
 {
 	IsDeflecting = true;
+	
 }
 void UDeflectorBoxComponent::StopDeflect()
 {
