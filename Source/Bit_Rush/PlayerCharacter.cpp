@@ -167,7 +167,8 @@ void APlayerCharacter::BeginPlay()
 void APlayerCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	
+
+	InvincibilityTimer -= DeltaTime;
 	MovementData.SetCharacterMovement(CharacterMovement);
 	DashComponent.Update(DeltaTime);
 	GunComponent.Update(DeltaTime);
@@ -416,7 +417,11 @@ float APlayerCharacter::TakeDamage
 	AActor * DamageCauser
 )
 {
+	if (InvincibilityTimer <= 0)
+	{
 	CurrentTime -= DamageAmount;
+	InvincibilityTimer = 0.4;
+	}
 	return CurrentTime;
 }
 

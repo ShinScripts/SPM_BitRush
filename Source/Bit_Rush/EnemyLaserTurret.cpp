@@ -51,11 +51,11 @@ void AEnemyLaserTurret::FireLaser()
 
 	FCollisionQueryParams Params;
 	Params.AddIgnoredActor(this);
-	Params.AddIgnoredActor(Cast<APlayerCharacter>(UGameplayStatics::GetPlayerCharacter(this, 0)));
+
 
 
 	GetWorld()->SweepSingleByChannel(Hit, LaserStart, LaserEnd, FQuat::Identity, ECC_GameTraceChannel1, FCollisionShape::MakeSphere(12.0f), Params);
-	//DrawDebugLine(GetWorld(), LaserStart, Hit.Location, FColor::Red, false, RechargeTimer, 10, 15);
+	UGameplayStatics::ApplyDamage(Hit.GetActor(), Damage, GetInstigatorController(), this , UDamageType::StaticClass());
 	GetWorldTimerManager().SetTimer(ChargeHandle, this, &AEnemyLaserTurret::Recharge, RechargeTimer, false);
 }
 //Turret creates an outliner for the laser that is about to activate
