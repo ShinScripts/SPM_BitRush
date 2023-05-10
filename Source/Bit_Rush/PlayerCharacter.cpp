@@ -10,6 +10,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "GrapplingFeedbackComponent.h"
 
+//FMovementData
 void FMovementData::SetCharacterMovement(UCharacterMovementComponent* InCharacterMovementComponent) const
 {
 	InCharacterMovementComponent->GravityScale = GravityScale;
@@ -54,14 +55,67 @@ void FMovementData::SetFallingLateralFriction(const float NewFallingLateralFrict
 	FallingLateralFriction = NewFallingLateralFriction;
 }
 
+//FDashComponent
+
+void FDashComponent::Initialize(APlayerCharacter* InPlayerCharacter)
+{
+	PlayerCharacter = InPlayerCharacter;
+}
+
+
+void FDashComponent::Update(float DeltaTime)
+{
+	if(bIsDashing)
+		Dash(DeltaTime);
+	
+	if(bDashIsOnCooldown)
+	{
+		DashCurrentCooldown-= DeltaTime;
+	}
+	
+	if(DashCurrentCooldown <= 0.0f)
+	{
+		bDashIsOnCooldown = false;
+		DashCurrentCooldown = DashCooldown;
+	}
+}
+
+void FDashComponent::StartDash()
+{
+	if(bDashIsOnCooldown)
+		return;
+
+	bIsDashing = true;
+	DashDistance = PlayerCharacter->GetActorRotation().RotateVector(DashDirection.GetSafeNormal()) * 20;
+	DashDistance.Z = 0;
+	CurrentDashTime = DashTime;
+}
+
+void FDashComponent::Dash(float DeltaTime)
+{
+	bIsDashing = true;
+	
+	const float DashSpeed = (PlayerCharacter->GetActorLocation() - DashDistance).Length()/DashTime;
+
+	PlayerCharacter->SetActorLocation(FMath::VInterpConstantTo(PlayerCharacter->GetActorLocation(),DashDistance + PlayerCharacter->GetActorLocation(),PlayerCharacter->GetWorld()->DeltaTimeSeconds,DashSpeed));
+	CurrentDashTime -= DeltaTime;
+	UE_LOG(LogTemp,Warning,TEXT("%f"),CurrentDashTime);
+	if(CurrentDashTime < 0)
+	{
+		bDashIsOnCooldown = true;
+		bIsDashing = false;
+	}
+		
+		
+}
+
+//APlayerCharacter
 // Sets default values
 APlayerCharacter::APlayerCharacter()
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-	
 	CharacterMovement = GetCharacterMovement();
-	MovementData.SetDefaultValues();
 }
 
 
@@ -69,10 +123,14 @@ APlayerCharacter::APlayerCharacter()
 void APlayerCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-	//HitBoxDefaultValue = CharacterHitBox->GetScaledCapsuleHalfHeight();
+	
+	MovementData.SetDefaultValues();
+	DashComponent.Initialize(this);
 	bCanMove = true;
 	CameraComp = FindComponentByClass<UCameraComponent>();
+
 	SetDeflectBoxVariable();
+
 	CharacterHitBox = FindComponentByClass<UCapsuleComponent>();
 	HitBoxDefaultValue = CharacterHitBox->GetScaledCapsuleHalfHeight();
 	CrouchHitBoxValue = HitBoxDefaultValue/2;
@@ -82,8 +140,9 @@ void APlayerCharacter::BeginPlay()
 void APlayerCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	
 	MovementData.SetCharacterMovement(CharacterMovement);
+	DashComponent.Update(DeltaTime);
+	
 	FloorHit = CharacterMovement->CurrentFloor.HitResult;
 	SlideSurfNormal = GetSlideSurface(FloorHit.Normal);
 	
@@ -97,10 +156,10 @@ void APlayerCharacter::Tick(float DeltaTime)
 		CharacterHitBox->SetCapsuleHalfHeight(FMath::FInterpTo(CharacterHitBox->GetScaledCapsuleHalfHeight(),HitBoxDefaultValue,DeltaTime,CrouchSpeed));
 	}
 	
-	if(bIsDashing)
+	/*if(bIsDashing)
 	{
 		Dash();
-	}
+	}*/
 
 	if(bIsGrappling)
 	{
@@ -129,7 +188,7 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 
 	//Binding Action
 	PlayerInputComponent->BindAction(TEXT("Jump"),EInputEvent::IE_Pressed,this, &ACharacter::Jump);
-	PlayerInputComponent->BindAction(TEXT("Dash"),EInputEvent::IE_Pressed,this, &APlayerCharacter::StartDash);
+	PlayerInputComponent->BindAction(TEXT("Dash"),EInputEvent::IE_Pressed,this,&APlayerCharacter::ActionStartDash);
 	PlayerInputComponent->BindAction(TEXT("Slide"),EInputEvent::IE_Pressed,this, &APlayerCharacter::EnterSlide);
 	PlayerInputComponent->BindAction(TEXT("Slide"),EInputEvent::IE_Released,this,&APlayerCharacter::ExitSlide);
 	PlayerInputComponent->BindAction(TEXT("Grapple"),EInputEvent::IE_Pressed,this,&APlayerCharacter::StartGrapple);
@@ -160,7 +219,7 @@ void APlayerCharacter::MoveForward(const float AxisValue)
 	if(bCanMove)
 	{
 		AddMovementInput(GetActorForwardVector() * AxisValue);
-		DashDirection.X = AxisValue;
+		DashComponent.DashDirection.X = AxisValue;
 	}
 }
 
@@ -169,7 +228,7 @@ void APlayerCharacter::MoveRight(const float AxisValue)
 	if(bCanMove)
 	{
 		AddMovementInput(GetActorRightVector() * AxisValue);
-		DashDirection.Y = AxisValue;
+		DashComponent.DashDirection.Y = AxisValue;
 	}
 }
 
@@ -178,7 +237,12 @@ void APlayerCharacter::Jump()
 	Super::Jump();
 }
 
-void APlayerCharacter::Dash()
+void APlayerCharacter::ActionStartDash()
+{
+	DashComponent.StartDash();
+}
+
+/*void APlayerCharacter::Dash()
 {
 	CanDash = false;
 	bIsDashing = true;
@@ -209,6 +273,7 @@ void APlayerCharacter::ResetDash()
 {
 	CanDash = true;
 }
+*/
 
 void APlayerCharacter::EnterSlide()
 {
@@ -269,7 +334,6 @@ void APlayerCharacter::ScanGrapple()
 	FCollisionQueryParams QueryParams;
 	QueryParams.AddIgnoredActor(this);
 	
-	DrawDebugLine(GetWorld(),TraceStart,TraceEnd,FColor::Red,false,0,0,5);
 	bool bIsHit = GetWorld()->SweepMultiByChannel(OutHits,TraceStart,TraceEnd, FQuat::Identity,ECC_GameTraceChannel1,FCollisionShape::MakeSphere(70),QueryParams);
 	UGrapplingFeedbackComponent* GrapplingFeedComp;
 	if(bIsHit)
@@ -300,8 +364,6 @@ void APlayerCharacter::ScanGrapple()
 		}
 	}
 }
-
-
 
 void APlayerCharacter::StartGrapple()
 {
