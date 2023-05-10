@@ -398,7 +398,7 @@ UDeflectorBoxComponent* APlayerCharacter::GetDeflectorBox()
 	return DeflectorBox;
 }
 
-//Terminate game session
+//Terminate game session - mainly for gamepad use, it serves no other function than to call a BP sequence.
 void APlayerCharacter::TerminatePlay()
 {
 }
