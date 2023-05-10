@@ -128,6 +128,7 @@ void FGunComponent::Reload()
 		CurrentReloadTime -= PlayerCharacter->GetWorld()->GetDeltaSeconds();
 	}
 	
+	
 	if(CurrentReloadTime < 0.0f)
 	{
 		CurrentReloadTime = ReloadTimer;
