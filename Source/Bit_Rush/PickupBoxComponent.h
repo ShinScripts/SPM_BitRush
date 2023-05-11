@@ -8,11 +8,11 @@
 
 #include "PickupBoxComponent.generated.h"
 
-UENUM(BlueprintType)
+//UENUM(BlueprintType)
 enum EPickupType
 {
-	Time UMETA(DisplayName = "Time"),
-	Ammo UMETA(DisplayName = "Ammo"),
+	Pickup_Time UMETA(DisplayName = "Time"),
+	Pickup_Ammo UMETA(DisplayName = "Ammo"),
 };
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
@@ -33,13 +33,16 @@ public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 private:
-	//Variables
+	// - Variables
+	//float - (EditAnywhere)
+	UPROPERTY(EditAnywhere)
+	float TributeCount = 0;
+	//APlayerCharacter
+	APlayerCharacter* PlayerChar;
+	//TEnumAsByte
+	TEnumAsByte<EPickupType> PickupType;
 	
-	//Functions
-	APlayerCharacter* GetPlayer();
+	// - Functions
+	void GetPlayer();
 	void GiveToPlayer();
-
-	//Debug utility
-	void ScreenPrint(FString Message);
-	void ScreenPrint(FString Message, FColor Color);
 };

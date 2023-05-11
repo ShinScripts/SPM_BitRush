@@ -3,6 +3,8 @@
 
 #include "PickupBoxComponent.h"
 
+#include "Kismet2/BlueprintEditorUtils.h"
+
 // Sets default values for this component's properties
 UPickupBoxComponent::UPickupBoxComponent()
 {
@@ -32,7 +34,7 @@ void UPickupBoxComponent::TickComponent(float DeltaTime, ELevelTick TickType, FA
 	// ...
 }
 
-APlayerCharacter* UPickupBoxComponent::GetPlayer()
+void UPickupBoxComponent::GetPlayer()
 {
 	TArray<AActor*> Actors;
 	GetOverlappingActors(Actors);
@@ -42,51 +44,29 @@ APlayerCharacter* UPickupBoxComponent::GetPlayer()
 		APlayerCharacter* Player = Cast<APlayerCharacter>(Actor);
 		if(!Player)
 		{
-			ScreenPrint("player null");
-			return nullptr;
+			return;
 		}
-		ScreenPrint("is player");
-		return Player;
+		PlayerChar = Player;
 	}
 }
 
 void UPickupBoxComponent::GiveToPlayer()
 {
-	APlayerCharacter* Player = GetPlayer();
-
-	if(!Player)
+	if(!PlayerChar)
 	{
 		return;
 	}
-	
-	switch (EPickupType)
-	{
-	case "Time":
-		//Give time to player
-		break;
-		
-	case "Ammo":
-		//Give ammo to player
-		break;
 
-	default: break;
-	}
-	
-}
-
-//Debug utility
-void APlayerCharacter::ScreenPrint(FString Message)
-{
-	if(GEngine)
+	switch (PickupType)
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Emerald, TEXT(""+Message));
-	}
-}
+		case 0:
 
-void APlayerCharacter::ScreenPrint(FString Message, FColor Color)
-{
-	if(GEngine)
-	{
-		GEngine->AddOnScreenDebugMessage(-1, 2.0f, Color, TEXT(""+Message));
+			PlayerChar->ChangeTime(true, TributeCount);
+
+		case 1:
+
+			PlayerChar->ChangeAmmo(true, TributeCount);
+
+		default: break;
 	}
 }

@@ -225,7 +225,6 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 	PlayerInputComponent->BindAction(TEXT("Deflect"),EInputEvent::IE_Pressed,this,&APlayerCharacter::DeflectON);
 	PlayerInputComponent->BindAction(TEXT("Deflect"),EInputEvent::IE_Released,this,&APlayerCharacter::DeflectOFF);
 	PlayerInputComponent->BindAction(TEXT("Reload"),EInputEvent::IE_Pressed,this,&APlayerCharacter::ActionReload);
-	//PlayerInputComponent->BindAction(TEXT("Shoot"),EInputEvent::IE_Pressed,this,&APlayerCharacter::Shoot);
 }
 
 void APlayerCharacter::DeflectON()
@@ -467,7 +466,19 @@ UDeflectorBoxComponent* APlayerCharacter::GetDeflectorBox()
 	return DeflectorBox;
 }
 
-//ShootProjectile
-/*void APlayerCharacter::Shoot()
+void APlayerCharacter::ChangeTime(bool Add, float Tribute)
 {
-}*/
+	if(Add)
+	{
+		CurrentTime += Tribute;
+	}
+	else
+	{
+		CurrentTime -= Tribute;
+	}
+}
+
+void APlayerCharacter::ChangeAmmo(bool Add, float Tribute)
+{
+	
+}

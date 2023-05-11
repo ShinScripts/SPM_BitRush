@@ -129,6 +129,10 @@ public:
 	FMovementData MovementData;
 	FDashComponent DashComponent;
 	FGunComponent GunComponent;
+
+	//Tribute resource
+	void ChangeTime(bool Add, float Tribute);
+	void ChangeAmmo(bool Add, float Tribute);
 	
 private:
 	UPROPERTY(EditDefaultsOnly)
@@ -243,12 +247,8 @@ private:
 	UFUNCTION(BlueprintCallable)
 	virtual float TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator,
 	                         AActor* DamageCauser) override;
-
+	
 	//Debug utility
 	void ScreenPrint(FString Message);
 	void ScreenPrint(FString Message, FColor Color);
-
-	//Terminate game session
-	UFUNCTION(BlueprintCallable)
-	void TerminatePlay();
 };
