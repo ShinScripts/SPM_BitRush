@@ -202,6 +202,7 @@ void FGrappleComponent::ScanForGrapplePoint()
 		GrapplingFeedComp->PlayerCanGrapple = false;
 		GrappleHit.Reset();
 		GrapplingFeedComp = nullptr;
+		bCanGrapple = false;
 	}
 }
 
@@ -357,6 +358,18 @@ void APlayerCharacter::Tick(float DeltaTime)
 	InvincibilityTimer -= DeltaTime;
 	MovementData.SetCharacterMovement(CharacterMovement);
 
+	if(CharacterMovement->IsFalling())
+	{
+		CurrentCoyoteTime -= DeltaTime;
+	}
+
+	UE_LOG(LogTemp,Warning,TEXT("%f"),CurrentCoyoteTime);
+	if(!CharacterMovement->IsFalling())
+	{
+		CurrentCoyoteTime = CoyoteTime;
+		bCanJump = true;
+	}
+
 	//Updates
 	DashComponent.DashUpdate(DeltaTime);
 	GunComponent.GunUpdate(DeltaTime);
@@ -429,6 +442,13 @@ void APlayerCharacter::MoveRight(const float AxisValue)
 void APlayerCharacter::Jump()
 {
 	Super::Jump();
+	
+	if(CurrentCoyoteTime > 0.0f && bCanJump && CharacterMovement->IsFalling())
+	{
+		LaunchCharacter(GetActorUpVector().GetSafeNormal() * 700,false,true);
+	}
+
+	bCanJump = false;
 }
 
 void APlayerCharacter::ActionReload()
