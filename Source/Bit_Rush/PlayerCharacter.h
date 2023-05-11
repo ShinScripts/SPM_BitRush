@@ -171,6 +171,37 @@ struct FMovementData
 	float MaxAcceleration;
 };
 
+USTRUCT(BlueprintType)
+struct FWeaponData
+{
+	GENERATED_USTRUCT_BODY()
+
+	void SetCharacterMovement(UCharacterMovementComponent* InCharacterMovementComponent) const;
+	void SetCharacterHitBox(UCapsuleComponent* InCharacterMovementComponent) const;
+	void SetDefaultValues();
+	void SetGroundFriction(const float NewGroundFriction);
+	void SetGravityScale(const float NewGravityScale);
+	void SetBrakingDecelerationWalking(const float NewBrakingDecelerationWalking);
+	void SetFallingLateralFriction(const float NewFallingLateralFriction);
+
+	UPROPERTY(BlueprintReadWrite)
+	float GravityScale;
+
+	UPROPERTY(BlueprintReadWrite)
+	float FallingLateralFriction;
+
+	UPROPERTY(BlueprintReadWrite)
+	float JumpForce;
+
+	UPROPERTY(BlueprintReadWrite)
+	float AirControl;
+	
+	float GroundFriction;
+	float BrakingDecelerationWalking;
+	float BrakingFrictionFactor;
+	float MaxAcceleration;
+};
+
 UCLASS()
 class BIT_RUSH_API APlayerCharacter : public ACharacter
 {
@@ -198,7 +229,16 @@ public:
 	bool bCanMove;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess))
-	int Ammo = 8;
+	int MaxAmmo = 32;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess))
+	int StoredAmmo ;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess))
+	int AmmoMagCapacity = 8;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess))
+	int CurrentMagAmmo;
 	
 	//Deflect
 	UFUNCTION(BlueprintCallable)
@@ -217,6 +257,10 @@ public:
 	
 	UCharacterMovementComponent* CharacterMovement;
 	UCapsuleComponent* CharacterHitBox;
+
+	//Tribute resource
+	void ChangeTime(bool AddOrTake, float Tribute); //AddOrTake = true -> add / = false -> subtract
+	void ChangeAmmo(bool AddOrTake, bool MagOrStore, float Tribute); //MagOrStore = true -> Mag / false -> Storage.
 	
 private:
 
@@ -260,7 +304,5 @@ private:
 	void ScreenPrint(FString Message);
 	void ScreenPrint(FString Message, FColor Color);
 
-	//Shoot
-	/*UFUNCTION(BlueprintCallable)
-	void Shoot();*/
+	//void AdditionalAmmoBoundry();
 };

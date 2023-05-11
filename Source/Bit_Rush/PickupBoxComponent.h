@@ -8,8 +8,8 @@
 
 #include "PickupBoxComponent.generated.h"
 
-//UENUM(BlueprintType)
-enum EPickupType
+UENUM(BlueprintType)
+enum class EPickupType : uint8
 {
 	Pickup_Time UMETA(DisplayName = "Time"),
 	Pickup_Ammo UMETA(DisplayName = "Ammo"),
@@ -22,6 +22,9 @@ class BIT_RUSH_API UPickupBoxComponent : public UBoxComponent
 
 public:	
 	// Sets default values for this component's properties
+	// - Variables
+	
+	// - Functions
 	UPickupBoxComponent();
 
 protected:
@@ -34,15 +37,26 @@ public:
 
 private:
 	// - Variables
+	//bool - (EditAnywhere)
+	UPROPERTY(EditAnywhere, Category="Pickup")
+	bool AddOrSubtract;
+
+	UPROPERTY(EditAnywhere, Category="Pickup")
+	bool MagOrStore;
+	
 	//float - (EditAnywhere)
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, Category="Pickup")
 	float TributeCount = 0;
+	
 	//APlayerCharacter
 	APlayerCharacter* PlayerChar;
-	//TEnumAsByte
-	TEnumAsByte<EPickupType> PickupType;
 	
-	// - Functions
-	void GetPlayer();
-	void GiveToPlayer();
+	//TEnumAsByte - (EditAnywhere)
+	UPROPERTY(EditAnywhere, Category="Pickup")
+	EPickupType PickupType;
+	
+	// - Functions - void
+	void CheckForPlayer();
+	void TributeToPlayer();
+
 };

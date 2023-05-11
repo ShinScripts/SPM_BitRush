@@ -9,6 +9,7 @@
 #include "Engine/World.h"
 #include "Kismet/GameplayStatics.h"
 #include "GrapplingFeedbackComponent.h"
+#include "IntVectorTypes.h"
 
 //FMovementData
 void FMovementData::SetCharacterMovement(UCharacterMovementComponent* InCharacterMovementComponent) const
@@ -120,14 +121,24 @@ void FGunComponent::GunUpdate(float DeltaTime)
 	{
 		CurrentReloadTime = ReloadTimer;
 		bIsReloading = false;
-		PlayerCharacter->Ammo = 8;
+		if(PlayerCharacter->StoredAmmo >= PlayerCharacter->AmmoMagCapacity)
+		{
+			PlayerCharacter->CurrentMagAmmo = PlayerCharacter->AmmoMagCapacity;
+			PlayerCharacter->StoredAmmo -= PlayerCharacter->CurrentMagAmmo;
+		}
+		else if(PlayerCharacter->StoredAmmo < PlayerCharacter->AmmoMagCapacity)
+		{
+			PlayerCharacter->CurrentMagAmmo = PlayerCharacter->StoredAmmo;
+			PlayerCharacter->StoredAmmo = 0;
+		}
+		
 	}
 }
 
 
 void FGunComponent::Reload()
 {
-	if(PlayerCharacter->Ammo < 8)
+	if(PlayerCharacter->CurrentMagAmmo < PlayerCharacter->AmmoMagCapacity)
 	{
 		bIsReloading = true;
 
@@ -334,6 +345,8 @@ void APlayerCharacter::BeginPlay()
 	Super::BeginPlay();
 
 	CharacterHitBox = FindComponentByClass<UCapsuleComponent>();
+	StoredAmmo = MaxAmmo;
+	CurrentMagAmmo = AmmoMagCapacity;
 	
 	MovementData.SetDefaultValues();
 	DashComponent.Initialize(this);
@@ -363,7 +376,8 @@ void APlayerCharacter::Tick(float DeltaTime)
 		CurrentCoyoteTime -= DeltaTime;
 	}
 
-	UE_LOG(LogTemp,Warning,TEXT("%f"),CurrentCoyoteTime);
+	//UE_LOG(LogTemp,Warning,TEXT("%f"),CurrentCoyoteTime);
+	UE_LOG(LogTemp,Warning,TEXT("Ammo stored: %i"),StoredAmmo);
 	if(!CharacterMovement->IsFalling())
 	{
 		CurrentCoyoteTime = CoyoteTime;
@@ -534,19 +548,78 @@ UDeflectorBoxComponent* APlayerCharacter::GetDeflectorBox()
 	return DeflectorBox;
 }
 
-void APlayerCharacter::ChangeTime(bool Add, float Tribute)
+void APlayerCharacter::ChangeTime(bool AddOrTake, float Tribute)
 {
-	if(Add)
+	if(AddOrTake)
 	{
 		CurrentTime += Tribute;
+		ScreenPrint("Add time");
 	}
 	else
 	{
 		CurrentTime -= Tribute;
+		ScreenPrint("Subtract time");
+		if(CurrentTime <= 0)
+		{
+			CurrentTime = 0;
+		}
 	}
 }
 
-void APlayerCharacter::ChangeAmmo(bool Add, float Tribute)
+void APlayerCharacter::ChangeAmmo(bool AddOrTake, bool MagOrStore, float Tribute)
 {
 	
+	if(AddOrTake)
+	{
+		if(MagOrStore)
+		{
+			CurrentMagAmmo += Tribute;
+			//ScreenPrint("Add ammo");
+			if(CurrentMagAmmo >= AmmoMagCapacity)
+			{
+				CurrentMagAmmo = AmmoMagCapacity;
+			}
+		}
+		else
+		{
+			StoredAmmo += Tribute;
+			//ScreenPrint("Add ammo");
+			if(StoredAmmo >= MaxAmmo)
+			{
+				StoredAmmo = MaxAmmo;
+			}
+		}
+	}
+	else
+	{
+
+		if(MagOrStore)
+		{
+			CurrentMagAmmo -= Tribute;
+			if(CurrentMagAmmo <= 0)
+			{
+				CurrentMagAmmo = 0;
+			}
+		}
+		else
+		{
+			StoredAmmo -= Tribute;
+			if(StoredAmmo <= 0)
+			{
+				StoredAmmo = 0;
+			}
+		}
+	}
 }
+
+/*void APlayerCharacter::AdditionalAmmoBoundry()
+{
+	if(StoredAmmo >= MaxAmmo)
+	{
+		StoredAmmo = MaxAmmo;
+	}
+	if(StoredAmmo <= 0)
+	{
+		StoredAmmo = 0;
+	}
+}*/

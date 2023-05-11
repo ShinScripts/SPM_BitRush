@@ -31,10 +31,12 @@ void UPickupBoxComponent::TickComponent(float DeltaTime, ELevelTick TickType, FA
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
+	CheckForPlayer();
+
 	// ...
 }
 
-void UPickupBoxComponent::GetPlayer()
+void UPickupBoxComponent::CheckForPlayer()
 {
 	TArray<AActor*> Actors;
 	GetOverlappingActors(Actors);
@@ -47,10 +49,11 @@ void UPickupBoxComponent::GetPlayer()
 			return;
 		}
 		PlayerChar = Player;
+		TributeToPlayer();
 	}
 }
 
-void UPickupBoxComponent::GiveToPlayer()
+void UPickupBoxComponent::TributeToPlayer()
 {
 	if(!PlayerChar)
 	{
@@ -59,14 +62,14 @@ void UPickupBoxComponent::GiveToPlayer()
 
 	switch (PickupType)
 	{
-		case 0:
-
-			PlayerChar->ChangeTime(true, TributeCount);
-
-		case 1:
-
-			PlayerChar->ChangeAmmo(true, TributeCount);
+	case EPickupType::Pickup_Time:
+		PlayerChar->ChangeTime(AddOrSubtract, TributeCount);
+	
+	case EPickupType::Pickup_Ammo:
+		PlayerChar->ChangeAmmo(AddOrSubtract, MagOrStore,TributeCount);
 
 		default: break;
 	}
+	
+	GetOwner()->Destroy();
 }
