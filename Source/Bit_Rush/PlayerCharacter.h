@@ -92,11 +92,13 @@ struct FGunComponent
 	void GunUpdate(float DeltaTime);
 	void Reload();
 
-	UPROPERTY(EditDefaultsOnly)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	float ReloadTimer = 2;
-	
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	float CurrentReloadTime = 2;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	bool bIsReloading = false;
 	
 	APlayerCharacter* PlayerCharacter;
@@ -113,9 +115,10 @@ struct FDashComponent
 	void Dash(float DeltaTime);
 	void StartDash();
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	float DashCooldown = 1;
-	
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	float DashCurrentCooldown = DashCooldown;
 	
 	UPROPERTY(EditAnywhere)
