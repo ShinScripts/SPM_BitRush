@@ -10,9 +10,140 @@
 class UBoxComponent;
 
 USTRUCT(BlueprintType)
+struct FSlideComponent
+{
+	GENERATED_USTRUCT_BODY()
+
+	void Initialize(FMovementData* InMovementData, APlayerCharacter* InPlayerCharacter);
+	void SlideBegin();
+	void SlideUpdate(float DeltaTime);
+	void EnterSlide();
+	void ExitSlide();
+	void Slide(float DeltaTime);
+	void StopSlide();
+	
+	FVector GetSlideSurface(const FVector &FloorNormal);
+
+	UPROPERTY(EditAnywhere)
+	float SlideVelocity = 5000000;
+
+	UPROPERTY(EditAnywhere)
+	float FlatSlideVelocity = 7000000;
+	
+	bool bShouldSlide = false;
+	
+	bool ShouldLaunchSlide = false;
+
+	float HitBoxDefaultValue;
+	
+	float CrouchHitBoxValue;
+
+	float CrouchSpeed = 10;
+
+	UPROPERTY(EditAnywhere)
+	float MaxSlideVelocity = 3000;
+	
+	FVector SlideSurfNormal;
+	
+	FHitResult FloorHit;
+	
+	APlayerCharacter* PlayerCharacter;
+	FMovementData* MovementData;
+};
+
+USTRUCT(BlueprintType)
+struct FGrappleComponent
+{
+	GENERATED_USTRUCT_BODY()
+
+	void Initialize(APlayerCharacter* InPlayerCharacter);
+	void GrappleUpdate();
+	void ScanForGrapplePoint();
+	void StartGrapple();
+	void StopGrapple();
+	void Grapple();
+
+	UPROPERTY(EditAnywhere)
+	float GrapplingHookRange = 1500;
+
+	UPROPERTY(EditAnywhere)
+	float GrapplingSpeed = 3000;
+
+	UPROPERTY(EditAnywhere)
+	float GrapplingLaunchSpeed = 2000;
+
+	UPROPERTY(BlueprintReadOnly)
+	bool bCanGrapple;
+
+	UPROPERTY(BlueprintReadOnly)
+	bool bIsGrappling;
+
+	FHitResult GrappleHit;
+
+	APlayerCharacter* PlayerCharacter;
+};
+
+USTRUCT(BlueprintType)
+struct FGunComponent
+{
+	GENERATED_USTRUCT_BODY()
+
+	void Initialize(APlayerCharacter* InPlayerCharacter);
+	void GunUpdate(float DeltaTime);
+	void Reload();
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	float ReloadTimer = 2;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	float CurrentReloadTime = 2;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	bool bIsReloading = false;
+	
+	APlayerCharacter* PlayerCharacter;
+};
+
+USTRUCT(BlueprintType)
+struct FDashComponent
+{
+	GENERATED_USTRUCT_BODY()
+
+	void Initialize(APlayerCharacter* PlayerCharacter);
+	void DashUpdate(float DeltaTime);
+	
+	void Dash(float DeltaTime);
+	void StartDash();
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	float DashCooldown = 1;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	float DashCurrentCooldown = DashCooldown;
+	
+	UPROPERTY(EditAnywhere)
+	float DashVelocity = 2000;
+	
+	UPROPERTY(EditAnywhere)
+	float DashTime = 0.15;
+
+	bool bDashIsOnCooldown = false;
+
+	UPROPERTY(BlueprintReadOnly)
+	bool bIsDashing = false;
+
+	float CurrentDashTime;
+	
+	FVector DashDistance;
+	FVector DashDirection;
+	
+	APlayerCharacter* PlayerCharacter;
+};
+
+USTRUCT(BlueprintType)
 struct FMovementData
 {
-	GENERATED_BODY()
+	GENERATED_USTRUCT_BODY()
 
 	void SetCharacterMovement(UCharacterMovementComponent* InCharacterMovementComponent) const;
 	void SetCharacterHitBox(UCapsuleComponent* InCharacterMovementComponent) const;
@@ -66,118 +197,53 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	bool bCanMove;
 
-	UPROPERTY(BlueprintReadWrite, meta=(AllowPrivateAccess))
-	FMovementData MovementData;
-
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess))
+	int Ammo = 8;
+	
 	//Deflect
 	UFUNCTION(BlueprintCallable)
 	UDeflectorBoxComponent* GetDeflectorBox();
+
+	UPROPERTY(BlueprintReadWrite)
+	FMovementData MovementData;
+	UPROPERTY(BlueprintReadWrite)
+	FDashComponent DashComponent;
+	UPROPERTY(BlueprintReadWrite)
+	FGunComponent GunComponent;
+	UPROPERTY(BlueprintReadWrite)
+	FGrappleComponent GrappleComponent;
+	UPROPERTY(BlueprintReadWrite)
+	FSlideComponent SlideComponent;
+	
+	UCharacterMovementComponent* CharacterMovement;
+	UCapsuleComponent* CharacterHitBox;
 	
 private:
-	UPROPERTY(EditDefaultsOnly)
-	UBoxComponent* BoxLeft;
 
-	UPROPERTY(EditDefaultsOnly)
-	UBoxComponent* BoxRight;
-	
-	//Variable
-	UPROPERTY(EditAnywhere)
-	float SlideVelocity = 5000000;
-
-	UPROPERTY(EditAnywhere)
-	float FlatSlideVelocity = 7000000;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess))
+	float InvincibilityTimer;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess))
 	float CurrentTime;
-	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess))
-	int MaxAmmo = 8;
-	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess))
-	int Ammo = 8;
-
-	// Dash
-	UPROPERTY(EditAnywhere)
-	float DashVelocity = 2000;
-	
-	UPROPERTY(EditAnywhere)
-	float DashTime = 0.15;
-
-	UPROPERTY(BlueprintReadOnly, meta = (AllowPrivateAccess))
-	bool CanDash = true;
-
-	bool bIsDashing = false;
-	
-	UPROPERTY(EditAnywhere)
-	float DashCooldown = 1;
 
 	UPROPERTY(EditAnywhere)
-	float MaxSlideVelocity = 3000;
+	float CoyoteTime = 0.2;
 
-	UPROPERTY(BlueprintReadOnly,meta=(AllowPrivateAccess))
-	bool bShouldSlide = false;
-	
-	bool ShouldLaunchSlide = false;
+	float CurrentCoyoteTime = CoyoteTime;
 
-	UPROPERTY(BlueprintReadWrite,meta=(AllowPrivateAccess))
-	FVector SlideSurfNormal;
-
-	UPROPERTY(EditAnywhere)
-	float CharacterSpeed = 1;
-
-	UPROPERTY(EditAnywhere)
-	float GrapplingHookRange = 1500;
-
-	UPROPERTY(EditAnywhere)
-	float GrapplingSpeed = 3000;
-
-	UPROPERTY(EditAnywhere)
-	float GrapplingLaunchSpeed = 2000;
-
-	UPROPERTY(BlueprintReadOnly, meta = (AllowPrivateAccess))
-	bool bCanGrapple;
-	bool bIsGrappling;
-
-	float CrouchSpeed = 10;
-	
-	float HitBoxDefaultValue;
-	float CrouchHitBoxValue;
-
-	FVector DashDistance;
-	FVector DashDirection;
-	
-	UCharacterMovementComponent* CharacterMovement;
-	
-	FHitResult FloorHit;
-	FHitResult GrappleHit;
-
-	UCapsuleComponent* CharacterHitBox;
-	
+	bool bCanJump = true;
 	//Functions
 	void MoveForward(const float AxisValue);
 	void MoveRight(const float AxisValue);
 	void Jump();
 
-	//Dash
-	void Dash();
-	void StopDash();
-	void StartDash();
-	void ResetDash();
-
-	//Slide
-	void EnterSlide();
-	void ExitSlide();
-	void PhysSlide(float DeltaTime);
-	void StopSlide();
-
-	//Grapple
-	void ScanGrapple();
-	void StartGrapple();
-	void StopGrapple();
-	void Grapple();
-	//void StopSlidingAfterSeconds();
-	FVector GetSlideSurface(const FVector& FloorNormal);
-
+	//ActionFunctions
+	void ActionReload();
+	void ActionStartDash();
+	void ActionStartGrapple();
+	void ActionEnterSlide();
+	void ActionExitSlide();
+	
 	//Deflect
 	// - variables
 	UDeflectorBoxComponent* DeflectorBox;
