@@ -225,7 +225,13 @@ private:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess))
 	float CurrentTime;
-	
+
+	UPROPERTY(EditAnywhere)
+	float CoyoteTime = 0.2;
+
+	float CurrentCoyoteTime = CoyoteTime;
+
+	bool bCanJump = true;
 	//Functions
 	void MoveForward(const float AxisValue);
 	void MoveRight(const float AxisValue);
