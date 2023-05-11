@@ -114,7 +114,14 @@ void FGunComponent::Initialize(APlayerCharacter* InPlayerCharacter)
 void FGunComponent::GunUpdate(float DeltaTime)
 {
 	if(bIsReloading)
-		Reload();
+		CurrentReloadTime -= PlayerCharacter->GetWorld()->GetDeltaSeconds();
+	
+	if(CurrentReloadTime < 0.0f)
+	{
+		CurrentReloadTime = ReloadTimer;
+		bIsReloading = false;
+		PlayerCharacter->Ammo = 8;
+	}
 }
 
 
@@ -123,15 +130,10 @@ void FGunComponent::Reload()
 	if(PlayerCharacter->Ammo < 8)
 	{
 		bIsReloading = true;
-		CurrentReloadTime -= PlayerCharacter->GetWorld()->GetDeltaSeconds();
+
+
 	}
-	
-	if(CurrentReloadTime < 0.0f)
-	{
-		CurrentReloadTime = ReloadTimer;
-		PlayerCharacter->Ammo = 8;
-		bIsReloading = false;
-	}
+
 }
 
 //FGrappleComponent
