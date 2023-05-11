@@ -202,6 +202,7 @@ void FGrappleComponent::ScanForGrapplePoint()
 		GrapplingFeedComp->PlayerCanGrapple = false;
 		GrappleHit.Reset();
 		GrapplingFeedComp = nullptr;
+		bCanGrapple = false;
 	}
 }
 
