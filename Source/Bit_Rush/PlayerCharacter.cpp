@@ -399,7 +399,7 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 	PlayerInputComponent->BindAction(TEXT("Slide"),EInputEvent::IE_Released,this,&APlayerCharacter::ActionExitSlide);
 	PlayerInputComponent->BindAction(TEXT("Grapple"),EInputEvent::IE_Pressed,this,&APlayerCharacter::ActionStartGrapple);
 	PlayerInputComponent->BindAction(TEXT("Deflect"),EInputEvent::IE_Pressed,this,&APlayerCharacter::DeflectON);
-	PlayerInputComponent->BindAction(TEXT("Deflect"),EInputEvent::IE_Released,this,&APlayerCharacter::DeflectOFF);
+	//PlayerInputComponent->BindAction(TEXT("Deflect"),EInputEvent::IE_Released,this,&APlayerCharacter::DeflectOFF);
 	PlayerInputComponent->BindAction(TEXT("Reload"),EInputEvent::IE_Pressed,this,&APlayerCharacter::ActionReload);
 	//PlayerInputComponent->BindAction(TEXT("Shoot"),EInputEvent::IE_Pressed,this,&APlayerCharacter::Shoot);
 }

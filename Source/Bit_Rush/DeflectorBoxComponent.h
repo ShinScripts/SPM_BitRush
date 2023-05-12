@@ -44,6 +44,10 @@ private:
 	UPROPERTY(EditAnywhere, Category="Deflector Component")
 	TArray<FName> DeflectableProjectileTags;
 
+	float CurrentDeflectCooldown;
+	float DeflectCooldown = 2;
+	bool bIsDeflecting = false;
+
 	/*UPROPERTY(EditAnywhere, Category="Deflector Component")
 	APlayerCharacter* Player;*/
 };
