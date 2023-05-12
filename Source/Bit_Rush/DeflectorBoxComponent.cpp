@@ -14,6 +14,8 @@ UDeflectorBoxComponent::UDeflectorBoxComponent()
 void UDeflectorBoxComponent::BeginPlay()
 {
 	Super::BeginPlay();
+	IsDeflecting = false;
+	CurrentDeflectCooldown = DeflectCooldown;
 	//BindInputs(Player->);
 	//UE_LOG(LogTemp, Warning, TEXT("can start.")); //It works at least.
 }
@@ -23,9 +25,24 @@ void UDeflectorBoxComponent::TickComponent(float DeltaTime, ELevelTick TickType,
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 	//-----------------------------------------------------------------------------------------------------------------
 	//UE_LOG(LogTemp, Warning, TEXT("can tick."));
-	CheckOverlappingTags(DeflectableProjectileTags);
+
 	//UE_LOG(LogTemp, Warning, TEXT("Vozmozshmno..."));
 	//ScreenPrint("Balls");
+
+	if(IsDeflecting)
+	{
+		if(CurrentDeflectCooldown-DeflectCooldown<0.4)
+		{
+			CheckOverlappingTags(DeflectableProjectileTags);
+		}
+		CurrentDeflectCooldown -= DeltaTime;
+	}
+	if (CurrentDeflectCooldown <= 0)
+	{
+		IsDeflecting = false;
+		CurrentDeflectCooldown = DeflectCooldown;
+	}
+	UE_LOG(LogTemp, Warning, TEXT("can tick., %f"), CurrentDeflectCooldown);
 }
 
 void UDeflectorBoxComponent::ScreenPrint(FString Message)
@@ -93,4 +110,5 @@ void UDeflectorBoxComponent::StartDeflect()
 void UDeflectorBoxComponent::StopDeflect()
 {
 	IsDeflecting = false;
+	CurrentDeflectCooldown = DeflectCooldown;
 }
