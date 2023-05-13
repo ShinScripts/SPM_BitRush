@@ -70,7 +70,7 @@ void UWallRunMovementComponent::TickComponent(float DeltaTime, ELevelTick TickTy
 		PlayerCharacter->bCanMove = false;
 		OnRightSide = true;	
 
-		if(FVector::DotProduct(HitResultRight.Normal, PlayerCharacter->GetActorForwardVector()) > OffWallThreshold)
+		if(IsLookingAtWallNormal(PlayerCharacter, HitResultRight))
 		{
 			OffWall(PlayerCharacter, DeltaTime);
 			return;
@@ -88,7 +88,7 @@ void UWallRunMovementComponent::TickComponent(float DeltaTime, ELevelTick TickTy
 		PlayerCharacter->bCanMove = false;
 		OnRightSide = true;	
 
-		if(FVector::DotProduct(HitResultRightAngle.Normal, PlayerCharacter->GetActorForwardVector()) > OffWallThreshold)
+		if(IsLookingAtWallNormal(PlayerCharacter, HitResultRightAngle))
 		{
 			OffWall(PlayerCharacter, DeltaTime);
 			return;
@@ -114,7 +114,7 @@ void UWallRunMovementComponent::TickComponent(float DeltaTime, ELevelTick TickTy
 		PlayerCharacter->bCanMove = false;
 		OnLeftSide = true;
 
-		if(FVector::DotProduct(HitResultLeft.Normal, PlayerCharacter->GetActorForwardVector()) > OffWallThreshold)
+		if(IsLookingAtWallNormal(PlayerCharacter, HitResultLeft))
 		{
 			OffWall(PlayerCharacter, DeltaTime);
 			return;
@@ -131,7 +131,7 @@ void UWallRunMovementComponent::TickComponent(float DeltaTime, ELevelTick TickTy
 		PlayerCharacter->bCanMove = false;
 		OnLeftSide = true;
 
-		if(FVector::DotProduct(HitResultLeftAngle.Normal, PlayerCharacter->GetActorForwardVector()) > OffWallThreshold)
+		if(IsLookingAtWallNormal(PlayerCharacter, HitResultLeftAngle))
 		{
 			OffWall(PlayerCharacter, DeltaTime);
 			return;
@@ -205,6 +205,14 @@ void UWallRunMovementComponent::JumpOffWall(APlayerCharacter* PlayerCharacter)
 	Velocity.Z = JumpForce;
 	
 	PlayerCharacter->LaunchCharacter(Velocity, false, true);
+}
+
+bool UWallRunMovementComponent::IsLookingAtWallNormal(const APlayerCharacter* PlayerCharacter, const FHitResult& HitResult)
+{
+	if(FVector::DotProduct(HitResult.Normal, PlayerCharacter->GetActorForwardVector()) > OffWallThreshold)
+		return true;
+	
+	return false;
 }
 
 bool UWallRunMovementComponent::ContainsTag(FHitResult HitResult)
