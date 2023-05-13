@@ -97,7 +97,7 @@ void FDashComponent::Dash(float DeltaTime)
 
 	PlayerCharacter->SetActorLocation(FMath::VInterpConstantTo(PlayerCharacter->GetActorLocation(),DashDistance + PlayerCharacter->GetActorLocation(),PlayerCharacter->GetWorld()->DeltaTimeSeconds,DashSpeed));
 	CurrentDashTime -= DeltaTime;
-	UE_LOG(LogTemp,Warning,TEXT("%f"),CurrentDashTime);
+	// UE_LOG(LogTemp,Warning,TEXT("%f"),CurrentDashTime);
 	if(CurrentDashTime < 0)
 	{
 		bDashIsOnCooldown = true;
@@ -180,7 +180,7 @@ void FGrappleComponent::ScanForGrapplePoint()
 				GrapplingFeedComp = Cast<UGrapplingFeedbackComponent>(GrappleHit.GetActor()->FindComponentByClass<UGrapplingFeedbackComponent>());
 				GrapplingFeedComp->PlayerCanGrapple = true;
 				
-				UE_LOG(LogTemp,Warning,TEXT("%s"),*GrappleHit.GetActor()->GetName());
+				// UE_LOG(LogTemp,Warning,TEXT("%s"),*GrappleHit.GetActor()->GetName());
 				bCanGrapple = true;
 			}
 			else
@@ -363,7 +363,7 @@ void APlayerCharacter::Tick(float DeltaTime)
 		CurrentCoyoteTime -= DeltaTime;
 	}
 
-	UE_LOG(LogTemp,Warning,TEXT("%f"),CurrentCoyoteTime);
+	// UE_LOG(LogTemp,Warning,TEXT("%f"),CurrentCoyoteTime);
 	if(!CharacterMovement->IsFalling())
 	{
 		CurrentCoyoteTime = CoyoteTime;
@@ -399,7 +399,7 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 	PlayerInputComponent->BindAction(TEXT("Slide"),EInputEvent::IE_Released,this,&APlayerCharacter::ActionExitSlide);
 	PlayerInputComponent->BindAction(TEXT("Grapple"),EInputEvent::IE_Pressed,this,&APlayerCharacter::ActionStartGrapple);
 	PlayerInputComponent->BindAction(TEXT("Deflect"),EInputEvent::IE_Pressed,this,&APlayerCharacter::DeflectON);
-	PlayerInputComponent->BindAction(TEXT("Deflect"),EInputEvent::IE_Released,this,&APlayerCharacter::DeflectOFF);
+	//PlayerInputComponent->BindAction(TEXT("Deflect"),EInputEvent::IE_Released,this,&APlayerCharacter::DeflectOFF);
 	PlayerInputComponent->BindAction(TEXT("Reload"),EInputEvent::IE_Pressed,this,&APlayerCharacter::ActionReload);
 	//PlayerInputComponent->BindAction(TEXT("Shoot"),EInputEvent::IE_Pressed,this,&APlayerCharacter::Shoot);
 }
