@@ -356,6 +356,7 @@ void APlayerCharacter::BeginPlay()
 	CameraComp = FindComponentByClass<UCameraComponent>();
 
 	SetDeflectBoxVariable();
+	SetStartAmmo();
 
 	
 }
@@ -551,12 +552,12 @@ void APlayerCharacter::ChangeTime(bool AddOrTake, float Tribute)
 	if(AddOrTake)
 	{
 		CurrentTime += Tribute;
-		ScreenPrint("Add time");
+		//ScreenPrint("Add time");
 	}
 	else
 	{
 		CurrentTime -= Tribute;
-		ScreenPrint("Subtract time");
+		//ScreenPrint("Subtract time");
 		if(CurrentTime <= 0)
 		{
 			CurrentTime = 0;
@@ -564,7 +565,7 @@ void APlayerCharacter::ChangeTime(bool AddOrTake, float Tribute)
 	}
 }
 
-void APlayerCharacter::ChangeAmmo(bool AddOrTake, bool MagOrStore, float Tribute)
+void APlayerCharacter::ChangeAmmo(bool AddOrTake, bool MagOrStore, int Tribute)
 {
 	
 	if(AddOrTake)
@@ -607,5 +608,22 @@ void APlayerCharacter::ChangeAmmo(bool AddOrTake, bool MagOrStore, float Tribute
 				StoredAmmo = 0;
 			}
 		}
+	}
+}
+
+void APlayerCharacter::SetStartAmmo()
+{
+	if(FullMagAtStart)
+	{
+		CurrentMagAmmo = AmmoMagCapacity;
+	}
+	else
+	{
+		CurrentMagAmmo = MagAmmoAtStart;
+	}
+
+	if(FullAmmoStoreAtStart)
+	{
+		StoredAmmo = MaxAmmo;
 	}
 }

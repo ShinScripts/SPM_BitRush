@@ -260,10 +260,9 @@ public:
 
 	//Tribute resource
 	void ChangeTime(bool AddOrTake, float Tribute); //AddOrTake = true -> add / = false -> subtract
-	void ChangeAmmo(bool AddOrTake, bool MagOrStore, float Tribute); //MagOrStore = true -> Mag / false -> Storage.
+	void ChangeAmmo(bool AddOrTake, bool MagOrStore, int Tribute); //MagOrStore = true -> Mag / false -> Storage.
 	
 private:
-
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess))
 	float InvincibilityTimer;
 
@@ -276,6 +275,23 @@ private:
 	float CurrentCoyoteTime = CoyoteTime;
 
 	bool bCanJump = true;
+	//Ammo
+	UPROPERTY(EditAnywhere, Category = "Ammo")
+	bool FullMagAtStart = true;
+	
+	UPROPERTY(EditAnywhere, Category = "Ammo")
+	bool FullAmmoStoreAtStart = true;
+	
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Ammo", meta = (AllowPrivateAccess, EditCondition = "!FullAmmoStoreAtStart"))
+	int StoredAmmoAtStart;
+	
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Ammo", meta = (AllowPrivateAccess, EditCondition = "!FullMagAtStart"))
+	int MagAmmoAtStart;
+
+	/*UPROPERTY(EditAnywhere, Category = "MyActor", meta = (EditCondition = "bMyVariable"))
+	bool bMyOtherVariable;*/
+	//
+	
 	//Functions
 	void MoveForward(const float AxisValue);
 	void MoveRight(const float AxisValue);
@@ -304,5 +320,6 @@ private:
 	void ScreenPrint(FString Message);
 	void ScreenPrint(FString Message, FColor Color);
 
-	//void AdditionalAmmoBoundry();
+	//Ammo
+	void SetStartAmmo();
 };
