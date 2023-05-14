@@ -105,7 +105,7 @@ void FDashComponent::Dash(float DeltaTime)
 	}
 }
 
-//FGunComponent
+///FGunComponent
 void FGunComponent::Initialize(APlayerCharacter* InPlayerCharacter)
 {
 	PlayerCharacter = InPlayerCharacter;
@@ -120,14 +120,24 @@ void FGunComponent::GunUpdate(float DeltaTime)
 	{
 		CurrentReloadTime = ReloadTimer;
 		bIsReloading = false;
-		PlayerCharacter->Ammo = 8;
+		if(PlayerCharacter->StoredAmmo >= PlayerCharacter->AmmoMagCapacity)
+		{
+			PlayerCharacter->CurrentMagAmmo = PlayerCharacter->AmmoMagCapacity;
+			PlayerCharacter->StoredAmmo -= PlayerCharacter->CurrentMagAmmo;
+		}
+		else if(PlayerCharacter->StoredAmmo < PlayerCharacter->AmmoMagCapacity)
+		{
+			PlayerCharacter->CurrentMagAmmo = PlayerCharacter->StoredAmmo;
+			PlayerCharacter->StoredAmmo = 0;
+		}
+		
 	}
 }
 
 
 void FGunComponent::Reload()
 {
-	if(PlayerCharacter->Ammo < 8)
+	if(PlayerCharacter->CurrentMagAmmo < PlayerCharacter->AmmoMagCapacity)
 	{
 		bIsReloading = true;
 
@@ -535,7 +545,67 @@ UDeflectorBoxComponent* APlayerCharacter::GetDeflectorBox()
 	return DeflectorBox;
 }
 
-//ShootProjectile
-/*void APlayerCharacter::Shoot()
+
+void APlayerCharacter::ChangeTime(bool AddOrTake, float Tribute)
 {
-}*/
+	if(AddOrTake)
+	{
+		CurrentTime += Tribute;
+		ScreenPrint("Add time");
+	}
+	else
+	{
+		CurrentTime -= Tribute;
+		ScreenPrint("Subtract time");
+		if(CurrentTime <= 0)
+		{
+			CurrentTime = 0;
+		}
+	}
+}
+
+void APlayerCharacter::ChangeAmmo(bool AddOrTake, bool MagOrStore, float Tribute)
+{
+	
+	if(AddOrTake)
+	{
+		if(MagOrStore)
+		{
+			CurrentMagAmmo += Tribute;
+			//ScreenPrint("Add ammo");
+			if(CurrentMagAmmo >= AmmoMagCapacity)
+			{
+				CurrentMagAmmo = AmmoMagCapacity;
+			}
+		}
+		else
+		{
+			StoredAmmo += Tribute;
+			//ScreenPrint("Add ammo");
+			if(StoredAmmo >= MaxAmmo)
+			{
+				StoredAmmo = MaxAmmo;
+			}
+		}
+	}
+	else
+	{
+
+		if(MagOrStore)
+		{
+			CurrentMagAmmo -= Tribute;
+			if(CurrentMagAmmo <= 0)
+			{
+				CurrentMagAmmo = 0;
+			}
+		}
+		else
+		{
+			StoredAmmo -= Tribute;
+			if(StoredAmmo <= 0)
+			{
+				StoredAmmo = 0;
+			}
+		}
+	}
+}
