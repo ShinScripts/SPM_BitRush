@@ -120,16 +120,27 @@ void FGunComponent::GunUpdate(float DeltaTime)
 	{
 		CurrentReloadTime = ReloadTimer;
 		bIsReloading = false;
-		if(PlayerCharacter->StoredAmmo >= PlayerCharacter->AmmoMagCapacity)
+		if(PlayerCharacter->UnlimitedAmmo == false)
 		{
-			PlayerCharacter->CurrentMagAmmo = PlayerCharacter->AmmoMagCapacity;
-			PlayerCharacter->StoredAmmo -= PlayerCharacter->CurrentMagAmmo;
+			if(PlayerCharacter->StoredAmmo >= PlayerCharacter->AmmoMagCapacity)
+			{
+				PlayerCharacter->CurrentMagAmmo = PlayerCharacter->AmmoMagCapacity;
+				PlayerCharacter->StoredAmmo -= PlayerCharacter->CurrentMagAmmo;
+			}
+			else if(PlayerCharacter->StoredAmmo < PlayerCharacter->AmmoMagCapacity)
+			{
+				PlayerCharacter->CurrentMagAmmo = PlayerCharacter->StoredAmmo;
+				PlayerCharacter->StoredAmmo = 0;
+			}
 		}
-		else if(PlayerCharacter->StoredAmmo < PlayerCharacter->AmmoMagCapacity)
+		else
 		{
-			PlayerCharacter->CurrentMagAmmo = PlayerCharacter->StoredAmmo;
-			PlayerCharacter->StoredAmmo = 0;
+			if(PlayerCharacter->CurrentMagAmmo < PlayerCharacter->AmmoMagCapacity)
+			{
+				PlayerCharacter->CurrentMagAmmo = PlayerCharacter->AmmoMagCapacity;
+			}
 		}
+		
 		
 	}
 }
@@ -567,10 +578,9 @@ void APlayerCharacter::ChangeTime(bool AddOrTake, float Tribute)
 
 void APlayerCharacter::ChangeAmmo(bool AddOrTake, bool MagOrStore, int Tribute)
 {
-	
 	if(AddOrTake)
 	{
-		if(MagOrStore)
+		/*if(MagOrStore)
 		{
 			CurrentMagAmmo += Tribute;
 			//ScreenPrint("Add ammo");
@@ -587,11 +597,87 @@ void APlayerCharacter::ChangeAmmo(bool AddOrTake, bool MagOrStore, int Tribute)
 			{
 				StoredAmmo = MaxAmmo;
 			}
+		}*/
+		AddAmmoWhileUnlimited(MagOrStore, Tribute);
+	}
+	else
+	{
+		/*if(!UnlimitedAmmo)
+		{
+			if(MagOrStore)
+			{
+				CurrentMagAmmo -= Tribute;
+				if(CurrentMagAmmo <= 0)
+				{
+					CurrentMagAmmo = 0;
+				}
+			}
+			else
+			{
+				StoredAmmo -= Tribute;
+				if(StoredAmmo <= 0)
+				{
+					StoredAmmo = 0;
+				}
+			}
+		}
+		else
+		{
+			if(MagOrStore)
+			{
+				CurrentMagAmmo -= Tribute;
+				if(CurrentMagAmmo <= 0)
+				{
+					CurrentMagAmmo = 0;
+				}
+			}
+		}*/
+
+		SubtractAmmoWhileUnlimited(MagOrStore, Tribute);
+	}
+}
+
+void APlayerCharacter::SetStartAmmo()
+{
+	if(!UnlimitedAmmo)
+	{
+		if(FullMagAtStart)
+		{
+			CurrentMagAmmo = AmmoMagCapacity;
+		}
+		else
+		{
+			CurrentMagAmmo = MagAmmoAtStart;
+		}
+        
+		if(FullAmmoStoreAtStart)
+		{
+			StoredAmmo = MaxAmmo;
+		}
+		else
+		{
+			StoredAmmo = StoredAmmoAtStart;
 		}
 	}
 	else
 	{
+		if(FullMagAtStart)
+		{
+			CurrentMagAmmo = AmmoMagCapacity;
+		}
+		else
+		{
+			CurrentMagAmmo = MagAmmoAtStart;
+		}
 
+		StoredAmmo = AmmoMagCapacity;
+	}
+}
+
+void APlayerCharacter::SubtractAmmoWhileUnlimited(bool MagOrStore, int Tribute)
+{
+	if(!UnlimitedAmmo)
+	{
 		if(MagOrStore)
 		{
 			CurrentMagAmmo -= Tribute;
@@ -609,21 +695,47 @@ void APlayerCharacter::ChangeAmmo(bool AddOrTake, bool MagOrStore, int Tribute)
 			}
 		}
 	}
+	else
+	{
+		if(MagOrStore)
+		{
+			CurrentMagAmmo -= Tribute;
+			if(CurrentMagAmmo <= 0)
+				{
+					CurrentMagAmmo = 0;
+				}
+		}
+	}
 }
 
-void APlayerCharacter::SetStartAmmo()
+void APlayerCharacter::AddAmmoWhileUnlimited(bool MagOrStore, int Tribute)
 {
-	if(FullMagAtStart)
+	if(!UnlimitedAmmo)
 	{
-		CurrentMagAmmo = AmmoMagCapacity;
+		if(MagOrStore)
+		{
+			CurrentMagAmmo += Tribute;
+			if(CurrentMagAmmo >= AmmoMagCapacity)
+			{
+				CurrentMagAmmo = AmmoMagCapacity;
+			}
+		}
+		else
+		{
+			StoredAmmo += Tribute;
+			if(StoredAmmo >= MaxAmmo)
+			{
+				StoredAmmo = MaxAmmo;
+			}
+		}
 	}
 	else
 	{
-		CurrentMagAmmo = MagAmmoAtStart;
-	}
-
-	if(FullAmmoStoreAtStart)
-	{
-		StoredAmmo = MaxAmmo;
+		CurrentMagAmmo += Tribute;
+		if(CurrentMagAmmo >= AmmoMagCapacity)
+		{
+			CurrentMagAmmo = AmmoMagCapacity;
+		}
 	}
 }
+

@@ -228,16 +228,16 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	bool bCanMove;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess))
+	//Ammo
+	UPROPERTY(EditAnywhere, Category = "Ammo", BlueprintReadWrite, meta = (AllowPrivateAccess))
+	bool UnlimitedAmmo = false;
+	UPROPERTY(EditAnywhere, Category = "Ammo", BlueprintReadWrite, meta = (AllowPrivateAccess, EditCondition = "!UnlimitedAmmo"))
 	int MaxAmmo = 32;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess))
+	UPROPERTY(EditAnywhere, Category = "Ammo", BlueprintReadWrite, meta = (AllowPrivateAccess, EditCondition = "!UnlimitedAmmo"))
 	int StoredAmmo ;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess))
+	UPROPERTY(EditAnywhere, Category = "Ammo", BlueprintReadWrite, meta = (AllowPrivateAccess))
 	int AmmoMagCapacity = 8;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess))
+	UPROPERTY(VisibleAnywhere, Category = "Ammo", BlueprintReadWrite, meta = (AllowPrivateAccess))
 	int CurrentMagAmmo;
 	
 	//Deflect
@@ -278,13 +278,11 @@ private:
 	//Ammo
 	UPROPERTY(EditAnywhere, Category = "Ammo")
 	bool FullMagAtStart = true;
-	
 	UPROPERTY(EditAnywhere, Category = "Ammo")
 	bool FullAmmoStoreAtStart = true;
 	
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Ammo", meta = (AllowPrivateAccess, EditCondition = "!FullAmmoStoreAtStart"))
 	int StoredAmmoAtStart;
-	
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Ammo", meta = (AllowPrivateAccess, EditCondition = "!FullMagAtStart"))
 	int MagAmmoAtStart;
 
@@ -322,4 +320,6 @@ private:
 
 	//Ammo
 	void SetStartAmmo();
+	void SubtractAmmoWhileUnlimited(bool MagOrStore, int Tribute);
+	void AddAmmoWhileUnlimited(bool MagOrStore, int Tribute);
 };
