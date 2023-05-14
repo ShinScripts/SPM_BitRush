@@ -32,6 +32,7 @@ void UPickupBoxComponent::TickComponent(float DeltaTime, ELevelTick TickType, FA
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
 	CheckForPlayer();
+	ObjectRotation();
 
 	// ...
 }
@@ -63,13 +64,29 @@ void UPickupBoxComponent::TributeToPlayer()
 	switch (PickupType)
 	{
 	case EPickupType::Pickup_Time:
-		PlayerChar->ChangeTime(AddOrSubtract, TributeCount);
+		PlayerChar->ChangeTime(AddOrSubtract, TimeTribute);
 	
 	case EPickupType::Pickup_Ammo:
-		PlayerChar->ChangeAmmo(AddOrSubtract, MagOrStore,TributeCount);
+		PlayerChar->ChangeAmmo(AddOrSubtract, MagOrStore,AmmoTribute);
 
 		default: break;
 	}
 	
 	GetOwner()->Destroy();
+}
+
+void UPickupBoxComponent::ObjectRotation()
+{
+	if(RotateObject)
+	{
+		AActor* Target = this->GetOwner();
+        
+		if(!Target)
+		{
+			return;
+		}
+		FQuat QuatRot = FQuat(FRotator(XRotation, YRotation, ZRotation));
+        
+		Target->AddActorLocalRotation(QuatRot, false, 0 , ETeleportType::None);
+	}
 }

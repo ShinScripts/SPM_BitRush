@@ -228,16 +228,16 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	bool bCanMove;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess))
+	//Ammo
+	UPROPERTY(EditAnywhere, Category = "Ammo", BlueprintReadWrite, meta = (AllowPrivateAccess))
+	bool UnlimitedAmmo = false;
+	UPROPERTY(EditAnywhere, Category = "Ammo", BlueprintReadWrite, meta = (AllowPrivateAccess, EditCondition = "!UnlimitedAmmo"))
 	int MaxAmmo = 32;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess))
+	UPROPERTY(EditAnywhere, Category = "Ammo", BlueprintReadWrite, meta = (AllowPrivateAccess, EditCondition = "!UnlimitedAmmo"))
 	int StoredAmmo ;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess))
+	UPROPERTY(EditAnywhere, Category = "Ammo", BlueprintReadWrite, meta = (AllowPrivateAccess))
 	int AmmoMagCapacity = 8;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess))
+	UPROPERTY(VisibleAnywhere, Category = "Ammo", BlueprintReadWrite, meta = (AllowPrivateAccess))
 	int CurrentMagAmmo;
 	
 	//Deflect
@@ -260,10 +260,9 @@ public:
 
 	//Tribute resource
 	void ChangeTime(bool AddOrTake, float Tribute); //AddOrTake = true -> add / = false -> subtract
-	void ChangeAmmo(bool AddOrTake, bool MagOrStore, float Tribute); //MagOrStore = true -> Mag / false -> Storage.
+	void ChangeAmmo(bool AddOrTake, bool MagOrStore, int Tribute); //MagOrStore = true -> Mag / false -> Storage.
 	
 private:
-
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess))
 	float InvincibilityTimer;
 
@@ -276,6 +275,21 @@ private:
 	float CurrentCoyoteTime = CoyoteTime;
 
 	bool bCanJump = true;
+	//Ammo
+	UPROPERTY(EditAnywhere, Category = "Ammo")
+	bool FullMagAtStart = true;
+	UPROPERTY(EditAnywhere, Category = "Ammo")
+	bool FullAmmoStoreAtStart = true;
+	
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Ammo", meta = (AllowPrivateAccess, EditCondition = "!FullAmmoStoreAtStart"))
+	int StoredAmmoAtStart;
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Ammo", meta = (AllowPrivateAccess, EditCondition = "!FullMagAtStart"))
+	int MagAmmoAtStart;
+
+	/*UPROPERTY(EditAnywhere, Category = "MyActor", meta = (EditCondition = "bMyVariable"))
+	bool bMyOtherVariable;*/
+	//
+	
 	//Functions
 	void MoveForward(const float AxisValue);
 	void MoveRight(const float AxisValue);
@@ -304,5 +318,8 @@ private:
 	void ScreenPrint(FString Message);
 	void ScreenPrint(FString Message, FColor Color);
 
-	//void AdditionalAmmoBoundry();
+	//Ammo
+	void SetStartAmmo();
+	void SubtractAmmoWhileUnlimited(bool MagOrStore, int Tribute);
+	void AddAmmoWhileUnlimited(bool MagOrStore, int Tribute);
 };
