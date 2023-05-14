@@ -9,7 +9,6 @@
 #include "Engine/World.h"
 #include "Kismet/GameplayStatics.h"
 #include "GrapplingFeedbackComponent.h"
-#include "IntVectorTypes.h"
 
 //FMovementData
 void FMovementData::SetCharacterMovement(UCharacterMovementComponent* InCharacterMovementComponent) const
@@ -98,7 +97,7 @@ void FDashComponent::Dash(float DeltaTime)
 
 	PlayerCharacter->SetActorLocation(FMath::VInterpConstantTo(PlayerCharacter->GetActorLocation(),DashDistance + PlayerCharacter->GetActorLocation(),PlayerCharacter->GetWorld()->DeltaTimeSeconds,DashSpeed));
 	CurrentDashTime -= DeltaTime;
-	UE_LOG(LogTemp,Warning,TEXT("%f"),CurrentDashTime);
+	// UE_LOG(LogTemp,Warning,TEXT("%f"),CurrentDashTime);
 	if(CurrentDashTime < 0)
 	{
 		bDashIsOnCooldown = true;
@@ -121,24 +120,14 @@ void FGunComponent::GunUpdate(float DeltaTime)
 	{
 		CurrentReloadTime = ReloadTimer;
 		bIsReloading = false;
-		if(PlayerCharacter->StoredAmmo >= PlayerCharacter->AmmoMagCapacity)
-		{
-			PlayerCharacter->CurrentMagAmmo = PlayerCharacter->AmmoMagCapacity;
-			PlayerCharacter->StoredAmmo -= PlayerCharacter->CurrentMagAmmo;
-		}
-		else if(PlayerCharacter->StoredAmmo < PlayerCharacter->AmmoMagCapacity)
-		{
-			PlayerCharacter->CurrentMagAmmo = PlayerCharacter->StoredAmmo;
-			PlayerCharacter->StoredAmmo = 0;
-		}
-		
+		PlayerCharacter->Ammo = 8;
 	}
 }
 
 
 void FGunComponent::Reload()
 {
-	if(PlayerCharacter->CurrentMagAmmo < PlayerCharacter->AmmoMagCapacity)
+	if(PlayerCharacter->Ammo < 8)
 	{
 		bIsReloading = true;
 
@@ -191,7 +180,7 @@ void FGrappleComponent::ScanForGrapplePoint()
 				GrapplingFeedComp = Cast<UGrapplingFeedbackComponent>(GrappleHit.GetActor()->FindComponentByClass<UGrapplingFeedbackComponent>());
 				GrapplingFeedComp->PlayerCanGrapple = true;
 				
-				UE_LOG(LogTemp,Warning,TEXT("%s"),*GrappleHit.GetActor()->GetName());
+				// UE_LOG(LogTemp,Warning,TEXT("%s"),*GrappleHit.GetActor()->GetName());
 				bCanGrapple = true;
 			}
 			else
@@ -345,8 +334,6 @@ void APlayerCharacter::BeginPlay()
 	Super::BeginPlay();
 
 	CharacterHitBox = FindComponentByClass<UCapsuleComponent>();
-	StoredAmmo = MaxAmmo;
-	CurrentMagAmmo = AmmoMagCapacity;
 	
 	MovementData.SetDefaultValues();
 	DashComponent.Initialize(this);
@@ -376,8 +363,7 @@ void APlayerCharacter::Tick(float DeltaTime)
 		CurrentCoyoteTime -= DeltaTime;
 	}
 
-	//UE_LOG(LogTemp,Warning,TEXT("%f"),CurrentCoyoteTime);
-	UE_LOG(LogTemp,Warning,TEXT("Ammo stored: %i"),StoredAmmo);
+	// UE_LOG(LogTemp,Warning,TEXT("%f"),CurrentCoyoteTime);
 	if(!CharacterMovement->IsFalling())
 	{
 		CurrentCoyoteTime = CoyoteTime;
@@ -413,8 +399,9 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 	PlayerInputComponent->BindAction(TEXT("Slide"),EInputEvent::IE_Released,this,&APlayerCharacter::ActionExitSlide);
 	PlayerInputComponent->BindAction(TEXT("Grapple"),EInputEvent::IE_Pressed,this,&APlayerCharacter::ActionStartGrapple);
 	PlayerInputComponent->BindAction(TEXT("Deflect"),EInputEvent::IE_Pressed,this,&APlayerCharacter::DeflectON);
-	PlayerInputComponent->BindAction(TEXT("Deflect"),EInputEvent::IE_Released,this,&APlayerCharacter::DeflectOFF);
+	//PlayerInputComponent->BindAction(TEXT("Deflect"),EInputEvent::IE_Released,this,&APlayerCharacter::DeflectOFF);
 	PlayerInputComponent->BindAction(TEXT("Reload"),EInputEvent::IE_Pressed,this,&APlayerCharacter::ActionReload);
+	//PlayerInputComponent->BindAction(TEXT("Shoot"),EInputEvent::IE_Pressed,this,&APlayerCharacter::Shoot);
 }
 
 void APlayerCharacter::DeflectON()
@@ -548,78 +535,7 @@ UDeflectorBoxComponent* APlayerCharacter::GetDeflectorBox()
 	return DeflectorBox;
 }
 
-void APlayerCharacter::ChangeTime(bool AddOrTake, float Tribute)
+//ShootProjectile
+/*void APlayerCharacter::Shoot()
 {
-	if(AddOrTake)
-	{
-		CurrentTime += Tribute;
-		ScreenPrint("Add time");
-	}
-	else
-	{
-		CurrentTime -= Tribute;
-		ScreenPrint("Subtract time");
-		if(CurrentTime <= 0)
-		{
-			CurrentTime = 0;
-		}
-	}
-}
-
-void APlayerCharacter::ChangeAmmo(bool AddOrTake, bool MagOrStore, float Tribute)
-{
-	
-	if(AddOrTake)
-	{
-		if(MagOrStore)
-		{
-			CurrentMagAmmo += Tribute;
-			//ScreenPrint("Add ammo");
-			if(CurrentMagAmmo >= AmmoMagCapacity)
-			{
-				CurrentMagAmmo = AmmoMagCapacity;
-			}
-		}
-		else
-		{
-			StoredAmmo += Tribute;
-			//ScreenPrint("Add ammo");
-			if(StoredAmmo >= MaxAmmo)
-			{
-				StoredAmmo = MaxAmmo;
-			}
-		}
-	}
-	else
-	{
-
-		if(MagOrStore)
-		{
-			CurrentMagAmmo -= Tribute;
-			if(CurrentMagAmmo <= 0)
-			{
-				CurrentMagAmmo = 0;
-			}
-		}
-		else
-		{
-			StoredAmmo -= Tribute;
-			if(StoredAmmo <= 0)
-			{
-				StoredAmmo = 0;
-			}
-		}
-	}
-}
-
-/*void APlayerCharacter::AdditionalAmmoBoundry()
-{
-	if(StoredAmmo >= MaxAmmo)
-	{
-		StoredAmmo = MaxAmmo;
-	}
-	if(StoredAmmo <= 0)
-	{
-		StoredAmmo = 0;
-	}
 }*/
