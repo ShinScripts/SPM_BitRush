@@ -171,6 +171,37 @@ struct FMovementData
 	float MaxAcceleration;
 };
 
+USTRUCT(BlueprintType)
+struct FWeaponData
+{
+	GENERATED_USTRUCT_BODY()
+
+	void SetCharacterMovement(UCharacterMovementComponent* InCharacterMovementComponent) const;
+	void SetCharacterHitBox(UCapsuleComponent* InCharacterMovementComponent) const;
+	void SetDefaultValues();
+	void SetGroundFriction(const float NewGroundFriction);
+	void SetGravityScale(const float NewGravityScale);
+	void SetBrakingDecelerationWalking(const float NewBrakingDecelerationWalking);
+	void SetFallingLateralFriction(const float NewFallingLateralFriction);
+
+	UPROPERTY(BlueprintReadWrite)
+	float GravityScale;
+
+	UPROPERTY(BlueprintReadWrite)
+	float FallingLateralFriction;
+
+	UPROPERTY(BlueprintReadWrite)
+	float JumpForce;
+
+	UPROPERTY(BlueprintReadWrite)
+	float AirControl;
+	
+	float GroundFriction;
+	float BrakingDecelerationWalking;
+	float BrakingFrictionFactor;
+	float MaxAcceleration;
+};
+
 UCLASS()
 class BIT_RUSH_API APlayerCharacter : public ACharacter
 {
@@ -197,8 +228,17 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	bool bCanMove;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess))
-	int Ammo = 8;
+	//Ammo
+	UPROPERTY(EditAnywhere, Category = "Ammo", BlueprintReadWrite, meta = (AllowPrivateAccess))
+	bool UnlimitedAmmo = false;
+	UPROPERTY(EditAnywhere, Category = "Ammo", BlueprintReadWrite, meta = (AllowPrivateAccess, EditCondition = "!UnlimitedAmmo"))
+	int MaxAmmo = 32;
+	UPROPERTY(EditAnywhere, Category = "Ammo", BlueprintReadWrite, meta = (AllowPrivateAccess, EditCondition = "!UnlimitedAmmo"))
+	int StoredAmmo ;
+	UPROPERTY(EditAnywhere, Category = "Ammo", BlueprintReadWrite, meta = (AllowPrivateAccess))
+	int AmmoMagCapacity = 8;
+	UPROPERTY(VisibleAnywhere, Category = "Ammo", BlueprintReadWrite, meta = (AllowPrivateAccess))
+	int CurrentMagAmmo;
 	
 	//Deflect
 	UFUNCTION(BlueprintCallable)
@@ -217,9 +257,12 @@ public:
 	
 	UCharacterMovementComponent* CharacterMovement;
 	UCapsuleComponent* CharacterHitBox;
+
+	//Tribute resource
+	void ChangeTime(bool AddOrTake, float Tribute); //AddOrTake = true -> add / = false -> subtract
+	void ChangeAmmo(bool AddOrTake, bool MagOrStore, int Tribute); //MagOrStore = true -> Mag / false -> Storage.
 	
 private:
-
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess))
 	float InvincibilityTimer;
 
@@ -232,6 +275,21 @@ private:
 	float CurrentCoyoteTime = CoyoteTime;
 
 	bool bCanJump = true;
+	//Ammo
+	UPROPERTY(EditAnywhere, Category = "Ammo")
+	bool FullMagAtStart = true;
+	UPROPERTY(EditAnywhere, Category = "Ammo")
+	bool FullAmmoStoreAtStart = true;
+	
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Ammo", meta = (AllowPrivateAccess, EditCondition = "!FullAmmoStoreAtStart"))
+	int StoredAmmoAtStart;
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Ammo", meta = (AllowPrivateAccess, EditCondition = "!FullMagAtStart"))
+	int MagAmmoAtStart;
+
+	/*UPROPERTY(EditAnywhere, Category = "MyActor", meta = (EditCondition = "bMyVariable"))
+	bool bMyOtherVariable;*/
+	//
+	
 	//Functions
 	void MoveForward(const float AxisValue);
 	void MoveRight(const float AxisValue);
@@ -260,7 +318,8 @@ private:
 	void ScreenPrint(FString Message);
 	void ScreenPrint(FString Message, FColor Color);
 
-	//Shoot
-	/*UFUNCTION(BlueprintCallable)
-	void Shoot();*/
+	//Ammo
+	void SetStartAmmo();
+	void SubtractAmmoWhileUnlimited(bool MagOrStore, int Tribute);
+	void AddAmmoWhileUnlimited(bool MagOrStore, int Tribute);
 };
