@@ -4,18 +4,12 @@
 #pragma once
 
 
-
-
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
+#include "Components/BoxComponent.h"
+#include "PlayerCharacter.h"
 
 #include "MPlatformVInterpActorComponent.generated.h"
-
-
-
-
-
-
 
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
@@ -46,7 +40,6 @@ public:
 
   //public Methods
   FVector GetPos();
-  
 
 private:
   //variables
@@ -54,6 +47,10 @@ private:
   bool ActorVisible = false;
   UPROPERTY(EditAnywhere, Category="TargetActor")
   bool ActorPhysicsEnabled = false;
+  UPROPERTY(EditAnywhere, Category="TargetActor")
+  bool ReturnToStartOnExitOverlap = false;
+  UPROPERTY(EditAnywhere, Category="TargetActor")
+  bool MoveActorOnOverlap = false;
   
   UPROPERTY(EditAnywhere, Category="MovingPlatform")
   bool EaseIn = false;
@@ -65,6 +62,11 @@ private:
   
   UPROPERTY(EditAnywhere, Category="MovingPlatform")
   AActor* TargetActor = nullptr;
+
+  UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+  UBoxComponent* Box;
+
+  APlayerCharacter* OverlappingPlayer;
 
   FVector TargetPosition;
   FVector StartPosition;
@@ -82,11 +84,16 @@ private:
   
 
   //Methods
-  void MovePlatform(float DeltaTime);
+  void MovePlatform(float DeltaTime, bool MoveOnOverlap, bool Overlapping, bool ReturnToStartOnExit);
+  void AdjustTargetPos();
+  void ReturnToStart();
   void ConstantReciprocatingMove();
   void EaseInReciprocatingMove();
   void HideActor(AActor* Actor, bool Visible, bool PhysicsActive);
+  void SetBox();
+  void CheckForPlayer();
   
   FVector GetNewPos(float DeltaTime);
-  
+
+  bool IsOverlappingPlayer();
 };

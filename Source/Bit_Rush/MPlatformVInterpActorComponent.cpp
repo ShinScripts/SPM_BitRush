@@ -27,17 +27,19 @@ void UMPlatformVInterpActorComponent::BeginPlay()
 	TargetPosition = TargetActor->GetActorLocation();
 
 	HideActor(TargetActor, ActorVisible, ActorPhysicsEnabled);
+
+	SetBox();
 }
 
 // Called every frame
 void UMPlatformVInterpActorComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
- Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-
- // Do this:
+	// Do this:
 	//TargetPosition = TargetActor->GetActorLocation();
-  MovePlatform(DeltaTime);
+	MovePlatform(DeltaTime, MoveActorOnOverlap, IsOverlappingPlayer(), ReturnToStartOnExitOverlap);
+	CheckForPlayer();
 }
 
 
@@ -47,23 +49,56 @@ FVector UMPlatformVInterpActorComponent::GetPos() // A more convenient way to ge
  return GetOwner()->GetActorLocation();
 }
 
-void UMPlatformVInterpActorComponent::MovePlatform(float DeltaTime) // Moves object (ideally a platform) based on whether MovingXForward, MovingYForward and MovingZForward are true/false respectively.
+void UMPlatformVInterpActorComponent::MovePlatform(float DeltaTime, bool MoveOnOverlap, bool Overlapping, bool ReturnToStartOnExit) // Moves object (ideally a platform) based on whether MovingXForward, MovingYForward and MovingZForward are true/false respectively.
 {
-  if(!TargetActor)
-  {
-    return;
-  }
+	if(!MoveOnOverlap)
+	{
+		AdjustTargetPos();
+	}
+	else
+	{
+		if(Overlapping)
+		{
+			AdjustTargetPos();
+		}
+		if(!Overlapping && ReturnToStartOnExit)
+		{
+
+		}
+	}
+	
+	GetOwner()->SetActorLocation(GetNewPos(DeltaTime));
+}
+
+void UMPlatformVInterpActorComponent::ReturnToStart()
+{
+	TargetPosition = DefStartPos;
+	float DistanceToTarget = FVector::Dist(TargetPosition, GetPos());
+
+	if(DistanceToTarget <= 0 && ReciprocatingPlatform)
+	{
+		ReciprocatingPlatform = false;
+	}
+}
+
+
+void UMPlatformVInterpActorComponent::AdjustTargetPos()
+{
+	if(!TargetActor)
+	{
+		return;
+	}
 	if(!EaseIn)
 	{
 		if(ReciprocatingPlatform)
-           {
-         	ConstantReciprocatingMove();
-          }
-        	else
-        	{
-        		StartPosition = DefStartPos;
-        		TargetPosition = DefTargetPos;
-        	}
+		{
+			ConstantReciprocatingMove();
+		}
+		else
+		{
+			StartPosition = DefStartPos;
+			TargetPosition = DefTargetPos;
+		}
 	}
 	else
 	{
@@ -77,9 +112,8 @@ void UMPlatformVInterpActorComponent::MovePlatform(float DeltaTime) // Moves obj
 			TargetPosition = DefTargetPos;
 		}
 	}
- 
-	GetOwner()->SetActorLocation(GetNewPos(DeltaTime));
 }
+
 
 FVector UMPlatformVInterpActorComponent::GetNewPos(float DeltaTime)
 {
@@ -160,5 +194,35 @@ void UMPlatformVInterpActorComponent::HideActor(AActor* Actor ,bool Visible, boo
 	
 }
 
+void UMPlatformVInterpActorComponent::SetBox()
+{
+	Box = CreateDefaultSubobject<UBoxComponent>(TEXT("Box"));
+	Box->SetupAttachment(Box->GetOwner()->GetRootComponent());
+	Box->InitBoxExtent(FVector(0,0,0));
+	Box->SetCollisionResponseToAllChannels(ECR_Overlap);
+}
 
+void UMPlatformVInterpActorComponent::CheckForPlayer()
+{
+	TArray<AActor*> Actors;
+	Box->GetOverlappingActors(Actors);
+	
+	for(AActor* Actor : Actors)
+	{
+		APlayerCharacter* Player = Cast<APlayerCharacter>(Actor);
+		if(!Player)
+		{
+			return;
+		}
+		OverlappingPlayer = Player;
+	}
+}
 
+bool UMPlatformVInterpActorComponent::IsOverlappingPlayer()
+{
+	if(!OverlappingPlayer)
+	{
+		return false;
+	}
+	return true;
+}
