@@ -34,7 +34,8 @@ private:
 	
 	UFUNCTION(BlueprintCallable)
 	void JumpOffWall(APlayerCharacter* PlayerCharacter);
-	
+
+	bool IsLookingAtWallNormal(const APlayerCharacter* PlayerCharacter, const FHitResult& HitResult);
 	bool ContainsTag(FHitResult HitResult);
 	
 	UPROPERTY(EditAnywhere)

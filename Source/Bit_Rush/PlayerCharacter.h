@@ -10,37 +10,115 @@
 class UBoxComponent;
 
 USTRUCT(BlueprintType)
-struct FGunComponent
+struct FSlideComponent
 {
-	GENERATED_BODY()
+	GENERATED_USTRUCT_BODY()
+
+	void Initialize(FMovementData* InMovementData, APlayerCharacter* InPlayerCharacter);
+	void SlideBegin();
+	void SlideUpdate(float DeltaTime);
+	void EnterSlide();
+	void ExitSlide();
+	void Slide(float DeltaTime);
+	void StopSlide();
+	
+	FVector GetSlideSurface(const FVector &FloorNormal);
+
+	UPROPERTY(EditAnywhere)
+	float SlideVelocity = 50000000;
+
+	UPROPERTY(EditAnywhere)
+	float FlatSlideVelocity = 6000000;
+	
+	bool bShouldSlide = false;
+	
+	bool ShouldLaunchSlide = false;
+
+	float HitBoxDefaultValue;
+	
+	float CrouchHitBoxValue;
+
+	float CrouchSpeed = 10;
+
+	UPROPERTY(EditAnywhere)
+	float MaxSlideVelocity = 3000;
+	
+	FVector SlideSurfNormal;
+	
+	FHitResult FloorHit;
+	
+	APlayerCharacter* PlayerCharacter;
+	FMovementData* MovementData;
+};
+
+USTRUCT(BlueprintType)
+struct FGrappleComponent
+{
+	GENERATED_USTRUCT_BODY()
 
 	void Initialize(APlayerCharacter* InPlayerCharacter);
-	void Update(float DeltaTime);
+	void GrappleUpdate();
+	void ScanForGrapplePoint();
+	void StartGrapple();
+	void StopGrapple();
+	void Grapple();
+
+	UPROPERTY(EditAnywhere)
+	float GrapplingHookRange = 1500;
+
+	UPROPERTY(EditAnywhere)
+	float GrapplingSpeed = 3000;
+
+	UPROPERTY(EditAnywhere)
+	float GrapplingLaunchSpeed = 2000;
+
+	UPROPERTY(BlueprintReadOnly)
+	bool bCanGrapple;
+
+	UPROPERTY(BlueprintReadOnly)
+	bool bIsGrappling;
+
+	FHitResult GrappleHit;
+
+	APlayerCharacter* PlayerCharacter;
+};
+
+USTRUCT(BlueprintType)
+struct FGunComponent
+{
+	GENERATED_USTRUCT_BODY()
+
+	void Initialize(APlayerCharacter* InPlayerCharacter);
+	void GunUpdate(float DeltaTime);
 	void Reload();
 
-	UPROPERTY(EditDefaultsOnly)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	float ReloadTimer = 2;
-	
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	float CurrentReloadTime = 2;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	bool bIsReloading = false;
+	
 	APlayerCharacter* PlayerCharacter;
 };
 
 USTRUCT(BlueprintType)
 struct FDashComponent
 {
-	GENERATED_BODY()
+	GENERATED_USTRUCT_BODY()
 
 	void Initialize(APlayerCharacter* PlayerCharacter);
-	void Update(float DeltaTime);
+	void DashUpdate(float DeltaTime);
 	
 	void Dash(float DeltaTime);
 	void StartDash();
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	float DashCooldown = 1;
-	
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	float DashCurrentCooldown = DashCooldown;
 	
 	UPROPERTY(EditAnywhere)
@@ -51,6 +129,7 @@ struct FDashComponent
 
 	bool bDashIsOnCooldown = false;
 
+	UPROPERTY(BlueprintReadOnly)
 	bool bIsDashing = false;
 
 	float CurrentDashTime;
@@ -64,7 +143,38 @@ struct FDashComponent
 USTRUCT(BlueprintType)
 struct FMovementData
 {
-	GENERATED_BODY()
+	GENERATED_USTRUCT_BODY()
+
+	void SetCharacterMovement(UCharacterMovementComponent* InCharacterMovementComponent) const;
+	void SetCharacterHitBox(UCapsuleComponent* InCharacterMovementComponent) const;
+	void SetDefaultValues();
+	void SetGroundFriction(const float NewGroundFriction);
+	void SetGravityScale(const float NewGravityScale);
+	void SetBrakingDecelerationWalking(const float NewBrakingDecelerationWalking);
+	void SetFallingLateralFriction(const float NewFallingLateralFriction);
+
+	UPROPERTY(BlueprintReadWrite)
+	float GravityScale;
+
+	UPROPERTY(BlueprintReadWrite)
+	float FallingLateralFriction;
+
+	UPROPERTY(BlueprintReadWrite)
+	float JumpForce;
+
+	UPROPERTY(BlueprintReadWrite)
+	float AirControl;
+	
+	float GroundFriction;
+	float BrakingDecelerationWalking;
+	float BrakingFrictionFactor;
+	float MaxAcceleration;
+};
+
+USTRUCT(BlueprintType)
+struct FWeaponData
+{
+	GENERATED_USTRUCT_BODY()
 
 	void SetCharacterMovement(UCharacterMovementComponent* InCharacterMovementComponent) const;
 	void SetCharacterHitBox(UCapsuleComponent* InCharacterMovementComponent) const;
@@ -105,7 +215,6 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -119,119 +228,80 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	bool bCanMove;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess))
-	int Ammo = 8;
+	//Ammo
+	UPROPERTY(EditAnywhere, Category = "Ammo", BlueprintReadWrite, meta = (AllowPrivateAccess))
+	bool UnlimitedAmmo = false;
+	UPROPERTY(EditAnywhere, Category = "Ammo", BlueprintReadWrite, meta = (AllowPrivateAccess, EditCondition = "!UnlimitedAmmo"))
+	int MaxAmmo = 32;
+	UPROPERTY(EditAnywhere, Category = "Ammo", BlueprintReadWrite, meta = (AllowPrivateAccess, EditCondition = "!UnlimitedAmmo"))
+	int StoredAmmo ;
+	UPROPERTY(EditAnywhere, Category = "Ammo", BlueprintReadWrite, meta = (AllowPrivateAccess))
+	int AmmoMagCapacity = 8;
+	UPROPERTY(VisibleAnywhere, Category = "Ammo", BlueprintReadWrite, meta = (AllowPrivateAccess))
+	int CurrentMagAmmo;
 	
 	//Deflect
 	UFUNCTION(BlueprintCallable)
 	UDeflectorBoxComponent* GetDeflectorBox();
 
+	UPROPERTY(BlueprintReadWrite)
 	FMovementData MovementData;
+	UPROPERTY(BlueprintReadWrite)
 	FDashComponent DashComponent;
+	UPROPERTY(BlueprintReadWrite)
 	FGunComponent GunComponent;
+	UPROPERTY(BlueprintReadWrite)
+	FGrappleComponent GrappleComponent;
+	UPROPERTY(BlueprintReadWrite)
+	FSlideComponent SlideComponent;
+	
+	UCharacterMovementComponent* CharacterMovement;
+	UCapsuleComponent* CharacterHitBox;
+
+	//Tribute resource
+	void ChangeTime(bool AddOrTake, float Tribute); //AddOrTake = true -> add / = false -> subtract
+	void ChangeAmmo(bool AddOrTake, bool MagOrStore, int Tribute); //MagOrStore = true -> Mag / false -> Storage.
 	
 private:
-	UPROPERTY(EditDefaultsOnly)
-	UBoxComponent* BoxLeft;
-
-	UPROPERTY(EditDefaultsOnly)
-	UBoxComponent* BoxRight;
-	
-	//Variable
-	UPROPERTY(EditAnywhere)
-	float SlideVelocity = 5000000;
-
-	UPROPERTY(EditAnywhere)
-	float FlatSlideVelocity = 7000000;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess))
+	float InvincibilityTimer;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess))
 	float CurrentTime;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess))
-	float InvincibilityTimer;
-
-	// Dash
 	UPROPERTY(EditAnywhere)
-	float DashVelocity = 2000;
+	float CoyoteTime = 0.2;
+
+	float CurrentCoyoteTime = CoyoteTime;
+
+	bool bCanJump = true;
+	//Ammo
+	UPROPERTY(EditAnywhere, Category = "Ammo")
+	bool FullMagAtStart = true;
+	UPROPERTY(EditAnywhere, Category = "Ammo")
+	bool FullAmmoStoreAtStart = true;
 	
-	UPROPERTY(EditAnywhere)
-	float DashTime = 0.15;
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Ammo", meta = (AllowPrivateAccess, EditCondition = "!FullAmmoStoreAtStart"))
+	int StoredAmmoAtStart;
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Ammo", meta = (AllowPrivateAccess, EditCondition = "!FullMagAtStart"))
+	int MagAmmoAtStart;
 
-	UPROPERTY(BlueprintReadOnly, meta = (AllowPrivateAccess))
-	bool CanDash = true;
-
-	bool bIsDashing = false;
-	
-	UPROPERTY(EditAnywhere)
-	float DashCooldown = 1;
-
-	UPROPERTY(EditAnywhere)
-	float MaxSlideVelocity = 3000;
-
-	UPROPERTY(BlueprintReadOnly,meta=(AllowPrivateAccess))
-	bool bShouldSlide = false;
-	
-	bool ShouldLaunchSlide = false;
-
-	UPROPERTY(BlueprintReadWrite,meta=(AllowPrivateAccess))
-	FVector SlideSurfNormal;
-
-	UPROPERTY(EditAnywhere)
-	float CharacterSpeed = 1;
-
-	UPROPERTY(EditAnywhere)
-	float GrapplingHookRange = 1500;
-
-	UPROPERTY(EditAnywhere)
-	float GrapplingSpeed = 3000;
-
-	UPROPERTY(EditAnywhere)
-	float GrapplingLaunchSpeed = 2000;
-
-	UPROPERTY(BlueprintReadOnly, meta = (AllowPrivateAccess))
-	bool bCanGrapple;
-	bool bIsGrappling;
-
-	float CrouchSpeed = 10;
-	
-	float HitBoxDefaultValue;
-	float CrouchHitBoxValue;
-
-	FVector DashDistance;
-	FVector DashDirection;
-	
-	UCharacterMovementComponent* CharacterMovement;
-	
-	FHitResult FloorHit;
-	FHitResult GrappleHit;
-
-	UCapsuleComponent* CharacterHitBox;
+	/*UPROPERTY(EditAnywhere, Category = "MyActor", meta = (EditCondition = "bMyVariable"))
+	bool bMyOtherVariable;*/
+	//
 	
 	//Functions
 	void MoveForward(const float AxisValue);
 	void MoveRight(const float AxisValue);
 	void Jump();
 
-	//Gun
+	//ActionFunctions
 	void ActionReload();
-	
-	//Dash
 	void ActionStartDash();
-
-	//Slide
-	void EnterSlide();
-	void ExitSlide();
-	void PhysSlide(float DeltaTime);
-	void StopSlide();
-
-	//Grapple
-	void ScanGrapple();
-	void StartGrapple();
-	void StopGrapple();
-	void Grapple();
-	//void StopSlidingAfterSeconds();
-	FVector GetSlideSurface(const FVector& FloorNormal);
-
+	void ActionStartGrapple();
+	void ActionEnterSlide();
+	void ActionExitSlide();
+	
 	//Deflect
 	// - variables
 	UDeflectorBoxComponent* DeflectorBox;
@@ -248,7 +318,8 @@ private:
 	void ScreenPrint(FString Message);
 	void ScreenPrint(FString Message, FColor Color);
 
-	//Shoot
-	/*UFUNCTION(BlueprintCallable)
-	void Shoot();*/
+	//Ammo
+	void SetStartAmmo();
+	void SubtractAmmoWhileUnlimited(bool MagOrStore, int Tribute);
+	void AddAmmoWhileUnlimited(bool MagOrStore, int Tribute);
 };
