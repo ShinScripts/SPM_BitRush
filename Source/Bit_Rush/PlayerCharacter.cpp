@@ -293,7 +293,7 @@ void FSlideComponent::EnterSlide()
 	
 	if(FloorHit.Normal.Equals(PlayerCharacter->GetActorUpVector()))
 	{
-		PlayerCharacter->CharacterMovement->AddImpulse(PlayerCharacter->GetVelocity().GetSafeNormal() * FlatSlideVelocity * PlayerCharacter->GetWorld()->DeltaTimeSeconds);
+		PlayerCharacter->CharacterMovement->AddImpulse(PlayerCharacter->GetVelocity().GetSafeNormal() * FlatSlideVelocity * PlayerCharacter->GetWorld()->DeltaRealTimeSeconds);
 	}
 }
 
@@ -309,16 +309,25 @@ void FSlideComponent::Slide(float DeltaTime)
 	PlayerCharacter->bCanMove = false;
 	
 	MovementData->SetGroundFriction(0);
-	MovementData->SetBrakingDecelerationWalking(1500);
-	MovementData->SetFallingLateralFriction(0);
-	
-	if(PlayerCharacter->CharacterMovement->Velocity.Length() > MaxSlideVelocity)
+
+	if(SlideSurfNormal == FVector::Zero())
 	{
-		PlayerCharacter->CharacterMovement->Velocity.GetSafeNormal() *= MaxSlideVelocity;
+		MovementData->SetBrakingDecelerationWalking(1000);
 	}
 	else
 	{
-		PlayerCharacter->CharacterMovement->AddForce(SlideSurfNormal);
+		MovementData->SetBrakingDecelerationWalking(0);
+	}
+	MovementData->SetFallingLateralFriction(0);
+	
+	
+	if(PlayerCharacter->CharacterMovement->Velocity.Length() > MaxSlideVelocity)
+	{
+		PlayerCharacter->CharacterMovement->Velocity.GetSafeNormal() *= MaxSlideVelocity * DeltaTime;
+	}
+	else
+	{
+		PlayerCharacter->CharacterMovement->AddForce(SlideSurfNormal * DeltaTime);
 	}
 }
 
