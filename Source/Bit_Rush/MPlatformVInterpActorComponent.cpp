@@ -2,6 +2,9 @@
 
 #include "MPlatformVInterpActorComponent.h"
 
+#include "Kismet/KismetSystemLibrary.h"
+#include "Microsoft/AllowMicrosoftPlatformTypes.h"
+
 
 // Sets default values for this component's properties
 UMPlatformVInterpActorComponent::UMPlatformVInterpActorComponent()
@@ -21,13 +24,14 @@ void UMPlatformVInterpActorComponent::BeginPlay()
  Super::BeginPlay();
 
  // Do this:
+	//Root = GetOwner()->GetRootComponent();
 	DefStartPos = GetPos();
 	DefTargetPos = TargetActor->GetActorLocation();
+	DefSpeed = Speed;
 	StartPosition = GetPos();
 	TargetPosition = TargetActor->GetActorLocation();
 
 	HideActor(TargetActor, ActorVisible, ActorPhysicsEnabled);
-
 	SetBox();
 }
 
@@ -37,12 +41,10 @@ void UMPlatformVInterpActorComponent::TickComponent(float DeltaTime, ELevelTick 
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
 	// Do this:
-	//TargetPosition = TargetActor->GetActorLocation();
+	//CheckForPlayer();
 	MovePlatform(DeltaTime, MoveActorOnOverlap, IsOverlappingPlayer(), ReturnToStartOnExitOverlap);
-	CheckForPlayer();
+	
 }
-
-
 
 FVector UMPlatformVInterpActorComponent::GetPos() // A more convenient way to get this actors location;
 {
@@ -60,24 +62,53 @@ void UMPlatformVInterpActorComponent::MovePlatform(float DeltaTime, bool MoveOnO
 		if(Overlapping)
 		{
 			AdjustTargetPos();
+			Speed = DefSpeed;
 		}
-		if(!Overlapping && ReturnToStartOnExit)
+		if(!Overlapping)
 		{
-
+			if(ReturnToStartOnExit)
+			{
+				ReturnToStart(Overlapping);
+			}
+			else
+			{
+				Speed = 0;
+			}
 		}
 	}
 	
 	GetOwner()->SetActorLocation(GetNewPos(DeltaTime));
 }
 
-void UMPlatformVInterpActorComponent::ReturnToStart()
+void UMPlatformVInterpActorComponent::ReturnToStart(bool IsOverlapping)
 {
-	TargetPosition = DefStartPos;
-	float DistanceToTarget = FVector::Dist(TargetPosition, GetPos());
-
-	if(DistanceToTarget <= 0 && ReciprocatingPlatform)
+	float DistanceToDefStart = FVector::Dist(DefStartPos, GetPos());
+	//float DistanceToDefTarget = FVector::Dist(DefTargetPos, GetPos());
+	
+	if(DistanceToDefStart <= 0)
 	{
-		ReciprocatingPlatform = false;
+		if(!IsOverlapping)
+		{
+			Speed = 0;
+			//TargetPosition = DefStartPos;
+		}
+		else
+		{
+			Speed = DefSpeed;
+		}
+	}
+	else if(DistanceToDefStart > 0)
+	{
+		if(!IsOverlapping)
+		{
+			//Speed = DefSpeed;
+			TargetPosition = DefStartPos;
+		}
+		else
+		{
+			//Speed = DefSpeed;
+			TargetPosition = DefTargetPos;
+		}
 	}
 }
 
@@ -133,49 +164,33 @@ FVector UMPlatformVInterpActorComponent::GetNewPos(float DeltaTime)
 
 void UMPlatformVInterpActorComponent::ConstantReciprocatingMove()
 {
-	/*float MoveDistance = FVector::Dist(StartPosition, TargetPosition);
-	 float DistanceMoved = FVector::Dist(StartPosition, GetPos());*/
 	float DistanceToTarget = FVector::Dist(TargetPosition, GetPos());
 	
 	if(DistanceToTarget <= 0 && TargetPosition != DefStartPos)
 	{
 		StartPosition = DefTargetPos;
 		TargetPosition = DefStartPos;
- 		
-		//Speed = -Speed;
-		//TargetActor->GetOwner()->SetActorLocation(DefStartPos);
-		//StartPosition = DefStartPos;
 	}
 	else if(DistanceToTarget <= 0 && TargetPosition != DefTargetPos)
 	{
 		StartPosition = DefStartPos;
 		TargetPosition = DefTargetPos;
-		//TargetActor->GetOwner()->SetActorLocation(DefTargetPos);
-		//StartPosition = DefTargetPos;
 	}
 }
 
 void UMPlatformVInterpActorComponent::EaseInReciprocatingMove()
 {
-	/*float MoveDistance = FVector::Dist(StartPosition, TargetPosition);
-	 float DistanceMoved = FVector::Dist(StartPosition, GetPos());*/
 	float DistanceToTarget = FVector::Dist(TargetPosition, GetPos());
 	
 	if(DistanceToTarget <= EaseInDistanceMargin && TargetPosition != DefStartPos)
 	{
 		StartPosition = DefTargetPos;
 		TargetPosition = DefStartPos;
- 		
-		//Speed = -Speed;
-		//TargetActor->GetOwner()->SetActorLocation(DefStartPos);
-		//StartPosition = DefStartPos;
 	}
 	else if(DistanceToTarget <= EaseInDistanceMargin && TargetPosition != DefTargetPos)
 	{
 		StartPosition = DefStartPos;
 		TargetPosition = DefTargetPos;
-		//TargetActor->GetOwner()->SetActorLocation(DefTargetPos);
-		//StartPosition = DefTargetPos;
 	}
 }
 
@@ -196,33 +211,46 @@ void UMPlatformVInterpActorComponent::HideActor(AActor* Actor ,bool Visible, boo
 
 void UMPlatformVInterpActorComponent::SetBox()
 {
-	Box = CreateDefaultSubobject<UBoxComponent>(TEXT("Box"));
-	Box->SetupAttachment(Box->GetOwner()->GetRootComponent());
-	Box->InitBoxExtent(FVector(0,0,0));
-	Box->SetCollisionResponseToAllChannels(ECR_Overlap);
-}
-
-void UMPlatformVInterpActorComponent::CheckForPlayer()
-{
-	TArray<AActor*> Actors;
-	Box->GetOverlappingActors(Actors);
-	
-	for(AActor* Actor : Actors)
+	BoxComponent = NewObject<UBoxComponent>(this, UBoxComponent::StaticClass(), TEXT("PlatformTrigger"));
+	if(!BoxComponent)
 	{
-		APlayerCharacter* Player = Cast<APlayerCharacter>(Actor);
-		if(!Player)
-		{
-			return;
-		}
-		OverlappingPlayer = Player;
+		return;
 	}
+	BoxComponent->RegisterComponent();
+	BoxComponent->AttachToComponent(GetOwner()->GetRootComponent(), FAttachmentTransformRules::KeepRelativeTransform); // Might need this line, might not.
+	BoxComponent->InitBoxExtent(BoxExtent);
+	BoxComponent->SetLineThickness(1);
+	BoxComponent->SetRelativeLocation(BoxPosition);
+	BoxComponent->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+	BoxComponent->SetCollisionResponseToAllChannels(ECR_Overlap);
+	BoxComponent->SetActiveFlag(true);
 }
 
 bool UMPlatformVInterpActorComponent::IsOverlappingPlayer()
 {
-	if(!OverlappingPlayer)
+	//UE_LOG(LogTemp, Warning, TEXT("is Root: %s"),*RootMesh->GetOwner()->GetActorNameOrLabel());
+	TArray<AActor*> Actors;
+	BoxComponent->GetOverlappingActors(Actors);
+	bool ReturnValue;
+	
+	for(AActor* Actor : Actors)
 	{
-		return false;
+		//UE_LOG(LogTemp, Warning, TEXT("is Overlapping: %s"),*Actor->GetActorNameOrLabel());
+		APlayerCharacter* Player = Cast<APlayerCharacter>(Actor);
+
+		if(!Player)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Not overlapping Player"));
+			//OverlappingPlayer = Player;
+			ReturnValue = false;
+		}
+		else
+		{
+			//UE_LOG(LogTemp, Warning, TEXT("failed"));
+			UE_LOG(LogTemp, Warning, TEXT("Overlapping Player"));
+			//OverlappingPlayer = true;
+			ReturnValue=  true;
+		}
 	}
-	return true;
+	return ReturnValue;
 }

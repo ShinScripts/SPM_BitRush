@@ -47,26 +47,36 @@ private:
   bool ActorVisible = false;
   UPROPERTY(EditAnywhere, Category="TargetActor")
   bool ActorPhysicsEnabled = false;
-  UPROPERTY(EditAnywhere, Category="TargetActor")
+  UPROPERTY(EditAnywhere, Category="TargetActor"/*, meta=(EditCondition = "!ReciprocatingPlatform")*/)
   bool ReturnToStartOnExitOverlap = false;
   UPROPERTY(EditAnywhere, Category="TargetActor")
   bool MoveActorOnOverlap = false;
-  
+
   UPROPERTY(EditAnywhere, Category="MovingPlatform")
   bool EaseIn = false;
   UPROPERTY(EditAnywhere, Category="MovingPlatform")
   bool ReciprocatingPlatform = true;
+  bool OverlappingPlayer = false;
 
-  UPROPERTY(EditAnywhere, Category="MovingPlatform")
+  UPROPERTY(EditAnywhere, Category="MovingPlatform", meta=(EditCondition = "EaseIn"))
   float EaseInDistanceMargin = 1.5f;
   
-  UPROPERTY(EditAnywhere, Category="MovingPlatform")
+  UPROPERTY(EditAnywhere, Category="TargetActor")
   AActor* TargetActor = nullptr;
 
-  UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-  UBoxComponent* Box;
+  UPROPERTY(VisibleAnywhere)
+  UBoxComponent* BoxComponent;
 
-  APlayerCharacter* OverlappingPlayer;
+  /*UPROPERTY(VisibleAnywhere)
+  USceneComponent* Root;*/
+
+  //APlayerCharacter* OverlappingPlayer;
+
+  UPROPERTY(EditAnywhere, Category="Overlap")
+  FVector BoxExtent = FVector(100,100,100);
+
+  UPROPERTY(EditAnywhere, Category="Overlap")
+  FVector BoxPosition = FVector(0,0,0);
 
   FVector TargetPosition;
   FVector StartPosition;
@@ -80,18 +90,18 @@ private:
 
   UPROPERTY(EditAnywhere)
   float Speed;
+  float DefSpeed;
 
   
 
   //Methods
   void MovePlatform(float DeltaTime, bool MoveOnOverlap, bool Overlapping, bool ReturnToStartOnExit);
   void AdjustTargetPos();
-  void ReturnToStart();
+  void ReturnToStart(bool IsOverlapping);
   void ConstantReciprocatingMove();
   void EaseInReciprocatingMove();
   void HideActor(AActor* Actor, bool Visible, bool PhysicsActive);
   void SetBox();
-  void CheckForPlayer();
   
   FVector GetNewPos(float DeltaTime);
 

@@ -535,23 +535,6 @@ void APlayerCharacter::SetDeflectBoxVariable()
 	}
 }
 
-//Debug utility
-void APlayerCharacter::ScreenPrint(FString Message)
-{
-	if(GEngine)
-	{
-		GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Emerald, TEXT(""+Message));
-	}
-}
-
-void APlayerCharacter::ScreenPrint(FString Message, FColor Color)
-{
-	if(GEngine)
-	{
-		GEngine->AddOnScreenDebugMessage(-1, 2.0f, Color, TEXT(""+Message));
-	}
-}
-
 UDeflectorBoxComponent* APlayerCharacter::GetDeflectorBox()
 {
 	return DeflectorBox;
