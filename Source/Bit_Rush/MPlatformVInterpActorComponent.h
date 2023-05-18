@@ -4,18 +4,12 @@
 #pragma once
 
 
-
-
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
+#include "Components/BoxComponent.h"
+#include "PlayerCharacter.h"
 
 #include "MPlatformVInterpActorComponent.generated.h"
-
-
-
-
-
-
 
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
@@ -46,7 +40,6 @@ public:
 
   //public Methods
   FVector GetPos();
-  
 
 private:
   //variables
@@ -54,17 +47,36 @@ private:
   bool ActorVisible = false;
   UPROPERTY(EditAnywhere, Category="TargetActor")
   bool ActorPhysicsEnabled = false;
-  
+  UPROPERTY(EditAnywhere, Category="TargetActor"/*, meta=(EditCondition = "!ReciprocatingPlatform")*/)
+  bool ReturnToStartOnExitOverlap = false;
+  UPROPERTY(EditAnywhere, Category="TargetActor")
+  bool MoveActorOnOverlap = false;
+
   UPROPERTY(EditAnywhere, Category="MovingPlatform")
   bool EaseIn = false;
   UPROPERTY(EditAnywhere, Category="MovingPlatform")
   bool ReciprocatingPlatform = true;
+  bool OverlappingPlayer = false;
 
-  UPROPERTY(EditAnywhere, Category="MovingPlatform")
+  UPROPERTY(EditAnywhere, Category="MovingPlatform", meta=(EditCondition = "EaseIn"))
   float EaseInDistanceMargin = 1.5f;
   
-  UPROPERTY(EditAnywhere, Category="MovingPlatform")
+  UPROPERTY(EditAnywhere, Category="TargetActor")
   AActor* TargetActor = nullptr;
+
+  UPROPERTY(VisibleAnywhere)
+  UBoxComponent* BoxComponent;
+
+  /*UPROPERTY(VisibleAnywhere)
+  USceneComponent* Root;*/
+
+  //APlayerCharacter* OverlappingPlayer;
+
+  UPROPERTY(EditAnywhere, Category="Overlap")
+  FVector BoxExtent = FVector(100,100,100);
+
+  UPROPERTY(EditAnywhere, Category="Overlap")
+  FVector BoxPosition = FVector(0,0,0);
 
   FVector TargetPosition;
   FVector StartPosition;
@@ -78,15 +90,20 @@ private:
 
   UPROPERTY(EditAnywhere)
   float Speed;
+  float DefSpeed;
 
   
 
   //Methods
-  void MovePlatform(float DeltaTime);
+  void MovePlatform(float DeltaTime, bool MoveOnOverlap, bool Overlapping, bool ReturnToStartOnExit);
+  void AdjustTargetPos();
+  void ReturnToStart(bool IsOverlapping);
   void ConstantReciprocatingMove();
   void EaseInReciprocatingMove();
   void HideActor(AActor* Actor, bool Visible, bool PhysicsActive);
+  void SetBox();
   
   FVector GetNewPos(float DeltaTime);
-  
+
+  bool IsOverlappingPlayer();
 };

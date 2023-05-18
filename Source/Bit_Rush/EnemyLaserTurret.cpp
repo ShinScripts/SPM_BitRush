@@ -48,6 +48,7 @@ void AEnemyLaserTurret::FireLaser()
 	FVector LaserEnd = (LaserSpawnPoint->GetComponentLocation() + (GetActorRotation().Vector() * 2000));
 
 	FHitResult Hit;
+	LaserBeam->SetWorldScale3D(FVector(	3, 3, (Hit.Location-LaserSpawnPoint->GetComponentLocation()).Size()/100));
 
 	FCollisionQueryParams Params;
 	Params.AddIgnoredActor(this);
@@ -76,10 +77,17 @@ void AEnemyLaserTurret::Shoot()
 	
 	
 	//DrawDebugLine(GetWorld(), LaserStart, Hit.Location, FColor::Red, false, 0, 10, 5);
-	FTimerHandle ChargeHandl;
-	GetWorldTimerManager().SetTimer(ChargeHandl, this, &AEnemyLaserTurret::FireLaser, 2, false);
+	FTimerHandle ChargeHandler;
+	FTimerHandle RotationHandler;
+	//GetWorldTimerManager().SetTimer(RotationHandler, this, &AEnemyLaserTurret::SetRotationSpeed, 1.8, false);
+	GetWorldTimerManager().SetTimer(ChargeHandler, this, &AEnemyLaserTurret::FireLaser, 2, false);
 
 	LaserBeam->SetWorldScale3D(FVector(	1, 1, (Hit.Location-LaserStart).Size()/100));
+}
+
+void AEnemyLaserTurret::SetRotationSpeed(float NewRotationSpeed)
+{
+	RotationSpeed = NewRotationSpeed;
 }
 
 

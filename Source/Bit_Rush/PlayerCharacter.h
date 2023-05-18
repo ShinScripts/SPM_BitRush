@@ -314,10 +314,6 @@ private:
 	virtual float TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator,
 	                         AActor* DamageCauser) override;
 
-	//Debug utility
-	void ScreenPrint(FString Message);
-	void ScreenPrint(FString Message, FColor Color);
-
 	//Ammo
 	void SetStartAmmo();
 	void SubtractAmmoWhileUnlimited(bool MagOrStore, int Tribute);

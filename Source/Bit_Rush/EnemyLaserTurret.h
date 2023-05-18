@@ -41,6 +41,10 @@ private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Combat", meta = (AllowPrivateAccess))
 	float Damage = 20;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Combat", meta = (AllowPrivateAccess))
+	float RotationSpeed;
+
+	
 	UPROPERTY(VisibleDefaultsOnly, Category = "Rockets")
 	TSubclassOf<class AActor> LaserClass;
 	
@@ -49,6 +53,9 @@ private:
 
 	UFUNCTION(BlueprintCallable)
 	virtual void Shoot() override;
+
+	UFUNCTION(BlueprintCallable)
+	void SetRotationSpeed(float NewRotationSpeed);
 	
 	void FireLaser();
 
