@@ -44,8 +44,13 @@ private:
 	UPROPERTY(EditAnywhere, Category="Deflector Component")
 	TArray<FName> DeflectableProjectileTags;
 
+
+	UPROPERTY(EditAnywhere, Category="Deflector Component", BlueprintReadOnly,meta = (AllowPrivateAccess))
 	float CurrentDeflectCooldown;
+
+	UPROPERTY(EditAnywhere, Category="Deflector Component", BlueprintReadOnly,meta = (AllowPrivateAccess))
 	float DeflectCooldown = 2;
+	
 	bool bIsDeflecting = false;
 
 	/*UPROPERTY(EditAnywhere, Category="Deflector Component")

@@ -31,7 +31,7 @@ void UDeflectorBoxComponent::TickComponent(float DeltaTime, ELevelTick TickType,
 
 	if(IsDeflecting)
 	{
-		if(CurrentDeflectCooldown-DeflectCooldown<0.4)
+		if(DeflectCooldown-CurrentDeflectCooldown<0.4)
 		{
 			CheckOverlappingTags(DeflectableProjectileTags);
 		}
