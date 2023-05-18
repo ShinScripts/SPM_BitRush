@@ -20,6 +20,12 @@ protected:
 	AEnemyRocketTurret();
 	
 private:
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly,Category = "Combat", meta=(AllowPrivateAccess))
+	float targetRange = 1000;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly,Category = "Combat", meta=(AllowPrivateAccess))
+	float AttackFrequency;
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Body", meta = (AllowPrivateAccess))
 	class UCapsuleComponent* CapsuleComp;
 
