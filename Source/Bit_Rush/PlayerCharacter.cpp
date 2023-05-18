@@ -201,7 +201,6 @@ void FGrappleComponent::ScanForGrapplePoint()
 				GrapplingFeedComp = Cast<UGrapplingFeedbackComponent>(GrappleHit.GetActor()->FindComponentByClass<UGrapplingFeedbackComponent>());
 				GrapplingFeedComp->PlayerCanGrapple = true;
 				
-				// UE_LOG(LogTemp,Warning,TEXT("%s"),*GrappleHit.GetActor()->GetName());
 				bCanGrapple = true;
 			}
 			else
@@ -535,11 +534,6 @@ void APlayerCharacter::SetDeflectBoxVariable()
 		if(DefBox)
 		{
 			DeflectorBox = DefBox;
-			//ScreenPrint("This loop object does match", FColor::Green);
-		}
-		else
-		{
-			//ScreenPrint("This loop object does not match", FColor::Red);
 		}
 	}
 }
@@ -555,12 +549,10 @@ void APlayerCharacter::ChangeTime(bool AddOrTake, float Tribute)
 	if(AddOrTake)
 	{
 		CurrentTime += Tribute;
-		//ScreenPrint("Add time");
 	}
 	else
 	{
 		CurrentTime -= Tribute;
-		//ScreenPrint("Subtract time");
 		if(CurrentTime <= 0)
 		{
 			CurrentTime = 0;
@@ -572,59 +564,10 @@ void APlayerCharacter::ChangeAmmo(bool AddOrTake, bool MagOrStore, int Tribute)
 {
 	if(AddOrTake)
 	{
-		/*if(MagOrStore)
-		{
-			CurrentMagAmmo += Tribute;
-			//ScreenPrint("Add ammo");
-			if(CurrentMagAmmo >= AmmoMagCapacity)
-			{
-				CurrentMagAmmo = AmmoMagCapacity;
-			}
-		}
-		else
-		{
-			StoredAmmo += Tribute;
-			//ScreenPrint("Add ammo");
-			if(StoredAmmo >= MaxAmmo)
-			{
-				StoredAmmo = MaxAmmo;
-			}
-		}*/
 		AddAmmoWhileUnlimited(MagOrStore, Tribute);
 	}
 	else
 	{
-		/*if(!UnlimitedAmmo)
-		{
-			if(MagOrStore)
-			{
-				CurrentMagAmmo -= Tribute;
-				if(CurrentMagAmmo <= 0)
-				{
-					CurrentMagAmmo = 0;
-				}
-			}
-			else
-			{
-				StoredAmmo -= Tribute;
-				if(StoredAmmo <= 0)
-				{
-					StoredAmmo = 0;
-				}
-			}
-		}
-		else
-		{
-			if(MagOrStore)
-			{
-				CurrentMagAmmo -= Tribute;
-				if(CurrentMagAmmo <= 0)
-				{
-					CurrentMagAmmo = 0;
-				}
-			}
-		}*/
-
 		SubtractAmmoWhileUnlimited(MagOrStore, Tribute);
 	}
 }
