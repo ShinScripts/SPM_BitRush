@@ -30,6 +30,7 @@ struct FSlideComponent
 	UPROPERTY(EditAnywhere)
 	float FlatSlideVelocity = 6000000;
 	
+	UPROPERTY(BlueprintReadOnly)
 	bool bShouldSlide = false;
 	
 	bool ShouldLaunchSlide = false;
