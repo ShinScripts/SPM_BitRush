@@ -2,7 +2,6 @@
 
 
 #include "RocketProjectile.h"
-#include "Kismet/GameplayStatics.h" 
 #include "NiagaraFunctionLibrary.h"
 
 // Sets default values
