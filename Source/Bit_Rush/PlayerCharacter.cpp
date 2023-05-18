@@ -7,7 +7,6 @@
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Engine/World.h"
-#include "Kismet/GameplayStatics.h"
 #include "GrapplingFeedbackComponent.h"
 
 //FMovementData

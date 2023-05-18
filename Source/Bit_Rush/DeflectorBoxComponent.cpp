@@ -3,9 +3,6 @@
 
 #include "DeflectorBoxComponent.h"
 
-#include "PlayerCharacter.h"
-#include "Engine/GameEngine.h"
-
 UDeflectorBoxComponent::UDeflectorBoxComponent()
 {
 	PrimaryComponentTick.bCanEverTick = true;

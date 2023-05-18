@@ -7,7 +7,6 @@
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
 #include "Components/BoxComponent.h"
-#include "PlayerCharacter.h"
 
 #include "MPlatformVInterpActorComponent.generated.h"
 
