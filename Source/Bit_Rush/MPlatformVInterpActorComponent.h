@@ -47,9 +47,10 @@ private:
   bool ActorVisible = false;
   UPROPERTY(EditAnywhere, Category="TargetActor")
   bool ActorPhysicsEnabled = false;
-  UPROPERTY(EditAnywhere, Category="TargetActor"/*, meta=(EditCondition = "!ReciprocatingPlatform")*/)
+
+  UPROPERTY(EditAnywhere, Category="MovingPlatform"/*, meta=(EditCondition = "!ReciprocatingPlatform")*/)
   bool ReturnToStartOnExitOverlap = false;
-  UPROPERTY(EditAnywhere, Category="TargetActor")
+  UPROPERTY(EditAnywhere, Category="MovingPlatform")
   bool MoveActorOnOverlap = false;
 
   UPROPERTY(EditAnywhere, Category="MovingPlatform")
@@ -88,7 +89,7 @@ private:
   FVector DefaultStartPosition;*/
   
 
-  UPROPERTY(EditAnywhere)
+  UPROPERTY(EditAnywhere, Category="MovingPlatform")
   float Speed;
   float DefSpeed;
 

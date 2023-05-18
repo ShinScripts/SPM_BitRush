@@ -2,6 +2,7 @@
 
 #include "MPlatformVInterpActorComponent.h"
 
+#include "Components/CapsuleComponent.h"
 #include "Kismet/KismetSystemLibrary.h"
 #include "Microsoft/AllowMicrosoftPlatformTypes.h"
 
@@ -231,7 +232,7 @@ bool UMPlatformVInterpActorComponent::IsOverlappingPlayer()
 	//UE_LOG(LogTemp, Warning, TEXT("is Root: %s"),*RootMesh->GetOwner()->GetActorNameOrLabel());
 	TArray<AActor*> Actors;
 	BoxComponent->GetOverlappingActors(Actors);
-	bool ReturnValue;
+	bool ReturnValue = false;
 	
 	for(AActor* Actor : Actors)
 	{
@@ -240,16 +241,25 @@ bool UMPlatformVInterpActorComponent::IsOverlappingPlayer()
 
 		if(!Player)
 		{
-			UE_LOG(LogTemp, Warning, TEXT("Not overlapping Player"));
-			//OverlappingPlayer = Player;
 			ReturnValue = false;
 		}
 		else
 		{
-			//UE_LOG(LogTemp, Warning, TEXT("failed"));
-			UE_LOG(LogTemp, Warning, TEXT("Overlapping Player"));
-			//OverlappingPlayer = true;
-			ReturnValue=  true;
+			TArray<UPrimitiveComponent*> OverlapComponents;
+			BoxComponent->GetOverlappingComponents(OverlapComponents);
+
+			for(UPrimitiveComponent* OverlapComp : OverlapComponents)
+			{
+				UCapsuleComponent* Capsule = Cast<UCapsuleComponent>(OverlapComp);
+				if(!Capsule)
+				{
+					ReturnValue = false;
+				}
+				else
+				{
+					ReturnValue = true;
+				}
+			}
 		}
 	}
 	return ReturnValue;
