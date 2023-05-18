@@ -2,8 +2,8 @@
 
 #include "MPlatformVInterpActorComponent.h"
 
+#include "PlayerCharacter.h"
 #include "Components/CapsuleComponent.h"
-#include "Kismet/KismetSystemLibrary.h"
 #include "Microsoft/AllowMicrosoftPlatformTypes.h"
 
 

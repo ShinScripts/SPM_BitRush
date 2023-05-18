@@ -3,8 +3,6 @@
 
 #include "PickupBoxComponent.h"
 
-#include "Kismet2/BlueprintEditorUtils.h"
-
 // Sets default values for this component's properties
 UPickupBoxComponent::UPickupBoxComponent()
 {
