@@ -47,7 +47,7 @@ void AEnemyLaserTurret::FireLaser()
 	FVector LaserEnd = (LaserSpawnPoint->GetComponentLocation() + (GetActorRotation().Vector() * 2000));
 
 	FHitResult Hit;
-	LaserBeam->SetWorldScale3D(FVector(	3, 3, (Hit.Location-LaserSpawnPoint->GetComponentLocation()).Size()/100));
+	LaserBeam->SetWorldScale3D(FVector(	4, 4, (Hit.Location-LaserSpawnPoint->GetComponentLocation()).Size()/100));
 
 	FCollisionQueryParams Params;
 	Params.AddIgnoredActor(this);
@@ -57,6 +57,11 @@ void AEnemyLaserTurret::FireLaser()
 	GetWorld()->SweepSingleByChannel(Hit, LaserStart, LaserEnd, FQuat::Identity, ECC_GameTraceChannel1, FCollisionShape::MakeSphere(12.0f), Params);
 	UGameplayStatics::ApplyDamage(Hit.GetActor(), Damage, GetInstigatorController(), this , UDamageType::StaticClass());
 	GetWorldTimerManager().SetTimer(ChargeHandle, this, &AEnemyLaserTurret::Recharge, RechargeTimer, false);
+	RotationSpeed = 150;
+}
+void AEnemyLaserTurret::SetRotationSpeed()
+{
+	RotationSpeed = 1;
 }
 //Turret creates an outliner for the laser that is about to activate
 void AEnemyLaserTurret::Shoot()
@@ -78,16 +83,12 @@ void AEnemyLaserTurret::Shoot()
 	//DrawDebugLine(GetWorld(), LaserStart, Hit.Location, FColor::Red, false, 0, 10, 5);
 	FTimerHandle ChargeHandler;
 	FTimerHandle RotationHandler;
-	//GetWorldTimerManager().SetTimer(RotationHandler, this, &AEnemyLaserTurret::SetRotationSpeed, 1.8, false);
+	GetWorldTimerManager().SetTimer(RotationHandler, this, &AEnemyLaserTurret::SetRotationSpeed, 1.7, false);
 	GetWorldTimerManager().SetTimer(ChargeHandler, this, &AEnemyLaserTurret::FireLaser, 2, false);
 
-	LaserBeam->SetWorldScale3D(FVector(	1, 1, (Hit.Location-LaserStart).Size()/100));
+	LaserBeam->SetWorldScale3D(FVector(	0.5, 0.5, (Hit.Location-LaserStart).Size()/100));
 }
 
-void AEnemyLaserTurret::SetRotationSpeed(float NewRotationSpeed)
-{
-	RotationSpeed = NewRotationSpeed;
-}
 
 
 void AEnemyLaserTurret::Destroy()
