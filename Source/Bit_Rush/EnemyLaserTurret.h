@@ -55,7 +55,7 @@ private:
 	virtual void Shoot() override;
 
 	UFUNCTION(BlueprintCallable)
-	void SetRotationSpeed(float NewRotationSpeed);
+	void SetRotationSpeed();
 	
 	void FireLaser();
 
