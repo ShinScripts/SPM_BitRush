@@ -59,11 +59,6 @@ void UWallRunMovementComponent::TickComponent(float DeltaTime, ELevelTick TickTy
 	GetWorld()->LineTraceSingleByChannel(HitResultRightAngle, StartTrace, RightSideEndAngleTrace, ECC_GameTraceChannel1, Params);
 	GetWorld()->LineTraceSingleByChannel(HitResultLeftAngle, StartTrace, LeftSideEndAngleTrace, ECC_GameTraceChannel1, Params);
 	
-	DrawDebugLine(GetWorld(), StartTrace, RightSideEndTrace, FColor::Cyan, false, 3.f);
-	DrawDebugLine(GetWorld(), StartTrace, LeftSideEndTrace, FColor::Cyan, false, 3.f);
-	DrawDebugLine(GetWorld(), StartTrace, RightSideEndAngleTrace, FColor::Red, false, 3.f);
-	DrawDebugLine(GetWorld(), StartTrace, LeftSideEndAngleTrace, FColor::Red, false, 3.f);
-	
 	// Right side
 	if(HitResultRight.bBlockingHit && ContainsTag(HitResultRight))
 	{
@@ -156,8 +151,6 @@ void UWallRunMovementComponent::SetWallRunVelocity(APlayerCharacter* PlayerChara
 		InitialVelocity = PlayerCharacter->GetMovementComponent()->Velocity.Size();
 	
 	const FVector Velocity = (InitialVelocity > MaxVelocity ? MaxVelocity : InitialVelocity < MinVelocity ? MinVelocity : InitialVelocity) * CrossProduct;
-	
-	// UE_LOG(LogTemp, Warning, TEXT("%s"), *Velocity.ToString());
 	
 	PlayerCharacter->LaunchCharacter(Velocity, true, true);
 	PlayerCharacter->MovementData.SetGravityScale(0.f);
