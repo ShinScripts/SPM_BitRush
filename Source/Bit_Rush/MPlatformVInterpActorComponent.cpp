@@ -246,7 +246,7 @@ bool UMPlatformVInterpActorComponent::IsOverlappingPlayer()
 		}
 		else
 		{
-			UE_LOG(LogTemp, Warning, TEXT("Player"));
+			//UE_LOG(LogTemp, Warning, TEXT("Player"));
 			TArray<UPrimitiveComponent*> OverlapComponents;
 			BoxComponent->GetOverlappingComponents(OverlapComponents);
 
