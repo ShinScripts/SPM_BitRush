@@ -241,24 +241,28 @@ bool UMPlatformVInterpActorComponent::IsOverlappingPlayer()
 
 		if(!Player)
 		{
+			//UE_LOG(LogTemp, Warning, TEXT("NoPlayer"));
 			ReturnValue = false;
 		}
 		else
 		{
+			UE_LOG(LogTemp, Warning, TEXT("Player"));
 			TArray<UPrimitiveComponent*> OverlapComponents;
 			BoxComponent->GetOverlappingComponents(OverlapComponents);
 
 			for(UPrimitiveComponent* OverlapComp : OverlapComponents)
 			{
 				UCapsuleComponent* Capsule = Cast<UCapsuleComponent>(OverlapComp);
-				if(!Capsule)
+				if(/*!*/Capsule)
 				{
-					ReturnValue = false;
-				}
-				else
-				{
+					//UE_LOG(LogTemp, Warning, TEXT("Capsule"));
 					ReturnValue = true;
 				}
+				/*else
+				{
+					UE_LOG(LogTemp, Warning, TEXT("NoCapsule"));
+					ReturnValue = true;
+				}*/
 			}
 		}
 	}
