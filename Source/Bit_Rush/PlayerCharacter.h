@@ -240,6 +240,8 @@ public:
 	int AmmoMagCapacity = 8;
 	UPROPERTY(VisibleAnywhere, Category = "Ammo", BlueprintReadWrite, meta = (AllowPrivateAccess))
 	int CurrentMagAmmo;
+	UPROPERTY(EditAnywhere, Category = "Ammo")
+	bool FillRestOnReload = false;
 	
 	//Deflect
 	UFUNCTION(BlueprintCallable)
@@ -317,6 +319,6 @@ private:
 
 	//Ammo
 	void SetStartAmmo();
-	void SubtractAmmoWhileUnlimited(bool MagOrStore, int Tribute);
-	void AddAmmoWhileUnlimited(bool MagOrStore, int Tribute);
+	void SubtractAmmo(bool MagOrStore, int Tribute);
+	void AddAmmo(bool MagOrStore, int Tribute);
 };
