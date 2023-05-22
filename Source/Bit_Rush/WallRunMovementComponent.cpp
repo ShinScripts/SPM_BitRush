@@ -40,11 +40,10 @@ void UWallRunMovementComponent::TickComponent(float DeltaTime, ELevelTick TickTy
 	}
 	
 	const FVector StartTrace = PlayerCharacter->GetActorLocation();
-	const FVector RightSideEndTrace = LineTraceLength * PlayerCharacter->GetActorRightVector() + PlayerCharacter->GetActorLocation();
-	const FVector LeftSideEndTrace = LineTraceLength * (PlayerCharacter->GetActorRightVector() * -1) + PlayerCharacter->GetActorLocation();
-
-	const FVector RightSideEndAngleTrace = LineTraceLength * (PlayerCharacter->GetActorRightVector() - PlayerCharacter->GetActorForwardVector()) + PlayerCharacter->GetActorLocation();
-	const FVector LeftSideEndAngleTrace = LineTraceLength * (PlayerCharacter->GetActorRightVector() * -1.f - PlayerCharacter->GetActorForwardVector()) + PlayerCharacter->GetActorLocation();
+	const FVector RightSideEndTrace = LineTraceLength * PlayerCharacter->GetActorRightVector() + StartTrace;
+	const FVector LeftSideEndTrace = LineTraceLength * (PlayerCharacter->GetActorRightVector() * -1.f) + StartTrace;
+	const FVector RightSideEndAngleTrace = LineTraceLength * (PlayerCharacter->GetActorRightVector() - PlayerCharacter->GetActorForwardVector()) + StartTrace;
+	const FVector LeftSideEndAngleTrace = LineTraceLength * (PlayerCharacter->GetActorRightVector() * -1.f - PlayerCharacter->GetActorForwardVector()) + StartTrace;
 	
 	FHitResult HitResultRight;
 	FHitResult HitResultLeft;
