@@ -89,8 +89,6 @@ void AEnemyLaserTurret::Shoot()
 	LaserBeam->SetWorldScale3D(FVector(	0.5, 0.5, (Hit.Location-LaserStart).Size()/100));
 }
 
-
-
 void AEnemyLaserTurret::Destroy()
 {
 }
