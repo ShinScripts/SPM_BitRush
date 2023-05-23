@@ -28,6 +28,7 @@ public:
 	
 private:
 	virtual void Shoot();
+
 	virtual void Destroy();
 	
 
