@@ -25,7 +25,7 @@ struct FSlideComponent
 	FVector GetSlideSurface(const FVector &FloorNormal);
 
 	UPROPERTY(EditAnywhere)
-	float SlideVelocity = 50000000;
+	float SlideVelocity = 60000000;
 
 	UPROPERTY(EditAnywhere)
 	float FlatSlideVelocity = 6000000;
