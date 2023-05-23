@@ -269,7 +269,7 @@ public:
 	void ChangeAmmo(bool AddOrTake, bool MagOrStore, int Tribute); //MagOrStore = true -> Mag / false -> Storage.
 
 	UFUNCTION(BlueprintCallable)
-	FRotator GetGrappleRotation(FVector StartPosition) const;
+	FVector GetGrappleRotation() const;
 	
 private:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess))
