@@ -416,12 +416,10 @@ void APlayerCharacter::Tick(float DeltaTime)
 	CurrentTime -= GetWorld()->GetDeltaSeconds();
 	// UE_LOG(LogTemp, Warning, TEXT("Time %f"), CurrentTime);
 }
-FRotator APlayerCharacter::GetGrappleRotation(FVector StartPosition) const
+FVector APlayerCharacter::GetGrappleRotation() const
 {
 
-	FVector GrappleHookVector = GrappleComponent.GrappleHit.Location - StartPosition;
-
-	return GrappleHookVector.Rotation();
+	return GrappleComponent.GrappleHit.GetActor()->GetActorLocation();
 	//UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, GrappleComponent.GrappleNiagra, StartPosition, GrappleHookVector.Rotation(), FVector(GrappleHookVector.Size(), 1, 1 ));
 	//UNiagaraFunctionLibrary::SpawnSystemAttached(this, GrappleComponent.GrappleNiagra, StartPosition, GrappleHookVector.Rotation(), FVector(GrappleHookVector.Size(), 1, 1));
 }
