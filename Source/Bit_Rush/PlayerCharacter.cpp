@@ -8,6 +8,7 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Engine/World.h"
 #include "GrapplingFeedbackComponent.h"
+#include "NiagaraFunctionLibrary.h"
 
 //FMovementData
 void FMovementData::SetCharacterMovement(UCharacterMovementComponent* InCharacterMovementComponent) const
@@ -261,8 +262,13 @@ void FGrappleComponent::StartGrapple()
 	{
 		PlayerCharacter->CharacterMovement->Velocity = FVector::Zero();
 		bIsGrappling = true;
+
+
+		
 	}
 }
+
+
 
 void FGrappleComponent::Grapple()
 {
@@ -279,6 +285,7 @@ void FGrappleComponent::StopGrapple()
 	GrappleHit.Reset();
 	PlayerCharacter->CharacterMovement->SetMovementMode(MOVE_Walking);
 	PlayerCharacter->LaunchCharacter(PlayerCharacter->CameraComp->GetComponentRotation().Vector() * GrapplingLaunchSpeed,true,true);
+	//RemoveNiagra
 }
 
 //FSlideComponent
@@ -438,6 +445,13 @@ void APlayerCharacter::Tick(float DeltaTime)
 	//Reduces players time left
 	CurrentTime -= GetWorld()->GetDeltaSeconds();
 	// UE_LOG(LogTemp, Warning, TEXT("Time %f"), CurrentTime);
+}
+FVector APlayerCharacter::GetGrappleRotation() const
+{
+
+	return GrappleComponent.GrappleHit.GetActor()->GetActorLocation();
+	//UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, GrappleComponent.GrappleNiagra, StartPosition, GrappleHookVector.Rotation(), FVector(GrappleHookVector.Size(), 1, 1 ));
+	//UNiagaraFunctionLibrary::SpawnSystemAttached(this, GrappleComponent.GrappleNiagra, StartPosition, GrappleHookVector.Rotation(), FVector(GrappleHookVector.Size(), 1, 1));
 }
 
 // Called to bind functionality to input

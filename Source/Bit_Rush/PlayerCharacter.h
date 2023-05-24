@@ -61,9 +61,14 @@ struct FGrappleComponent
 	void GrappleUpdate();
 	void ScanForGrapplePoint();
 	void StartGrapple();
+
+
 	void StopGrapple();
 	void Grapple();
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly,Category = "Grapple Component", meta=(AllowPrivateAccess))
+	class UNiagaraSystem* GrappleNiagra;
+	
 	UPROPERTY(EditAnywhere)
 	float GrapplingHookRange = 1500;
 
@@ -264,6 +269,9 @@ public:
 	//Tribute resource
 	void ChangeTime(bool AddOrTake, float Tribute); //AddOrTake = true -> add / = false -> subtract
 	void ChangeAmmo(bool AddOrTake, bool MagOrStore, int Tribute); //MagOrStore = true -> Mag / false -> Storage.
+
+	UFUNCTION(BlueprintCallable)
+	FVector GetGrappleRotation() const;
 	
 private:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess))

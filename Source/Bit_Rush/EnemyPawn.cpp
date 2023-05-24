@@ -29,6 +29,7 @@ void AEnemyPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 }
 
+//Gets called in blueprint when supposed to shoot
 void AEnemyPawn::Shoot()
 {
 }
@@ -36,3 +37,4 @@ void AEnemyPawn::Shoot()
 void AEnemyPawn::Destroy()
 {
 }
+

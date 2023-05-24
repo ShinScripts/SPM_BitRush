@@ -17,6 +17,8 @@ public:
 	AEnemyLaserTurret();
 	
 private:
+
+	//Components
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Body", meta = (AllowPrivateAccess))
 	class UCapsuleComponent* CapsuleComp;
 
@@ -31,6 +33,10 @@ private:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Laser", meta = (AllowPrivateAccess))
 	UStaticMeshComponent* LaserBeam;
+
+
+
+	//Variables
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Combat", meta = (AllowPrivateAccess))
 	float RechargeTimer = 2;
@@ -47,6 +53,8 @@ private:
 	
 	UPROPERTY(VisibleDefaultsOnly, Category = "Rockets")
 	TSubclassOf<class AActor> LaserClass;
+
+	//Functions
 	
 	virtual void Tick(float DeltaSeconds) override;
 	void Recharge();
