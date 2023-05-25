@@ -33,14 +33,15 @@ void AEnemyLaserTurret::Tick(float DeltaSeconds)
 
 }
 
+//Changes bool CanFire to true
 void AEnemyLaserTurret::Recharge()
 {
 	CanFire = true;
 }
+
+//Activates the laser of the turret
 void AEnemyLaserTurret::FireLaser()
 {
-
-
 	CanFire = false;
 	FTimerHandle ChargeHandle;
 	FVector LaserStart = LaserSpawnPoint->GetComponentLocation();
@@ -59,11 +60,15 @@ void AEnemyLaserTurret::FireLaser()
 	GetWorldTimerManager().SetTimer(ChargeHandle, this, &AEnemyLaserTurret::Recharge, RechargeTimer, false);
 	RotationSpeed = 150;
 }
+
+//Sets Rotationspeed of turret
 void AEnemyLaserTurret::SetRotationSpeed()
 {
 	RotationSpeed = 1;
 }
-//Turret creates an outliner for the laser that is about to activate
+
+
+//Calls in blueprint when turret should shoot which then calls for FireLaser when laser should activate
 void AEnemyLaserTurret::Shoot()
 {
 	ACharacter* Char = UGameplayStatics::GetPlayerCharacter(this, 0);
@@ -78,9 +83,7 @@ void AEnemyLaserTurret::Shoot()
 
 
 	GetWorld()->SweepSingleByChannel(Hit, LaserStart, LaserEnd, FQuat::Identity, ECC_GameTraceChannel1, FCollisionShape::MakeSphere(12.0f), Params);
-	
-	
-	//DrawDebugLine(GetWorld(), LaserStart, Hit.Location, FColor::Red, false, 0, 10, 5);
+
 	FTimerHandle ChargeHandler;
 	FTimerHandle RotationHandler;
 	GetWorldTimerManager().SetTimer(RotationHandler, this, &AEnemyLaserTurret::SetRotationSpeed, 1.7, false);

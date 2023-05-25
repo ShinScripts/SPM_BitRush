@@ -39,7 +39,7 @@ void UDeflectorBoxComponent::TickComponent(float DeltaTime, ELevelTick TickType,
 		IsDeflecting = false;
 		CurrentDeflectCooldown = DeflectCooldown;
 	}
-	// UE_LOG(LogTemp, Warning, TEXT("can tick., %f"), CurrentDeflectCooldown);
+
 }
 
 void UDeflectorBoxComponent::ScreenPrint(FString Message)
