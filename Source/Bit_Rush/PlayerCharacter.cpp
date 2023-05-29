@@ -536,8 +536,6 @@ float APlayerCharacter::TakeDamage
 	return CurrentTime;
 }
 
-
-
 //Finding the DeflectorBoxComponent and setting a pointer to it
 void APlayerCharacter::SetDeflectBoxVariable()
 {
