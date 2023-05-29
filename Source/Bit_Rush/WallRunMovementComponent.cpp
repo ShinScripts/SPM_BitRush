@@ -87,7 +87,7 @@ void UWallRunMovementComponent::TickComponent(float DeltaTime, ELevelTick TickTy
 			TiltCamera(PlayerCharacter->CameraComp, -RollDegrees, InterpolationSpeed, DeltaTime);
 		}
 	}
-	else if(HitResultLeft.bBlockingHit && ContainsTag(HitResultLeft)) 	// Left side
+	else if(HitResultLeft.bBlockingHit && ContainsTag(HitResultLeft)) // Left side
 	{
 		PlayerCharacter->bCanMove = false;
 		OnLeftSide = true;
