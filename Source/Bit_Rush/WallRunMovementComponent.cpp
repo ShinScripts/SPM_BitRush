@@ -62,57 +62,38 @@ void UWallRunMovementComponent::TickComponent(float DeltaTime, ELevelTick TickTy
 	if(HitResultRight.bBlockingHit && ContainsTag(HitResultRight))
 	{
 		PlayerCharacter->bCanMove = false;
-		OnRightSide = true;	
+		OnRightSide = true;
 
-		if(IsLookingAtWallNormal(PlayerCharacter, HitResultRight))
-		{
-			OffWall(PlayerCharacter, DeltaTime);
+		if(IsLookingAtWallNormal(PlayerCharacter, HitResultRight, DeltaTime))
 			return;
-		}
 		
 		if(!IsJumpingOffWall)
 		{
 			SetWallRunVelocity(PlayerCharacter, FVector::CrossProduct(HitResultRight.Normal, FVector(0.f, 0.f, -1.f)));
 			TiltCamera(PlayerCharacter->CameraComp, -RollDegrees, InterpolationSpeed, DeltaTime);
-			return;
 		}
 	}
 	else if (HitResultRightAngle.bBlockingHit && ContainsTag(HitResultRightAngle))
 	{
 		PlayerCharacter->bCanMove = false;
-		OnRightSide = true;	
+		OnRightSide = true;
 
-		if(IsLookingAtWallNormal(PlayerCharacter, HitResultRightAngle))
-		{
-			OffWall(PlayerCharacter, DeltaTime);
+		if(IsLookingAtWallNormal(PlayerCharacter, HitResultRightAngle, DeltaTime))
 			return;
-		}
 		
 		if(!IsJumpingOffWall)
 		{
 			SetWallRunVelocity(PlayerCharacter, FVector::CrossProduct(HitResultRightAngle.Normal, FVector(0.f, 0.f, -1.f)));
 			TiltCamera(PlayerCharacter->CameraComp, -RollDegrees, InterpolationSpeed, DeltaTime);
-			return;
 		}
 	}
-	else
-	{
-		if(!OnLeftSide)
-			OffWall(PlayerCharacter, DeltaTime);
-	}
-	
-	
-	// Left side
-	if(HitResultLeft.bBlockingHit && ContainsTag(HitResultLeft))
+	else if(HitResultLeft.bBlockingHit && ContainsTag(HitResultLeft)) 	// Left side
 	{
 		PlayerCharacter->bCanMove = false;
 		OnLeftSide = true;
 
-		if(IsLookingAtWallNormal(PlayerCharacter, HitResultLeft))
-		{
-			OffWall(PlayerCharacter, DeltaTime);
+		if(IsLookingAtWallNormal(PlayerCharacter, HitResultLeft, DeltaTime))
 			return;
-		}
 		
 		if(!IsJumpingOffWall)
 		{
@@ -125,11 +106,8 @@ void UWallRunMovementComponent::TickComponent(float DeltaTime, ELevelTick TickTy
 		PlayerCharacter->bCanMove = false;
 		OnLeftSide = true;
 
-		if(IsLookingAtWallNormal(PlayerCharacter, HitResultLeftAngle))
-		{
-			OffWall(PlayerCharacter, DeltaTime);
+		if(IsLookingAtWallNormal(PlayerCharacter, HitResultLeftAngle, DeltaTime))
 			return;
-		}
 		
 		if(!IsJumpingOffWall)
 		{
@@ -139,7 +117,7 @@ void UWallRunMovementComponent::TickComponent(float DeltaTime, ELevelTick TickTy
 	}
 	else
 	{
-		if(!OnRightSide)
+		if(!OnLeftSide || !OnRightSide)
 			OffWall(PlayerCharacter, DeltaTime);
 	}
 }
@@ -199,10 +177,13 @@ void UWallRunMovementComponent::JumpOffWall(APlayerCharacter* PlayerCharacter)
 	PlayerCharacter->LaunchCharacter(Velocity, false, true);
 }
 
-bool UWallRunMovementComponent::IsLookingAtWallNormal(const APlayerCharacter* PlayerCharacter, const FHitResult& HitResult)
+bool UWallRunMovementComponent::IsLookingAtWallNormal(APlayerCharacter* PlayerCharacter, const FHitResult& HitResult, const float DeltaTime)
 {
 	if(FVector::DotProduct(HitResult.Normal, PlayerCharacter->GetActorForwardVector()) > OffWallThreshold)
+	{
+		OffWall(PlayerCharacter, DeltaTime);
 		return true;
+	}
 	
 	return false;
 }
