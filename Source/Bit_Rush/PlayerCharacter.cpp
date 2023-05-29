@@ -25,14 +25,14 @@ void FMovementData::SetCharacterMovement(UCharacterMovementComponent* InCharacte
 
 void FMovementData::SetDefaultValues()
 {
-	JumpForce = 700;
+	JumpForce = 650;
 	GravityScale = 2;
 	BrakingFrictionFactor = 0.05;
 	FallingLateralFriction = 8;
 	AirControl = 0.4;
 	GroundFriction = 10;
 	BrakingDecelerationWalking = 5000;
-	MaxAcceleration = 3200;
+	MaxAcceleration = 1500;
 }
 
 void FMovementData::SetGroundFriction(const float NewGroundFriction)
