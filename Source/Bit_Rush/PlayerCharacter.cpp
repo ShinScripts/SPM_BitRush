@@ -32,7 +32,7 @@ void FMovementData::SetDefaultValues()
 	AirControl = 0.4;
 	GroundFriction = 10;
 	BrakingDecelerationWalking = 5000;
-	MaxAcceleration = 1500;
+	MaxAcceleration = 2500;
 }
 
 void FMovementData::SetGroundFriction(const float NewGroundFriction)
