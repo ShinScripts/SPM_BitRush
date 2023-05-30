@@ -140,8 +140,6 @@ void FGunComponent::GunUpdate(float DeltaTime)
 				PlayerCharacter->CurrentMagAmmo = PlayerCharacter->AmmoMagCapacity;
 			}
 		}
-		
-		
 	}
 }
 
@@ -151,10 +149,7 @@ void FGunComponent::Reload()
 	if(PlayerCharacter->CurrentMagAmmo < PlayerCharacter->AmmoMagCapacity)
 	{
 		bIsReloading = true;
-
-
 	}
-
 }
 
 //FGrappleComponent
@@ -232,13 +227,8 @@ void FGrappleComponent::StartGrapple()
 	{
 		PlayerCharacter->CharacterMovement->Velocity = FVector::Zero();
 		bIsGrappling = true;
-
-
-		
 	}
 }
-
-
 
 void FGrappleComponent::Grapple()
 {
