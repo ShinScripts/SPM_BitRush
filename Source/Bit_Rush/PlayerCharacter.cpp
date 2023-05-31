@@ -32,7 +32,7 @@ void FMovementData::SetDefaultValues()
 	AirControl = 0.4;
 	GroundFriction = 10;
 	BrakingDecelerationWalking = 5000;
-	MaxAcceleration = 1500;
+	MaxAcceleration = 2500;
 }
 
 void FMovementData::SetGroundFriction(const float NewGroundFriction)
@@ -140,8 +140,6 @@ void FGunComponent::GunUpdate(float DeltaTime)
 				PlayerCharacter->CurrentMagAmmo = PlayerCharacter->AmmoMagCapacity;
 			}
 		}
-		
-		
 	}
 }
 
@@ -151,10 +149,7 @@ void FGunComponent::Reload()
 	if(PlayerCharacter->CurrentMagAmmo < PlayerCharacter->AmmoMagCapacity)
 	{
 		bIsReloading = true;
-
-
 	}
-
 }
 
 //FGrappleComponent
@@ -232,13 +227,8 @@ void FGrappleComponent::StartGrapple()
 	{
 		PlayerCharacter->CharacterMovement->Velocity = FVector::Zero();
 		bIsGrappling = true;
-
-
-		
 	}
 }
-
-
 
 void FGrappleComponent::Grapple()
 {
@@ -535,6 +525,8 @@ float APlayerCharacter::TakeDamage
 	}
 	return CurrentTime;
 }
+
+
 
 //Finding the DeflectorBoxComponent and setting a pointer to it
 void APlayerCharacter::SetDeflectBoxVariable()

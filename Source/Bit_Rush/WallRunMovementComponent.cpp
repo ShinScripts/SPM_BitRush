@@ -87,7 +87,7 @@ void UWallRunMovementComponent::TickComponent(float DeltaTime, ELevelTick TickTy
 			TiltCamera(PlayerCharacter->CameraComp, -RollDegrees, InterpolationSpeed, DeltaTime);
 		}
 	}
-	else if(HitResultLeft.bBlockingHit && ContainsTag(HitResultLeft)) 	// Left side
+	else if(HitResultLeft.bBlockingHit && ContainsTag(HitResultLeft)) // Left side
 	{
 		PlayerCharacter->bCanMove = false;
 		OnLeftSide = true;
@@ -127,13 +127,7 @@ void UWallRunMovementComponent::SetWallRunVelocity(APlayerCharacter* PlayerChara
 	if(InitialVelocity == 0.f)
 		InitialVelocity = PlayerCharacter->GetMovementComponent()->Velocity.Size();
 	
-	const FVector Velocity = (
-			InitialVelocity > MaxVelocity ?
-			MaxVelocity :
-			InitialVelocity < MinVelocity ?
-			MinVelocity :
-			InitialVelocity
-		) * CrossProduct;
+	const FVector Velocity = (InitialVelocity > MaxVelocity ? MaxVelocity : InitialVelocity < MinVelocity ? MinVelocity : InitialVelocity) * CrossProduct;
 	
 	PlayerCharacter->LaunchCharacter(Velocity, true, true);
 	PlayerCharacter->MovementData.SetGravityScale(0.f);
