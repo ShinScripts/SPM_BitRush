@@ -8,7 +8,6 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Engine/World.h"
 #include "GrapplingFeedbackComponent.h"
-#include "NiagaraFunctionLibrary.h"
 
 //FMovementData
 void FMovementData::SetCharacterMovement(UCharacterMovementComponent* InCharacterMovementComponent) const
