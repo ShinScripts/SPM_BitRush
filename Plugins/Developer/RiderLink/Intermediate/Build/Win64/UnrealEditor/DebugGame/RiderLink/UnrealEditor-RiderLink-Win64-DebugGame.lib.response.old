@@ -6,6 +6,6 @@
 /NAME:"UnrealEditor-RiderLink-Win64-DebugGame.dll"
 /IGNORE:4221
 /NODEFAULTLIB
-"D:\Documents\GitHub\SPM_Shooter\Plugins\Developer\RiderLink\Intermediate\Build\Win64\UnrealEditor\DebugGame\RiderLink\Module.RiderLink.cpp.obj"
-"D:\Documents\GitHub\SPM_Shooter\Plugins\Developer\RiderLink\Intermediate\Build\Win64\UnrealEditor\DebugGame\RiderLink\Default.rc2.res"
-/OUT:"D:\Documents\GitHub\SPM_Shooter\Plugins\Developer\RiderLink\Intermediate\Build\Win64\UnrealEditor\DebugGame\RiderLink\UnrealEditor-RiderLink-Win64-DebugGame.lib"
+"C:\Users\shin\Desktop\BitRush\Plugins\Developer\RiderLink\Intermediate\Build\Win64\UnrealEditor\DebugGame\RiderLink\Module.RiderLink.cpp.obj"
+"C:\Users\shin\Desktop\BitRush\Plugins\Developer\RiderLink\Intermediate\Build\Win64\UnrealEditor\DebugGame\RiderLink\Default.rc2.res"
+/OUT:"C:\Users\shin\Desktop\BitRush\Plugins\Developer\RiderLink\Intermediate\Build\Win64\UnrealEditor\DebugGame\RiderLink\UnrealEditor-RiderLink-Win64-DebugGame.lib"
