@@ -31,6 +31,19 @@ void AEnemyLaserTurret::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
 
+	ACharacter* Char = UGameplayStatics::GetPlayerCharacter(this, 0);
+	FVector LaserStart = LaserSpawnPoint->GetComponentLocation();
+	FVector LaserEnd = (LaserSpawnPoint->GetComponentLocation() + (GetActorRotation().Vector() * 2000));
+
+	FHitResult Hit;
+
+	FCollisionQueryParams Params;
+	Params.AddIgnoredActor(this);
+	Params.AddIgnoredActor(Cast<APlayerCharacter>(UGameplayStatics::GetPlayerCharacter(this, 0)));
+
+
+	GetWorld()->SweepSingleByChannel(LaserHit, LaserStart, LaserEnd, FQuat::Identity, ECC_Visibility, FCollisionShape::MakeSphere(12.0f), Params);
+
 }
 
 //Changes bool CanFire to true
@@ -44,19 +57,9 @@ void AEnemyLaserTurret::FireLaser()
 {
 	CanFire = false;
 	FTimerHandle ChargeHandle;
-	FVector LaserStart = LaserSpawnPoint->GetComponentLocation();
-	FVector LaserEnd = (LaserSpawnPoint->GetComponentLocation() + (GetActorRotation().Vector() * 2000));
 
-	FHitResult Hit;
-	LaserBeam->SetWorldScale3D(FVector(	4, 4, (Hit.Location-LaserSpawnPoint->GetComponentLocation()).Size()/100));
-
-	FCollisionQueryParams Params;
-	Params.AddIgnoredActor(this);
-
-
-
-	GetWorld()->SweepSingleByChannel(Hit, LaserStart, LaserEnd, FQuat::Identity, ECC_GameTraceChannel1, FCollisionShape::MakeSphere(12.0f), Params);
-	UGameplayStatics::ApplyDamage(Hit.GetActor(), Damage, GetInstigatorController(), this , UDamageType::StaticClass());
+	LaserBeam->SetWorldScale3D(FVector(	4, 4, (LaserHit.Location-LaserSpawnPoint->GetComponentLocation()).Size()/200));
+	UGameplayStatics::ApplyDamage(LaserHit.GetActor(), Damage, GetInstigatorController(), this , UDamageType::StaticClass());
 	GetWorldTimerManager().SetTimer(ChargeHandle, this, &AEnemyLaserTurret::Recharge, RechargeTimer, false);
 	RotationSpeed = 150;
 }
@@ -71,25 +74,14 @@ void AEnemyLaserTurret::SetRotationSpeed()
 //Calls in blueprint when turret should shoot which then calls for FireLaser when laser should activate
 void AEnemyLaserTurret::Shoot()
 {
-	ACharacter* Char = UGameplayStatics::GetPlayerCharacter(this, 0);
-	FVector LaserStart = LaserSpawnPoint->GetComponentLocation();
-	FVector LaserEnd = (LaserSpawnPoint->GetComponentLocation() + (GetActorRotation().Vector() * 2000));
 
-	FHitResult Hit;
-
-	FCollisionQueryParams Params;
-	Params.AddIgnoredActor(this);
-	Params.AddIgnoredActor(Cast<APlayerCharacter>(UGameplayStatics::GetPlayerCharacter(this, 0)));
-
-
-	GetWorld()->SweepSingleByChannel(Hit, LaserStart, LaserEnd, FQuat::Identity, ECC_GameTraceChannel1, FCollisionShape::MakeSphere(12.0f), Params);
 
 	FTimerHandle ChargeHandler;
 	FTimerHandle RotationHandler;
 	GetWorldTimerManager().SetTimer(RotationHandler, this, &AEnemyLaserTurret::SetRotationSpeed, 1.7, false);
 	GetWorldTimerManager().SetTimer(ChargeHandler, this, &AEnemyLaserTurret::FireLaser, 2, false);
 
-	LaserBeam->SetWorldScale3D(FVector(	0.5, 0.5, (Hit.Location-LaserStart).Size()/100));
+	LaserBeam->SetWorldScale3D(FVector(	0.5, 0.5, (LaserHit.Location-LaserSpawnPoint->GetComponentLocation()).Size()/200));
 }
 
 void AEnemyLaserTurret::Destroy()
