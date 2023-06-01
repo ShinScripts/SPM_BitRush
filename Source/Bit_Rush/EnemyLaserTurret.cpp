@@ -43,6 +43,11 @@ void AEnemyLaserTurret::Tick(float DeltaSeconds)
 
 
 	GetWorld()->SweepSingleByChannel(LaserHit, LaserStart, LaserEnd, FQuat::Identity, ECC_Visibility, FCollisionShape::MakeSphere(12.0f), Params);
+	if(CanFire)
+	{
+		
+		LaserBeam->SetWorldScale3D(FVector(	0.5, 0.5, (LaserHit.Location-LaserSpawnPoint->GetComponentLocation()).Size()/200));
+	}
 
 }
 
@@ -81,7 +86,6 @@ void AEnemyLaserTurret::Shoot()
 	GetWorldTimerManager().SetTimer(RotationHandler, this, &AEnemyLaserTurret::SetRotationSpeed, 1.7, false);
 	GetWorldTimerManager().SetTimer(ChargeHandler, this, &AEnemyLaserTurret::FireLaser, 2, false);
 
-	LaserBeam->SetWorldScale3D(FVector(	0.5, 0.5, (LaserHit.Location-LaserSpawnPoint->GetComponentLocation()).Size()/200));
 }
 
 void AEnemyLaserTurret::Destroy()

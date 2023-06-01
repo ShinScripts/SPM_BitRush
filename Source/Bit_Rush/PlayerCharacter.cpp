@@ -121,15 +121,47 @@ void FGunComponent::GunUpdate(float DeltaTime)
 		bIsReloading = false;
 		if(PlayerCharacter->UnlimitedAmmo == false)
 		{
-			if(PlayerCharacter->StoredAmmo >= PlayerCharacter->AmmoMagCapacity)
+			if(PlayerCharacter->FillRestOnReload == false)
 			{
-				PlayerCharacter->CurrentMagAmmo = PlayerCharacter->AmmoMagCapacity;
-				PlayerCharacter->StoredAmmo -= PlayerCharacter->CurrentMagAmmo;
+				if(PlayerCharacter->StoredAmmo >= PlayerCharacter->AmmoMagCapacity)
+				{
+					PlayerCharacter->CurrentMagAmmo = PlayerCharacter->AmmoMagCapacity;
+					PlayerCharacter->StoredAmmo -= PlayerCharacter->CurrentMagAmmo;
+				}
+				else if(PlayerCharacter->StoredAmmo < PlayerCharacter->AmmoMagCapacity)
+				{
+					PlayerCharacter->CurrentMagAmmo = PlayerCharacter->StoredAmmo;
+					PlayerCharacter->StoredAmmo = 0;
+				}
 			}
-			else if(PlayerCharacter->StoredAmmo < PlayerCharacter->AmmoMagCapacity)
+			else
 			{
-				PlayerCharacter->CurrentMagAmmo = PlayerCharacter->StoredAmmo;
-				PlayerCharacter->StoredAmmo = 0;
+				int AmmoRest = PlayerCharacter->CurrentMagAmmo;
+				
+				if(PlayerCharacter->StoredAmmo >= PlayerCharacter->AmmoMagCapacity)
+				{
+					if(PlayerCharacter->CurrentMagAmmo <= 0)
+					{
+						PlayerCharacter->CurrentMagAmmo = PlayerCharacter->AmmoMagCapacity;
+						PlayerCharacter->StoredAmmo -= PlayerCharacter->CurrentMagAmmo;
+					}
+					else
+					{
+						PlayerCharacter->CurrentMagAmmo = PlayerCharacter->AmmoMagCapacity;
+						PlayerCharacter->StoredAmmo -= ((PlayerCharacter->AmmoMagCapacity)-AmmoRest);
+					}
+					
+				}
+				else if(PlayerCharacter->StoredAmmo < PlayerCharacter->AmmoMagCapacity)
+				{
+					PlayerCharacter->CurrentMagAmmo += PlayerCharacter->StoredAmmo;
+					PlayerCharacter->StoredAmmo -= AmmoRest;
+
+					if(PlayerCharacter->StoredAmmo <= 0)
+					{
+						PlayerCharacter->StoredAmmo = 0;	
+					}
+				}
 			}
 		}
 		else
@@ -568,11 +600,11 @@ void APlayerCharacter::ChangeAmmo(bool AddOrTake, bool MagOrStore, int Tribute)
 {
 	if(AddOrTake)
 	{
-		AddAmmoWhileUnlimited(MagOrStore, Tribute);
+		AddAmmo(MagOrStore, Tribute);
 	}
 	else
 	{
-		SubtractAmmoWhileUnlimited(MagOrStore, Tribute);
+		SubtractAmmo(MagOrStore, Tribute);
 	}
 }
 
@@ -613,7 +645,7 @@ void APlayerCharacter::SetStartAmmo()
 	}
 }
 
-void APlayerCharacter::SubtractAmmoWhileUnlimited(bool MagOrStore, int Tribute)
+void APlayerCharacter::SubtractAmmo(bool MagOrStore, int Tribute)
 {
 	if(!UnlimitedAmmo)
 	{
@@ -647,7 +679,7 @@ void APlayerCharacter::SubtractAmmoWhileUnlimited(bool MagOrStore, int Tribute)
 	}
 }
 
-void APlayerCharacter::AddAmmoWhileUnlimited(bool MagOrStore, int Tribute)
+void APlayerCharacter::AddAmmo(bool MagOrStore, int Tribute)
 {
 	if(!UnlimitedAmmo)
 	{
