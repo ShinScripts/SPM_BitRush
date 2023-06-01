@@ -50,12 +50,12 @@ private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Combat", meta = (AllowPrivateAccess))
 	float RotationSpeed;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Combat", meta = (AllowPrivateAccess))
-	float AttackRange = 2000;
-
+	
 	
 	UPROPERTY(VisibleDefaultsOnly, Category = "Rockets")
 	TSubclassOf<class AActor> LaserClass;
+
+	FHitResult LaserHit;
 
 	//Functions
 	
