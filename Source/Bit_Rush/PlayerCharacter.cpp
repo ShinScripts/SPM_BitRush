@@ -8,7 +8,6 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Engine/World.h"
 #include "GrapplingFeedbackComponent.h"
-#include "NiagaraFunctionLibrary.h"
 
 //FMovementData
 void FMovementData::SetCharacterMovement(UCharacterMovementComponent* InCharacterMovementComponent) const
@@ -32,7 +31,7 @@ void FMovementData::SetDefaultValues()
 	AirControl = 0.4;
 	GroundFriction = 10;
 	BrakingDecelerationWalking = 5000;
-	MaxAcceleration = 1500;
+	MaxAcceleration = 2500;
 }
 
 void FMovementData::SetGroundFriction(const float NewGroundFriction)
@@ -172,8 +171,6 @@ void FGunComponent::GunUpdate(float DeltaTime)
 				PlayerCharacter->CurrentMagAmmo = PlayerCharacter->AmmoMagCapacity;
 			}
 		}
-		
-		
 	}
 }
 
@@ -184,7 +181,6 @@ void FGunComponent::Reload()
 	{
 		bIsReloading = true;
 	}
-
 }
 
 //FGrappleComponent
@@ -262,13 +258,8 @@ void FGrappleComponent::StartGrapple()
 	{
 		PlayerCharacter->CharacterMovement->Velocity = FVector::Zero();
 		bIsGrappling = true;
-
-
-		
 	}
 }
-
-
 
 void FGrappleComponent::Grapple()
 {
@@ -443,7 +434,7 @@ void APlayerCharacter::Tick(float DeltaTime)
 	SlideComponent.SlideUpdate(DeltaTime);
 	
 	//Reduces players time left
-	CurrentTime -= GetWorld()->GetDeltaSeconds();
+	CurrentTime += GetWorld()->GetDeltaSeconds();
 	// UE_LOG(LogTemp, Warning, TEXT("Time %f"), CurrentTime);
 }
 FVector APlayerCharacter::GetGrappleRotation() const
@@ -560,11 +551,13 @@ float APlayerCharacter::TakeDamage
 {
 	if (InvincibilityTimer <= 0)
 	{
-	CurrentTime -= DamageAmount;
+	CurrentTime += DamageAmount;
 	InvincibilityTimer = 0.4;
 	}
 	return CurrentTime;
 }
+
+
 
 //Finding the DeflectorBoxComponent and setting a pointer to it
 void APlayerCharacter::SetDeflectBoxVariable()
