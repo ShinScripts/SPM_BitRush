@@ -1,0 +1,11 @@
+/NOLOGO
+/errorReport:prompt
+/MACHINE:x64
+/SUBSYSTEM:WINDOWS
+/DEF
+/NAME:"UnrealEditor-RiderBlueprint-Win64-DebugGame.dll"
+/IGNORE:4221
+/NODEFAULTLIB
+"D:\Documents\GitHub\SPM_Shooter\Plugins\Developer\RiderLink\Intermediate\Build\Win64\UnrealEditor\DebugGame\RiderBlueprint\Module.RiderBlueprint.cpp.obj"
+"D:\Documents\GitHub\SPM_Shooter\Plugins\Developer\RiderLink\Intermediate\Build\Win64\UnrealEditor\DebugGame\RiderBlueprint\Default.rc2.res"
+/OUT:"D:\Documents\GitHub\SPM_Shooter\Plugins\Developer\RiderLink\Intermediate\Build\Win64\UnrealEditor\DebugGame\RiderBlueprint\UnrealEditor-RiderBlueprint-Win64-DebugGame.lib"
