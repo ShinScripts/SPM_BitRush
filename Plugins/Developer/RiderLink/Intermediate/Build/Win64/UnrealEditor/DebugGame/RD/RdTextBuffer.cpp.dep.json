@@ -1,11 +1,11 @@
 {
-    "Version": "1.1",
+    "Version": "1.2",
     "Data": {
-        "Source": "d:\\documents\\github\\spm_shooter\\plugins\\developer\\riderlink\\source\\rd\\src\\rd_gen_cpp\\src\\rdtextbuffer.cpp",
+        "Source": "c:\\users\\shin\\desktop\\bitrush\\plugins\\developer\\riderlink\\source\\rd\\src\\rd_gen_cpp\\src\\rdtextbuffer.cpp",
         "ProvidedModule": "",
         "Includes": [
-            "d:\\documents\\github\\spm_shooter\\plugins\\developer\\riderlink\\intermediate\\build\\win64\\unrealeditor\\debuggame\\rd\\definitions.h",
-            "d:\\documents\\github\\spm_shooter\\plugins\\developer\\riderlink\\source\\rd\\src\\rd_gen_cpp\\src\\rdtextbuffer.h"
+            "c:\\users\\shin\\desktop\\bitrush\\plugins\\developer\\riderlink\\intermediate\\build\\win64\\unrealeditor\\debuggame\\rd\\definitions.h",
+            "c:\\users\\shin\\desktop\\bitrush\\plugins\\developer\\riderlink\\source\\rd\\src\\rd_gen_cpp\\src\\rdtextbuffer.h"
         ],
         "ImportedModules": [],
         "ImportedHeaderUnits": []
