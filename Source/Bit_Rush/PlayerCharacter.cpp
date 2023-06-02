@@ -83,7 +83,7 @@ void FDashComponent::StartDash()
 		return;
 
 	bIsDashing = true;
-	DashDistance = PlayerCharacter->GetActorRotation().RotateVector(DashDirection.GetSafeNormal()) * 20;
+	DashDistance = PlayerCharacter->GetActorRotation().RotateVector(DashDirection.GetSafeNormal()) * 30;
 	DashDistance.Z = 0;
 	CurrentDashTime = DashTime;
 }
@@ -91,7 +91,7 @@ void FDashComponent::StartDash()
 void FDashComponent::Dash(float DeltaTime)
 {
 	bIsDashing = true;
-	
+	PlayerCharacter->bCanMove = false;
 	const float DashSpeed = (PlayerCharacter->GetActorLocation() - DashDistance).Length()/DashTime;
 
 	PlayerCharacter->SetActorLocation(FMath::VInterpConstantTo(PlayerCharacter->GetActorLocation(),DashDistance + PlayerCharacter->GetActorLocation(),PlayerCharacter->GetWorld()->DeltaTimeSeconds,DashSpeed));
@@ -99,6 +99,8 @@ void FDashComponent::Dash(float DeltaTime)
 	// UE_LOG(LogTemp,Warning,TEXT("%f"),CurrentDashTime);
 	if(CurrentDashTime < 0)
 	{
+		PlayerCharacter->LaunchCharacter(PlayerCharacter->GetActorRotation().RotateVector(DashDirection.GetSafeNormal()) * DashLaunchValue, false,false);
+		PlayerCharacter->bCanMove = true;
 		bDashIsOnCooldown = true;
 		bIsDashing = false;
 	}
