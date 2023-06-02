@@ -68,6 +68,7 @@
 /DBUILD_VERSION=++UE5+Release-5.1-CL-23901901
 /DBUILD_ICON_FILE_NAME="\"..\\Build\\Windows\\Resources\\Default.ico\""
 /DPROJECT_COPYRIGHT_STRING="Fill out your copyright notice in the Description page of Project Settings."
+/DPROJECT_PRODUCT_NAME=BitRush
 /DPROJECT_PRODUCT_IDENTIFIER=Bit_Rush
 /fo "C:\Users\shin\Desktop\BitRush\Plugins\Developer\RiderLink\Intermediate\Build\Win64\UnrealEditor\DebugGame\RiderBlueprint\Default.rc2.res"
 "..\Build\Windows\Resources\Default.rc2"
