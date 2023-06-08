@@ -138,6 +138,9 @@ struct FDashComponent
 	UPROPERTY(BlueprintReadOnly)
 	bool bIsDashing = false;
 
+	UPROPERTY()
+	float DashLaunchValue = 900;
+	
 	float CurrentDashTime;
 	
 	FVector DashDistance;
